@@ -28,6 +28,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.HashMap;
 
 /**
  * @version $Revision$ $Date$
@@ -35,6 +36,7 @@ import java.util.Vector;
 public class Jira {
     private final XmlRpcClient client;
     private String token;
+    private HashMap cache;
 
     public Jira(String endpoint) throws MalformedURLException {
         if (endpoint.endsWith("/")) {
@@ -46,7 +48,9 @@ public class Jira {
         }
 
         this.client = new XmlRpcClient(endpoint);
+        this.cache = new HashMap();
     }
+
 
     /**
      * Logs the user into JIRA
@@ -59,6 +63,7 @@ public class Jira {
      * remove this token from the list of logged in tokens.
      */
     public boolean logout() throws Exception {
+        cache.clear();
         Boolean value = (Boolean) call("logout");
         return value.booleanValue();
     }
@@ -114,8 +119,15 @@ public class Jira {
     /**
      * List<{@link Issue}>:  Executes a saved filter
      */
+    public List getIssuesFromFilter(Filter filter) throws Exception {
+        return getIssuesFromFilter(filter.getId());
+    }
+
+    /**
+     * List<{@link Issue}>:  Executes a saved filter
+     */
     public List getIssuesFromFilter(String filterId) throws Exception {
-        Vector vector = (Vector) call("getIssuesFromFilter");
+        Vector vector = (Vector) call("getIssuesFromFilter", filterId);
         return toList(vector, Issue.class);
     }
 
@@ -138,41 +150,36 @@ public class Jira {
     /**
      * List<{@link IssueType}>:  Returns all visible issue types in the system
      */
-    public List getIssueTypes() throws Exception {
-        Vector vector = (Vector) call("getIssueTypes");
-        return toList(vector, IssueType.class);
+    public Map getIssueTypes() throws Exception {
+        return getCached(IssueType.class, "getIssueTypes", "id");
     }
 
     /**
      * List<{@link Priority}>:  Returns all priorities in the system
      */
-    public List getPriorities() throws Exception {
-        Vector vector = (Vector) call("getPriorities");
-        return toList(vector, Priority.class);
+    public Map getPriorities() throws Exception {
+        return getCached(Priority.class, "getPriorities", "id");
     }
 
     /**
      * List<{@link Project}>:  Returns a list of projects available to the user
      */
-    public List getProjects() throws Exception {
-        Vector vector = (Vector) call("getProjects");
-        return toList(vector, Project.class);
+    public Map getProjects() throws Exception {
+        return getCached(Project.class, "getProjects", "key");
     }
 
     /**
      * List<{@link Resolution}>:  Returns all resolutions in the system
      */
-    public List getResolutions() throws Exception {
-        Vector vector = (Vector) call("getResolutions");
-        return toList(vector, Resolution.class);
+    public Map getResolutions() throws Exception {
+        return getCached(Resolution.class, "getResolutions", "id");
     }
 
     /**
      * List<{@link Filter}>:  Gets all saved filters available for the currently logged in user
      */
-    public List getSavedFilters() throws Exception {
-        Vector vector = (Vector) call("getSavedFilters");
-        return toList(vector, Filter.class);
+    public Map getSavedFilters() throws Exception {
+        return getCached(Filter.class, "getSavedFilters", "id");
     }
 
     /**
@@ -186,9 +193,8 @@ public class Jira {
     /**
      * List<{@link Status}>:  Returns all statuses in the system
      */
-    public List getStatuses() throws Exception {
-        Vector vector = (Vector) call("getStatuses");
-        return toList(vector, Status.class);
+    public Map getStatuses() throws Exception {
+        return getCached(Status.class, "getStatuses", "id");
     }
 
     /**
@@ -196,17 +202,21 @@ public class Jira {
      *
      * @return list of {@link IssueType}
      */
-    public List getSubTaskIssueTypes() throws Exception {
-        Vector vector = (Vector) call("getSubTaskIssueTypes");
-        return toList(vector, IssueType.class);
+    public Map getSubTaskIssueTypes() throws Exception {
+        return getCached(IssueType.class, "getSubTaskIssueTypes", "id");
     }
 
     /**
      * Returns a user's information given a username
      */
     public User getUser(String username) throws Exception {
-        Hashtable data = (Hashtable) call("getUser", username);
-        return new User(data);
+        User user = (User) cache.get("getUser:" + username);
+        if (user == null){
+            Hashtable data = (Hashtable) call("getUser", username);
+            user = new User(data);
+            cache.put("getUser:"+username, user);
+        }
+        return user;
     }
 
     /**
@@ -215,6 +225,25 @@ public class Jira {
     public List getVersions(String projectKey) throws Exception {
         Vector vector = (Vector) call("getVersions", projectKey);
         return toList(vector, Version.class);
+    }
+
+
+    private Map getCached(Class type, String rpcCommand, String indexField) throws Exception {
+        Map objects = (Map) cache.get(rpcCommand);
+        if (objects == null){
+            Vector vector = (Vector) call(rpcCommand);
+            objects = new HashMap();
+
+            Constructor constructor = type.getConstructor(new Class[]{Map.class});
+            for (int i = 0; i < vector.size(); i++) {
+                Map data = (Map) vector.elementAt(i);
+                Object object = constructor.newInstance(new Object[]{data});
+                objects.put(data.get(indexField), object);
+            }
+
+            cache.put(rpcCommand, objects);
+        }
+        return objects;
     }
 
     private List toList(Vector vector, Class type) throws Exception {

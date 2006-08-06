@@ -17,6 +17,7 @@
 package org.codehaus.swizzle.jira;
 
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @version $Revision$ $Date$
@@ -27,6 +28,9 @@ public class User extends MapObject {
         super(data);
     }
 
+    public User() {
+        this(new HashMap());
+    }
 
     /**
      * the username of this user

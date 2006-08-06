@@ -30,12 +30,12 @@ public class BasicObject extends MapObject {
     /**
      * the id of this constant
      */
-    public String getId() {
-        return getString("id");
+    public int getId() {
+        return getInt("id");
     }
 
-    public void setId(String id) {
-        setString("id", id);
+    public void setId(int id) {
+        setInt("id", id);
     }
 
     /**

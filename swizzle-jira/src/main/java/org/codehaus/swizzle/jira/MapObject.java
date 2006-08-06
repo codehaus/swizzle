@@ -17,6 +17,7 @@
 package org.codehaus.swizzle.jira;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,18 +27,37 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.Iterator;
 
 /**
  * @version $Revision$ $Date$
  */
 public class MapObject {
 
-    private final SimpleDateFormat format;
+    /**
+     * When Sending data of the following type, do not
+     * send a Hashtable, instead send a single value
+     * from the hashtable to act as a reference to the
+     * object.
+     */
+    protected Map xmlrpcRefs = new HashMap();
+
+    /**
+     * A list of fields in this hashtable which should
+     * not be sent on xml-rpc create or update calls.
+     */
+    protected List xmlrpcNoSend = new ArrayList();
+
+    private final SimpleDateFormat[] formats;
     private final Map fields;
 
     protected MapObject(Map data) {
         fields = new HashMap(data);
-        format = new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy");
+        formats = new SimpleDateFormat[]{
+                new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy"),
+                new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z"),
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S"),
+        };
     }
 
     protected String getString(String key) {
@@ -46,11 +66,13 @@ public class MapObject {
 
     protected boolean getBoolean(String key) {
         String value = getString(key);
+        if (value == null) return false;
         return (value.equalsIgnoreCase("true") || value.equals("1") || value.equalsIgnoreCase("yes"));
     }
 
     protected int getInt(String key) {
         String value = getString(key);
+        if (value == null) return 0;
         return Integer.parseInt(value);
     }
 
@@ -67,16 +89,24 @@ public class MapObject {
     }
 
     protected void setDate(String key, Date value) {
-        fields.put(key, format.format(value));
+        fields.put(key, formats[0].format(value));
     }
 
     protected Date getDate(String key) {
-        try {
-            return format.parse(getString(key));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return new Date();
+        String value = getString(key);
+        if (value == null) return new Date();
+
+        ParseException notParsable = null;
+        for (int i = 0; i < formats.length; i++) {
+            try {
+                return formats[i].parse(value);
+            } catch (ParseException e) {
+                notParsable = e;
+            }
         }
+
+        notParsable.printStackTrace();
+        return new Date();
     }
 
     protected Vector getVector(String key) {
@@ -87,39 +117,133 @@ public class MapObject {
         fields.put(key, value);
     }
 
+    protected MapObject getMapObject(String key, Class type) {
+        Object object = fields.get(key);
+        if (object == null){
+            return null;
+        }
+        if (object instanceof MapObject) {
+            return (MapObject) object;
+        }
+
+        try {
+            MapObject mapObject = createMapObject(type, object);
+            fields.put(key, mapObject);
+            return mapObject;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected void setMapObject(String key, MapObject mapObject) {
+        fields.put(key, mapObject);
+    }
+
+    protected boolean hasField(String key){
+        return fields.containsKey(key);
+    }
+    
+    protected List getMapObjects(String key, Class type) {
+        List list;
+        Object collection = fields.get(key);
+        if (collection instanceof Vector) {
+            Vector vector = (Vector) collection;
+            try {
+                list = toList(vector, type);
+                fields.put(key, list);
+            } catch (Exception e) {
+                list = new ArrayList();
+            }
+        } else if (collection == null){
+            list = new ArrayList();
+            fields.put(key, list);
+        } else {
+            list = (List) collection;
+        }
+
+        return list;
+    }
+
+    protected void setMapObjects(String key, List objects) {
+        fields.put(key, objects);
+    }
+
     protected List toList(Vector vector, Class type) throws Exception {
         List list = new ArrayList(vector.size());
 
-        Constructor constructor = type.getConstructor(new Class[]{Map.class});
         for (int i = 0; i < vector.size(); i++) {
-            Map data = (Map) vector.elementAt(i);
-            Object object = constructor.newInstance(new Object[]{data});
+            Object object = createMapObject(type, vector.elementAt(i));
             list.add(object);
         }
 
         return list;
     }
 
+    private MapObject createMapObject(Class type, Object value) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        Constructor constructor = type.getConstructor(new Class[]{Map.class});
+        Map data;
+
+        Object idField = xmlrpcRefs.get(type);
+        if (idField != null && !(value instanceof Map)){
+            data = new HashMap();
+            data.put(idField, value);
+        } else if (value instanceof Map) {
+            data = (Map) value;
+        } else {
+            throw new RuntimeException("Cannot create a "+type.getName()+" from '" + value+"'");
+        }
+
+        Object object = constructor.newInstance(new Object[]{data});
+        return (MapObject) object;
+    }
+
     public Hashtable toHashtable() {
-        return new Hashtable(fields);
+        Hashtable hashtable = new Hashtable(fields);
+
+        // Remove anything marked as "no send"
+        for (int i = 0; i < xmlrpcNoSend.size(); i++) {
+            String fieldName = (String) xmlrpcNoSend.get(i);
+            hashtable.remove(fieldName);
+        }
+
+        // Expand any MapObject values to be Hashtables
+        // Where specified, use the appropriate Id Field instead of the Hashtable
+        for (Iterator iterator = hashtable.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            Object key = entry.getKey();
+            Object value = entry.getValue();
+
+            if (value instanceof MapObject) {
+
+                MapObject mapObject = (MapObject) value;
+                hashtable.put(key, toHashtableOrId(mapObject));
+
+            } else if (value instanceof List && !(value instanceof Vector)) {
+
+                List objects = (List) value;
+                Vector vector = new Vector();
+
+                for (int i = 0; i < objects.size(); i++) {
+                    MapObject mapObject = (MapObject) objects.get(i);
+                    vector.add(toHashtableOrId(mapObject));
+                }
+
+                hashtable.put(key, vector);
+            }
+        }
+        return hashtable;
     }
 
-    protected List getMapObjects(String key, Class type) {
-        Vector vector = getVector(key);
-        try {
-            return toList(vector, type);
-        } catch (Exception e) {
-            return vector;
+    private Object toHashtableOrId(MapObject mapObject) {
+        Hashtable child = mapObject.toHashtable();
+        Object object;
+        String idField = (String) xmlrpcRefs.get(mapObject.getClass());
+        if (idField != null){
+            object = child.get(idField);
+        } else {
+            object = child;
         }
-    }
-
-    protected void setMapObjects(String key, List objects) {
-        Vector vector = new Vector();
-        for (int i = 0; i < objects.size(); i++) {
-            MapObject mapObject = (MapObject) objects.get(i);
-            vector.add(mapObject.toHashtable());
-        }
-        setVector(key, vector);
+        return object;
     }
 
 }

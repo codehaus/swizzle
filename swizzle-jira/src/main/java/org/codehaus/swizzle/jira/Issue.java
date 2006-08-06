@@ -21,18 +21,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
 /**
  * @version $Revision$ $Date$
  */
 public class Issue extends MapObject {
 
+
     public Issue() {
-        super(new HashMap());
+        this(new HashMap());
     }
 
     public Issue(Map data) {
         super(data);
+        xmlrpcRefs.put(IssueType.class,"id");
+        xmlrpcRefs.put(Status.class,"id");
+        xmlrpcRefs.put(User.class,"name");
+        xmlrpcRefs.put(Project.class, "key");
+        xmlrpcRefs.put(Priority.class, "id");
+        xmlrpcRefs.put(Resolution.class, "id");
+
+        xmlrpcNoSend.add("customFieldValues");
+        xmlrpcNoSend.add("link");
+        xmlrpcNoSend.add("voters");
     }
 
     /**
@@ -46,15 +59,12 @@ public class Issue extends MapObject {
         setString("project", project);
     }
 
-    /**
-     *
-     */
-    public int getType() {
-        return getInt("type");
+    public IssueType getType() {
+        return (IssueType) getMapObject("type", IssueType.class);
     }
 
-    public void setType(int type) {
-        setInt("type", type);
+    public void setType(IssueType type) {
+        setMapObject("type", type);
     }
 
     /**
@@ -68,7 +78,6 @@ public class Issue extends MapObject {
         setDate("created", created);
     }
 
-
     /**
      *
      */
@@ -81,10 +90,28 @@ public class Issue extends MapObject {
     }
 
     /**
+     * This data is not available via interface except scraping
+     * the html from the web interface.  If you know of another
+     * way to get it, please let us know.
+     * 
+     * @return List<User>
+     */
+    public List getVoters() {
+        if (!hasField("voters")){
+            List votes = new ArrayList();
+            for (int i = getInt("votes"); i > votes.size(); i--) {
+                votes.add(new User());
+            }
+            setMapObjects("voters", votes);
+        }
+        return getMapObjects("voters", User.class);
+    }
+
+    /**
      *
      */
     public int getVotes() {
-        return getInt("votes");
+        return getVoters().size();
     }
 
     public void setVotes(int votes) {
@@ -109,7 +136,7 @@ public class Issue extends MapObject {
         return getMapObjects("components", Component.class);
     }
 
-    public void setComponents(Vector components) {
+    public void setComponents(List components) {
         setMapObjects("components", components);
     }
 
@@ -138,24 +165,22 @@ public class Issue extends MapObject {
     /**
      * 6
      */
-    public int getStatus() {
-        return getInt("status");
+    public Status getStatus() {
+        return (Status) getMapObject("status", Status.class);
     }
 
-    public void setStatus(int status) {
-        setInt("status", status);
+    public void setStatus(Status status) {
+        setMapObject("status", status);
     }
 
-    /**
-     * 1
-     */
-    public int getResolution() {
-        return getInt("resolution");
+    public Resolution getResolution() {
+        return (Resolution) getMapObject("resolution", Resolution.class);
     }
 
-    public void setResolution(int resolution) {
-        setInt("resolution", resolution);
+    public void setResolution(Resolution resolution) {
+        setMapObject("resolution", resolution);
     }
+
 
     /**
      * List
@@ -179,15 +204,13 @@ public class Issue extends MapObject {
         setString("description", description);
     }
 
-    /**
-     *
-     */
-    public String getReporter() {
-        return getString("reporter");
+
+    public User getReporter() {
+        return (User) getMapObject("reporter", User.class);
     }
 
-    public void setReporter(String reporter) {
-        setString("reporter", reporter);
+    public void setReporter(User reporter) {
+        setMapObject("reporter", reporter);
     }
 
     /**
@@ -204,24 +227,41 @@ public class Issue extends MapObject {
     /**
      *
      */
-    public String getAssignee() {
-        return getString("assignee");
+    public Date getDuedate() {
+        return getDate("duedate");
     }
 
-    public void setAssignee(String assignee) {
-        setString("assignee", assignee);
+    public void setDuedate(Date duedate) {
+        setDate("duedate", duedate);
+    }
+
+    public User getAssignee() {
+        return (User) getMapObject("assignee", User.class);
+    }
+
+    public void setAssignee(User assignee) {
+        setMapObject("assignee", assignee);
     }
 
     /**
      *
      */
-    public int getPriority() {
-        return getInt("priority");
+    public String getEnvironment() {
+        return getString("environment");
     }
 
-    public void setPriority(int priority) {
-        setInt("priority", priority);
+    public void setEnvironment(String environment) {
+        setString("environment", environment);
     }
+
+    public Priority getPriority() {
+        return (Priority) getMapObject("priority", Priority.class);
+    }
+
+    public void setPriority(Priority priority) {
+        setMapObject("priority", priority);
+    }
+
 
     /**
      *
@@ -234,4 +274,22 @@ public class Issue extends MapObject {
         setString("key", key);
     }
 
+    /**
+     * Only available via the RSS source
+     * Not available via XML-RPC source
+     */
+    public String getLink() {
+        return getString("link");
+    }
+
+    public void setLink(String link) {
+        setString("link", link);
+    }
+
+    public Hashtable toHashtable() {
+        // It's unlikely that you can even update the votes via xml-rpc
+        // till we know for sure, best to make sure the tally is current
+        setInt("votes", getVoters().size());
+        return super.toHashtable();
+    }
 }

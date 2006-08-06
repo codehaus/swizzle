@@ -17,6 +17,8 @@
 package org.codehaus.swizzle.jira;
 
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Date;
 
 /**
  * @version $Revision$ $Date$
@@ -27,16 +29,15 @@ public class Version extends MapObject {
         super(data);
     }
 
-
     /**
      * the id of the version
      */
-    public String getId() {
-        return getString("id");
+    public int getId() {
+        return getInt("id");
     }
 
-    public void setId(String id) {
-        setString("id", id);
+    public void setId(int id) {
+        setInt("id", id);
     }
 
     /**
@@ -70,6 +71,14 @@ public class Version extends MapObject {
 
     public void setArchived(boolean archived) {
         setBoolean("archived", archived);
+    }
+
+    public Date getReleaseDate() {
+        return getDate("releaseDate");
+    }
+
+    public void setReleaseDate(Date releaseDate) {
+        setDate("releaseDate", releaseDate);
     }
 
     public int getSequence() {

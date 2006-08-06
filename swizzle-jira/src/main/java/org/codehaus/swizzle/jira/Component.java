@@ -30,12 +30,12 @@ public class Component extends MapObject {
     /**
      * the id of the component
      */
-    public String getId() {
-        return getString("id");
+    public int getId() {
+        return getInt("id");
     }
 
-    public void setId(String id) {
-        setString("id", id);
+    public void setId(int id) {
+        setInt("id", id);
     }
 
     /**

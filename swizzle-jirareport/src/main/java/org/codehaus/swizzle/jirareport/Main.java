@@ -114,6 +114,11 @@ public class Main {
             return dateFormat.format(now);
         }
 
+        public String as(String format){
+            SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+            return dateFormat.format(now);
+        }
+
         public String toString() {
             return dateFormat.format(now);
         }

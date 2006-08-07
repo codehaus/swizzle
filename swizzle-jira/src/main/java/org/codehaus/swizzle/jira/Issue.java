@@ -107,15 +107,15 @@ public class Issue extends MapObject {
         return getMapObjects("voters", User.class);
     }
 
+    public void setVoters(List users){
+        setMapObjects("voters", users);
+    }
+
     /**
      *
      */
     public int getVotes() {
         return getVoters().size();
-    }
-
-    public void setVotes(int votes) {
-        setInt("votes", votes);
     }
 
     /**

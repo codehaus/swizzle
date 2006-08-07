@@ -4,7 +4,7 @@
   <groupId>org.codehaus.swizzle</groupId>
   <artifactId>swizzle-jirareport</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>Swizzle :: Jira Report</name>
   <url>http://swizzle.codehaus.org</url>
   <build>
@@ -21,12 +21,19 @@
         </configuration>
       </plugin>
     </plugins>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-webdav</artifactId>
+        <version>1.0-beta-1</version>
+      </extension>
+    </extensions>
   </build>
   <dependencies>
     <dependency>
       <groupId>org.codehaus.swizzle</groupId>
       <artifactId>swizzle-jira</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.1</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -55,4 +62,20 @@
       <version>1.2.8</version>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <repository>
+      <id>codehaus.org</id>
+      <name>Swizzle Central Repository</name>
+      <url>dav:https://dav.codehaus.org/repository/swizzle/</url>
+    </repository>
+    <snapshotRepository>
+      <id>codehaus.org</id>
+      <name>Swizzle Central Development Repository</name>
+      <url>dav:https://dav.codehaus.org/snapshots.repository/swizzle/</url>
+    </snapshotRepository>
+    <site>
+      <id>codehaus.org</id>
+      <url>dav:https://dav.codehaus.org/swizzle/</url>
+    </site>
+  </distributionManagement>
 </project>

@@ -24,6 +24,8 @@ import java.net.URL;
 import java.io.InputStream;
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * @version $Revision$ $Date$
@@ -44,13 +46,31 @@ public class VotersFiller implements IssueFiller {
         if (!enabled){
             return;
         }
+        ServerInfo serverInfo = jira.getServerInfo();
 
+        String baseUrlString = serverInfo.getBaseUrl();
+
+        getVotes(baseUrlString, issue);
+    }
+
+    public static List fill(JiraRss jiraRss) throws Exception {
+        VotersFiller filler = new VotersFiller(null);
+        List issues = jiraRss.getIssues();
+        for (int i = 0; i < issues.size(); i++) {
+            Issue issue = (Issue) issues.get(i);
+            String link = issue.getLink();
+            link = link.replaceFirst("/browse/.*$", "/");
+            filler.getVotes(link, issue);
+        }
+        return issues;
+    }
+
+    private void getVotes(String baseUrlString, final Issue issue) {
         try {
-            Project project = jira.getProject(issue.getProject().getKey());
-            ServerInfo serverInfo = jira.getServerInfo();
+            final List votes = new ArrayList();
+            URL baseUrl = new URL(baseUrlString);
 
-            URL baseUrl = new URL(serverInfo.getBaseUrl());
-            URL url = new URL(baseUrl, "secure/ViewVoters!default.jspa?id="+project.getId());
+            URL url = new URL(baseUrl, "secure/ViewVoters!default.jspa?id="+issue.getId());
 
             InputStream in = new BufferedInputStream(url.openStream());
             in = new IncludeFilterInputStream(in, "<a id=\"voter_link","/a>");
@@ -58,12 +78,20 @@ public class VotersFiller implements IssueFiller {
                 public String handleToken(String token) throws IOException {
                     String[] s = token.split("\">");
                     try {
-                        User user = jira.getUser(s[0]);
-                        if (user != null){
-                            issue.getVoters().add(user);
+                        User user;
+                        if (jira == null) {
+                            user = new User();
+                            user.setName(s[0]);
+                            user.setFullname(s[1]);
+                            votes.add(user);
+                        } else {
+                            user = jira.getUser(s[0]);
+                            if (user != null){
+                                votes.add(user);
+                            }
                         }
                     } catch (Exception e) {
-                        System.err.println("Bad voter string: "+token);
+                        System.err.println("Bad voter string: "+token + ", "+e.getClass().getName()+": "+e.getMessage());
                     }
                     return "";
                 }
@@ -74,6 +102,8 @@ public class VotersFiller implements IssueFiller {
                 i = in.read();
             }
             in.close();
+
+            issue.setVoters(votes);
         } catch (IOException e) {
             System.err.println(e.getClass().getName()+": "+e.getMessage());
         }

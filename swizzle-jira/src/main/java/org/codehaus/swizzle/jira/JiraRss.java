@@ -39,6 +39,7 @@ import java.lang.reflect.Constructor;
  */
 public class JiraRss {
     private Map issues = new HashMap();
+    private URL url;
 
     public JiraRss(String query) throws Exception {
         this(new URL(query));
@@ -46,6 +47,7 @@ public class JiraRss {
 
     public JiraRss(URL url) throws Exception {
         this(url.openStream());
+        this.url = url;
     }
 
     public JiraRss(InputStream in) throws Exception {
@@ -71,9 +73,11 @@ public class JiraRss {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        String query = "http://issues.apache.org/jira/secure/IssueNavigator.jspa?view=rss&&pid=12310200&pid=10220&pid=12310111&pid=12310312&status=10002&sorter/field=issuekey&sorter/order=DESC&tempMax=25&reset=true&decorator=none";
-        new JiraRss(query);
+    public List fillVotes() throws Exception {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        Class clazz = classLoader.loadClass("org.codehaus.swizzle.jira.VotersFiller");
+        Method fill = clazz.getMethod("fill", new Class[]{JiraRss.class});
+        return (List) fill.invoke(null, new Object[]{this});
     }
 
     public List getIssues() {

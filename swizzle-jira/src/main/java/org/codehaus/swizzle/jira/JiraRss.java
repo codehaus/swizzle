@@ -209,7 +209,9 @@ public class JiraRss {
 
         public void endElement(String string, String string1, String string2) throws SAXException {
             MapObject status = (MapObject) objects.peek();
-            status.setString(name, value.toString());
+            String text = value.toString();
+            text = text.replaceAll("^<p>|</p>$", "");
+            status.setString(name, text);
         }
 
         protected Object clone() throws CloneNotSupportedException {

@@ -17,15 +17,19 @@
 package org.codehaus.swizzle.jirareport;
 
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.app.Velocity;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.Template;
 import org.codehaus.swizzle.jira.JiraRss;
 import org.codehaus.swizzle.jira.Jira;
 
 import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 
 /**
@@ -33,6 +37,7 @@ import java.text.SimpleDateFormat;
  */
 public class Main {
     public static void main(String[] args) throws Exception {
+        List newargs = new ArrayList();
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (arg.startsWith("-D")) {
@@ -40,11 +45,24 @@ public class Main {
                 String val = arg.substring(arg.indexOf("=") + 1);
 
                 System.setProperty(prop, val);
+            } else {
+                newargs.add(arg);
             }
         }
 
-        VelocityContext context = new VelocityContext();
+        args = (String[]) newargs.toArray(new String[]{});
 
+        if (args.length > 0){
+            System.setProperty("template", args[0]);
+        }
+
+        String templateName = System.getProperty("template","report.vm");
+
+        generate(templateName, System.out);
+    }
+
+    public static void generate(String templateName, PrintStream result) throws Exception {
+        VelocityContext context = new VelocityContext();
         for (Iterator iterator = System.getProperties().entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
             String name = (String) entry.getKey();
@@ -56,14 +74,14 @@ public class Main {
         context.put("xmlrpc", new Xmlrpc());
         context.put("date", new DateUtil(System.getProperty("dateFormat", "yyyy-MM-dd")));
         VelocityEngine velocity = new VelocityEngine();
-//        velocity.setProperty(Velocity.RESOURCE_LOADER, "class");
-//        velocity.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        velocity.setProperty(Velocity.RESOURCE_LOADER, "all");
+        velocity.setProperty("all.resource.loader.class", FederatedResourceLoader.class.getName());
         velocity.init();
 
-        String templateName = System.getProperty("template","report.vm");
         Template template = velocity.getTemplate(templateName);
 
-        PrintWriter writer = new PrintWriter(System.out);
+
+        PrintWriter writer = new PrintWriter(result);
         template.merge(context, writer);
         writer.flush();
     }

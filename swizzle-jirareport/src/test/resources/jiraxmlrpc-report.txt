@@ -1,0 +1,19 @@
+
+[SWIZZLE-1] Unit Test Summary
+    - project:  SWIZZLE
+    - id:  40099
+    - type:  New Feature
+    - priority:  Blocker
+    - affectsVersions:  [Test Version]
+    - fixVersions:  [Test Version]
+    - components:  [jira client]
+    - status:  Closed
+    - resolution:  Fixed
+    - created:  Fri Aug 04 20:05:13 PDT 2006
+    - updated:  Fri Aug 04 21:33:48 PDT 2006
+    - duedate:  Sun Aug 06 00:00:00 PDT 2006
+    - reporter:  David Blevins
+    - assignee:  David Blevins
+    - votes:  1
+    - environment:  Unit Test Environment
+    - description:  Unit Test Description

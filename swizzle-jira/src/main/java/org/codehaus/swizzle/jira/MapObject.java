@@ -142,7 +142,7 @@ public class MapObject {
     protected boolean hasField(String key){
         return fields.containsKey(key);
     }
-    
+
     protected List getMapObjects(String key, Class type) {
         List list;
         Object collection = fields.get(key);
@@ -244,6 +244,12 @@ public class MapObject {
             object = child;
         }
         return object;
+    }
+
+    protected void merge(MapObject source){
+        if (source != null){
+            fields.putAll(source.fields);
+        }
     }
 
 }

@@ -31,12 +31,12 @@ public class Project extends MapObject {
     /**
      * the id of the project
      */
-    public String getId() {
-        return getString("id");
+    public int getId() {
+        return getInt("id");
     }
 
-    public void setId(String id) {
-        setString("id", id);
+    public void setId(int id) {
+        setInt("id", id);
     }
 
     /**
@@ -103,6 +103,12 @@ public class Project extends MapObject {
 
     public void setDescription(String description) {
         setString("description", description);
+    }
+
+    public String toString() {
+        String name = getName();
+        String key = getKey();
+        return (name != null)? name : key+"";
     }
 
 }

@@ -11,6 +11,7 @@
     <module>swizzle-stream</module>
     <module>swizzle-confluence</module>
     <module>swizzle-jira</module>
+    <module>swizzle-jirareport</module>
   </modules>
 
 </project>

@@ -16,42 +16,31 @@
  */
 package org.codehaus.swizzle.jira;
 
-import java.util.Map;
-
 /**
  * @version $Revision$ $Date$
  */
-public class Component extends MapObject {
+public class ProjectFiller implements IssueFiller {
+    private final Jira jira;
+    private boolean enabled;
 
-    public Component(Map data) {
-        super(data);
+    public ProjectFiller(Jira jira) {
+        this.jira = jira;
     }
 
-    /**
-     * the id of the component
-     */
-    public int getId() {
-        return getInt("id");
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
-    public void setId(int id) {
-        setInt("id", id);
+    public void fill(Issue issue){
+        if (!enabled){
+            return;
+        }
+        fill(issue.getProject());
     }
 
-    /**
-     * the name of the component
-     */
-    public String getName() {
-        return getString("name");
-    }
-
-    public void setName(String name) {
-        setString("name", name);
-    }
-
-    public String toString() {
-        String name = getName();
-        int id = getId();
-        return (name != null)? name : id+"";
+    public void fill(Project dest) {
+        Project source = jira.getProject(dest.getKey());
+        if (source == null) source = jira.getProject(dest.getId());
+        dest.merge(source);
     }
 }

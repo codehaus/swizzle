@@ -71,4 +71,9 @@ public class BasicObject extends MapObject {
         setString("icon", icon);
     }
 
+    public String toString() {
+        String name = getName();
+        int id = getId();
+        return (name != null)? name : id+"";
+    }
 }

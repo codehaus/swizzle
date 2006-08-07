@@ -65,7 +65,7 @@ public class JiraRss {
             try {
                 // Fix: the project name isn't in the RSS feed
                 String project = issue.getKey().split("-")[0];
-                issue.setProject(project);
+                issue.setString("project", project);
             } catch (Exception dontCare) {
             }
         }

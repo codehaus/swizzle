@@ -41,7 +41,7 @@ public class JiraTest extends TestCase {
         assertEquals("Issue.getDescription()", "Unit Test Description", issue.getDescription());
         assertEquals("Issue.getDuedate()", "Sun Aug 06 00:00:00 PDT 2006", issue.getDuedate().toString());
         assertEquals("Issue.getReporter()", "dblevins", issue.getReporter().getName());
-        assertEquals("Issue.getProject()", "SWIZZLE", issue.getProject());
+        assertEquals("Issue.getProject()", "SWIZZLE", issue.getProject().getKey());
         assertEquals("Issue.getResolution()", 1, issue.getResolution().getId());
         assertEquals("Issue.getVotes()", 1, issue.getVotes());
         assertEquals("Issue.getAssignee()", "dblevins", issue.getAssignee().getName());
@@ -95,5 +95,68 @@ public class JiraTest extends TestCase {
         assertEquals("issue.Priority", "1", data.get("priority"));
         assertEquals("issue.Link", null, data.get("link"));
 
+    }
+
+    public void testFill() throws Exception {
+        Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
+        jira.login("swizzletester", "swizzle");
+
+        Issue issue = jira.getIssue("SWIZZLE-1");
+        issue = jira.fill(issue);
+
+        assertEquals("Issue.getCreated()", "Fri Aug 04 20:05:13 PDT 2006", issue.getCreated().toString());
+        assertEquals("Issue.getSummary()", "Unit Test Summary", issue.getSummary());
+        assertEquals("Issue.getType()", "New Feature", issue.getType().getName());
+        assertEquals("Issue.getEnvironment()", "Unit Test Environment", issue.getEnvironment());
+        assertEquals("Issue.getStatus()", "Closed", issue.getStatus().getName());
+        assertEquals("Issue.getUpdated()", "Fri Aug 04 21:33:48 PDT 2006", issue.getUpdated().toString());
+        assertEquals("Issue.getId()", 40099, issue.getId());
+        assertEquals("Issue.getKey()", "SWIZZLE-1", issue.getKey());
+        assertEquals("Issue.getDescription()", "Unit Test Description", issue.getDescription());
+        assertEquals("Issue.getDuedate()", "Sun Aug 06 00:00:00 PDT 2006", issue.getDuedate().toString());
+        assertEquals("Issue.getReporter()", "David Blevins", issue.getReporter().getFullname());
+        assertEquals("Issue.getProject()", "SWIZZLE", issue.getProject().getKey());
+        assertEquals("Issue.getResolution()", "Fixed", issue.getResolution().getName());
+        assertEquals("Issue.getVotes()", 1, issue.getVotes());
+        assertEquals("Issue.getAssignee()", "David Blevins", issue.getAssignee().getFullname());
+        assertEquals("Issue.getPriority()", "Blocker", issue.getPriority().getName());
+        assertEquals("Issue.getLink()", null, issue.getLink());
+
+        Hashtable data = issue.toHashtable();
+
+        assertEquals("issue.Created", "2006-08-04 20:05:13.157", data.get("created"));
+        assertEquals("issue.Summary", "Unit Test Summary", data.get("summary"));
+        assertEquals("issue.Type", "2", data.get("type"));
+        assertEquals("issue.Environment", "Unit Test Environment", data.get("environment"));
+        assertEquals("issue.Status", "6", data.get("status"));
+        assertEquals("issue.Updated", "2006-08-04 21:33:48.108", data.get("updated"));
+        assertEquals("issue.Id", "40099", data.get("id"));
+        assertEquals("issue.Key", "SWIZZLE-1", data.get("key"));
+        assertEquals("issue.Description", "Unit Test Description", data.get("description"));
+        assertEquals("issue.Duedate", "2006-08-06 00:00:00.0", data.get("duedate"));
+        assertEquals("issue.Reporter", "dblevins", data.get("reporter"));
+        assertEquals("issue.Project", "SWIZZLE", data.get("project"));
+        assertEquals("issue.Resolution", "1", data.get("resolution"));
+        assertEquals("issue.Votes", "1", data.get("votes"));
+        assertEquals("issue.Assignee", "dblevins", data.get("assignee"));
+        assertEquals("issue.Priority", "1", data.get("priority"));
+        assertEquals("issue.Link", null, data.get("link"));
+
+    }
+
+    public void testAutofillProject() throws Exception {
+        Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
+        jira.autofill("project", true);
+        jira.login("swizzletester", "swizzle");
+
+        Issue issue = jira.getIssue("SWIZZLE-1");
+        Project project = issue.getProject();
+
+        assertEquals("Project.getId()", 11230, project.getId());
+        assertEquals("Project.getKey()", "SWIZZLE", project.getKey());
+        assertEquals("Project.getName()", "Swizzle", project.getName());
+        assertEquals("Project.getLead()", "dblevins", project.getLead());
+        assertEquals("Project.getProjectUrl()", "http://swizzle.codehaus.org", project.getProjectUrl());
+        assertEquals("Project.getUrl()", "http://jira.codehaus.org/browse/SWIZZLE", project.getUrl());
     }
 }

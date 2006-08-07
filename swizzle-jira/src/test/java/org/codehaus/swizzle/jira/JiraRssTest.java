@@ -27,7 +27,7 @@ public class JiraRssTest extends TestCase {
         assertEquals("Issue.getDescription()", "Unit Test Description", issue.getDescription());
         assertEquals("Issue.getDuedate()", "Sun Aug 06 00:00:00 PDT 2006", issue.getDuedate().toString());
         assertEquals("Issue.getReporter()", "dblevins", issue.getReporter().getName());
-        assertEquals("Issue.getProject()", "SWIZZLE", issue.getProject());
+        assertEquals("Issue.getProject()", "SWIZZLE", issue.getProject().getKey());
         assertEquals("Issue.getResolution()", 1, issue.getResolution().getId());
         assertEquals("Issue.getVotes()", 1, issue.getVotes());
         assertEquals("Issue.getAssignee()", "dblevins", issue.getAssignee().getName());

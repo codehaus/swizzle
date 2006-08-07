@@ -51,12 +51,12 @@ public class Issue extends MapObject {
     /**
      *
      */
-    public String getProject() {
-        return getString("project");
+    public Project getProject() {
+        return (Project) getMapObject("project", Project.class);
     }
 
-    public void setProject(String project) {
-        setString("project", project);
+    public void setProject(Project project) {
+        setMapObject("project", project);
     }
 
     public IssueType getType() {

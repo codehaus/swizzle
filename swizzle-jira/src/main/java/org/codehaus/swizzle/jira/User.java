@@ -64,4 +64,10 @@ public class User extends MapObject {
     public void setEmail(String email) {
         setString("email", email);
     }
+
+    public String toString() {
+        String name = getName();
+        String fullname = getFullname();
+        return (fullname != null)? fullname : name;
+    }
 }

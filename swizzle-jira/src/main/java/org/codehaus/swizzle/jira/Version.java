@@ -88,4 +88,10 @@ public class Version extends MapObject {
     public void setSequence(int sequence) {
         setInt("sequence", sequence);
     }
+
+    public String toString() {
+        String name = getName();
+        int id = getId();
+        return (name != null)? name : id+"";
+    }
 }

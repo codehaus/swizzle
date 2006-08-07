@@ -16,42 +16,10 @@
  */
 package org.codehaus.swizzle.jira;
 
-import java.util.Map;
-
 /**
  * @version $Revision$ $Date$
  */
-public class Component extends MapObject {
-
-    public Component(Map data) {
-        super(data);
-    }
-
-    /**
-     * the id of the component
-     */
-    public int getId() {
-        return getInt("id");
-    }
-
-    public void setId(int id) {
-        setInt("id", id);
-    }
-
-    /**
-     * the name of the component
-     */
-    public String getName() {
-        return getString("name");
-    }
-
-    public void setName(String name) {
-        setString("name", name);
-    }
-
-    public String toString() {
-        String name = getName();
-        int id = getId();
-        return (name != null)? name : id+"";
-    }
+public interface IssueFiller {
+    void fill(Issue issue);
+    void setEnabled(boolean enabled);
 }

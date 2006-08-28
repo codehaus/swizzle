@@ -46,6 +46,7 @@ public class Issue extends MapObject {
         xmlrpcNoSend.add("customFieldValues");
         xmlrpcNoSend.add("link");
         xmlrpcNoSend.add("voters");
+        xmlrpcNoSend.add("subTasks");
     }
 
     /**
@@ -191,6 +192,14 @@ public class Issue extends MapObject {
 
     public void setFixVersions(List fixVersions) {
         setMapObjects("fixVersions", fixVersions);
+    }
+
+    public List getSubTasks() {
+        return getMapObjects("subTasks", Issue.class);
+    }
+
+    public void setSubTasks(List subTasks) {
+        setMapObjects("subTasks", subTasks);
     }
 
     /**

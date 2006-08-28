@@ -73,29 +73,44 @@ public class BasicIssueFiller implements IssueFiller {
     }
 
     public void fill(User dest) {
+        if (dest == null){
+            return;
+        }
         User source = jira.getUser(dest.getName());
         dest.merge(source);
     }
 
     public void fill(Priority dest) {
+        if (dest == null){
+            return;
+        }
         Priority source = jira.getPriority(dest.getId());
         if (source == null) source = jira.getPriority(dest.getName());
         dest.merge(source);
     }
 
     public void fill(Status dest) {
+        if (dest == null){
+            return;
+        }
         Status source = jira.getStatus(dest.getId());
         if (source == null) source = jira.getStatus(dest.getName());
         dest.merge(source);
     }
 
     public void fill(Resolution dest) {
+        if (dest == null){
+            return;
+        }
         Resolution source = jira.getResolution(dest.getId());
         if (source == null) source = jira.getResolution(dest.getName());
         dest.merge(source);
     }
 
     public void fill(IssueType dest) {
+        if (dest == null){
+            return;
+        }
         IssueType source = jira.getIssueType(dest.getId());
         if (source == null) source = jira.getIssueType(dest.getName());
         dest.merge(source);

@@ -80,6 +80,13 @@ public class JiraRss {
         return (List) fill.invoke(null, new Object[]{this});
     }
 
+    public List fillSubTasks() throws Exception {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        Class clazz = classLoader.loadClass("org.codehaus.swizzle.jira.SubTasksFiller");
+        Method fill = clazz.getMethod("fill", new Class[]{JiraRss.class});
+        return (List) fill.invoke(null, new Object[]{this});
+    }
+
     public List getIssues() {
         return new ArrayList(issues.values());
     }

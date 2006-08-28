@@ -95,6 +95,18 @@ public class Jira {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (scheme.equals("subtasks") && !issueFillers.containsKey("subtasks")){
+            try {
+                ClassLoader classLoader = this.getClass().getClassLoader();
+                Class clazz = classLoader.loadClass("org.codehaus.swizzle.jira.SubTasksFiller");
+                Constructor constructor = clazz.getConstructor(new Class[]{Jira.class});
+                IssueFiller issueFiller = (IssueFiller) constructor.newInstance(new Object[]{this});
+                issueFillers.put("subtasks", issueFiller);
+            } catch (ClassNotFoundException e) {
+                System.err.println("Autofilling sub-tasks requires the swizzle-stream library.");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         IssueFiller filler = (IssueFiller) issueFillers.get(scheme);
         if (filler == null){

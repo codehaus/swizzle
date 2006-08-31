@@ -1,5 +1,5 @@
 #set( $jira = $xmlrpc.connect("swizzletester:swizzle","http://jira.codehaus.org/rpc/xmlrpc") )
 
-#foreach( $project in $jira.getProjects().matches("name", "[Mm]aven.*[Pp]lugin") )
+#foreach( $project in $jira.getProjects().matches("name", "Maven 2.*Plugin") )
    $project.name
 #end

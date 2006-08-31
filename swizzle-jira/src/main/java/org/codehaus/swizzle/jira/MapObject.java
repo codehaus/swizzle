@@ -24,10 +24,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @version $Revision$ $Date$
@@ -49,7 +49,7 @@ public class MapObject {
     protected List xmlrpcNoSend = new ArrayList();
 
     private final SimpleDateFormat[] formats;
-    private final Map fields;
+    protected final Map fields;
 
     protected MapObject(Map data) {
         fields = new HashMap(data);
@@ -152,10 +152,10 @@ public class MapObject {
                 list = toList(vector, type);
                 fields.put(key, list);
             } catch (Exception e) {
-                list = new ArrayList();
+                list = new MapObjectList();
             }
         } else if (collection == null){
-            list = new ArrayList();
+            list = new MapObjectList();
             fields.put(key, list);
         } else {
             list = (List) collection;
@@ -169,7 +169,7 @@ public class MapObject {
     }
 
     protected List toList(Vector vector, Class type) throws Exception {
-        List list = new ArrayList(vector.size());
+        List list = new MapObjectList(vector.size());
 
         for (int i = 0; i < vector.size(); i++) {
             Object object = createMapObject(type, vector.elementAt(i));

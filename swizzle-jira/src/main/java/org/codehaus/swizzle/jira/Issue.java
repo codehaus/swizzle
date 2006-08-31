@@ -18,11 +18,10 @@ package org.codehaus.swizzle.jira;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 /**
  * @version $Revision$ $Date$
@@ -99,7 +98,7 @@ public class Issue extends MapObject {
      */
     public List getVoters() {
         if (!hasField("voters")){
-            List votes = new ArrayList();
+            List votes = new MapObjectList();
             for (int i = getInt("votes"); i > votes.size(); i--) {
                 votes.add(new User());
             }

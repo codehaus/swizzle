@@ -30,8 +30,6 @@ import java.util.EmptyStackException;
 import java.net.URL;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Constructor;
 
 /**
@@ -186,7 +184,7 @@ public class JiraRss {
         }
 
         public List getIssues() {
-            return (List) getMapObjects("items", Issue.class);
+            return getMapObjects("items", Issue.class);
         }
     }
 

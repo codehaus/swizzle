@@ -29,6 +29,10 @@ public class Version extends MapObject {
         super(data);
     }
 
+    public Version(){
+        this(new HashMap());
+    }
+
     /**
      * the id of the version
      */

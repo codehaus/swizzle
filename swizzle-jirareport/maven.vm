@@ -4,8 +4,8 @@
    $project.name
 
 #set( $jirarss = $rss.fetch("http://jira.codehaus.org/secure/IssueNavigator.jspa?view=rss&&pid=${project.id}&status=1&sorter/field=issuekey&sorter/order=DESC&tempMax=100&reset=true&decorator=none" )
-#foreach ( $issue in $jirarss.issues.decsending("votes") ))
-        -- $issue.votes  $issue.key  $issue.summary        
+#foreach ( $issue in $jirarss.issues.descending("votes") ))
+        -- $issue.votes  $issue.key  $issue.summary
 #end
 
 #end

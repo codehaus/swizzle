@@ -370,7 +370,7 @@ public class Jira {
     // ----  PROJECT related data ---- /////////////////////////////////////////////////////
 
     private List toList(Vector vector, Class type) {
-        List list = new ArrayList(vector.size());
+        List list = new MapObjectList(vector.size());
 
         try {
             Constructor constructor = type.getConstructor(new Class[]{Map.class});
@@ -523,7 +523,8 @@ public class Jira {
                 }
                 indexes.put(field, index);
             }
-            indexes.put(List.class, Collections.unmodifiableList(list));
+            indexes.put(List.class, new MapObjectList(list));
+//            indexes.put(List.class, Collections.unmodifiableList(list));
             if (autofill && type == Issue.class){
                 for (int i = 0; i < list.size(); i++) {
                     Issue issue = (Issue) list.get(i);

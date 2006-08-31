@@ -1,0 +1,5 @@
+#set( $jira = $xmlrpc.connect("swizzletester:swizzle","http://jira.codehaus.org/rpc/xmlrpc") )
+
+#foreach( $project in $jira.projects.contains("name", "Maven") )
+   $project.name
+#end

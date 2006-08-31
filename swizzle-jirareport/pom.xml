@@ -11,6 +11,14 @@
     <plugins>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+	      <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>attached</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
           <descriptor>src/main/assembly/bin.xml</descriptor>
           <archive>

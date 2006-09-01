@@ -24,7 +24,6 @@ import javax.xml.parsers.SAXParser;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Stack;
 import java.util.EmptyStackException;
 import java.net.URL;
@@ -86,7 +85,7 @@ public class JiraRss {
     }
 
     public List getIssues() {
-        return new ArrayList(issues.values());
+        return new MapObjectList(issues.values());
     }
 
     public Issue getIssue(String key) {

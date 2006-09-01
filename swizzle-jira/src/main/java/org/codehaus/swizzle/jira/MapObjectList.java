@@ -16,15 +16,16 @@
  */
 package org.codehaus.swizzle.jira;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Comparator;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.regex.Pattern;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * @version $Revision$ $Date$
@@ -42,94 +43,122 @@ public class MapObjectList extends ArrayList {
         super(i);
     }
 
-    public MapObjectList contains(String field, String string){
+    public int sum(String field) {
+        if (size() == 0) return 0;
+        int sum = 0;
+        Accessor accessor = new Accessor(field, this);
+
+        for (int i = 0; i < this.size(); i++) {
+            try {
+                MapObject mapObject = (MapObject) this.get(i);
+                sum += accessor.intValue(mapObject);
+            } catch (NumberFormatException e) {
+            }
+        }
+        return sum;
+    }
+
+    public int average(String field) {
+        if (size() == 0) return 0;
+        int sum = 0;
+        Accessor accessor = new Accessor(field, this);
+        int count = 0;
+        for (int i = 0; i < this.size(); i++) {
+            try {
+                MapObject mapObject = (MapObject) this.get(i);
+                sum += accessor.intValue(mapObject);
+                count++;
+            } catch (NumberFormatException e) {
+            }
+        }
+        return (sum == 0) ? sum : sum / count;
+    }
+
+
+    public MapObjectList contains(String field, String string) {
         if (size() == 0) return this;
+        Accessor accessor = new Accessor(field, this);
         MapObjectList subset = new MapObjectList();
         for (int i = 0; i < this.size(); i++) {
             MapObject mapObject = (MapObject) this.get(i);
-            Map fields = mapObject.fields;
-            if (fields.containsKey(field)){
-                String value = fields.get(field) + "";
-                if (value.indexOf(string) != -1){
-                    subset.add(mapObject);
-                }
+            String value = accessor.stringValue(mapObject);
+            if (value != null && value.indexOf(string) != -1){
+                subset.add(mapObject);
             }
         }
         return subset;
     }
 
-    public MapObjectList matches(String field, String string){
+    public MapObjectList matches(String field, String string) {
         if (size() == 0) return this;
         Pattern pattern = Pattern.compile(string);
+        Accessor accessor = new Accessor(field, this);
         MapObjectList subset = new MapObjectList();
         for (int i = 0; i < this.size(); i++) {
             MapObject mapObject = (MapObject) this.get(i);
-            Map fields = mapObject.fields;
-            if (fields.containsKey(field)){
-                String value = fields.get(field) + "";
-                if (pattern.matcher(value).matches()){
-                    subset.add(mapObject);
-                }
+            String value = accessor.stringValue(mapObject);
+            if (value != null && pattern.matcher(value).matches()){
+                subset.add(mapObject);
             }
         }
         return subset;
     }
 
-    public MapObjectList equals(String field, String string){
+    public MapObjectList equals(String field, String string) {
         if (size() == 0) return this;
+        Accessor accessor = new Accessor(field, this);
         MapObjectList subset = new MapObjectList();
         for (int i = 0; i < this.size(); i++) {
             MapObject mapObject = (MapObject) this.get(i);
-            Map fields = mapObject.fields;
-            if (fields.containsKey(field)){
-                String value = fields.get(field) + "";
-                if (value.equals(string)){
-                    subset.add(mapObject);
-                }
+            String value = accessor.stringValue(mapObject);
+            if (value != null && value.equals(string)){
+                subset.add(mapObject);
             }
         }
         return subset;
     }
 
-    public MapObjectList greater(String field, String string){
-        return compare(field, string, 1);
+    public MapObjectList greater(String field, String string) {
+        return compareAndCollect(field, string, 1);
     }
 
-    public MapObjectList less(String field, String string){
-        return compare(field, string, -1);
+    public MapObjectList less(String field, String string) {
+        return compareAndCollect(field, string, -1);
     }
 
     /**
      * Synonym for sort(field, false);
+     *
      * @param field
      */
-    public MapObjectList ascending(String field){
+    public MapObjectList ascending(String field) {
         return sort(field);
     }
 
     /**
      * Synonym for sort(field, true);
+     *
      * @param field
      */
-    public MapObjectList descending(String field){
+    public MapObjectList descending(String field) {
         return sort(field, true);
     }
 
-    public MapObjectList sort(String field){
+    public MapObjectList sort(String field) {
         return sort(field, false);
     }
 
-    public MapObjectList sort(String field, boolean reverse){
+    public MapObjectList sort(String field, boolean reverse) {
         if (size() == 0) return this;
         Comparator comparator = getComparator(field);
 
-        comparator = reverse? new ReverseComparator(comparator): comparator;
+        comparator = reverse ? new ReverseComparator(comparator) : comparator;
         Collections.sort(this, comparator);
 
         return this;
     }
 
-    private MapObjectList compare(String field, String string, int condition) {
+    private MapObjectList compareAndCollect(String field, String string, int condition) {
         if (size() == 0) return this;
         try {
             Class type = get(0).getClass();
@@ -144,7 +173,7 @@ public class MapObjectList extends ArrayList {
             for (int i = 0; i < this.size(); i++) {
                 Object object = this.get(i);
                 int value = comparator.compare(object, base);
-                if (value == condition){
+                if (value == condition) {
                     subset.add(object);
                 }
             }
@@ -155,15 +184,7 @@ public class MapObjectList extends ArrayList {
     }
 
     private Comparator getComparator(String field) {
-        Method accessor = getAccessor(field);
-
-        Comparator comparator;
-        if (accessor != null && (accessor.getReturnType().isPrimitive() || Comparable.class.isAssignableFrom(accessor.getReturnType()))){
-            comparator = new MethodValueComparator(accessor);
-        } else {
-            comparator = new FieldValueComparator(field);
-        }
-        return comparator;
+        return new FieldComparator(new Accessor(field, this));
     }
 
     private static class ReverseComparator implements Comparator {
@@ -178,77 +199,82 @@ public class MapObjectList extends ArrayList {
         }
     }
 
-    private static class CollectingComparator implements Comparator {
-        private final Comparator comparator;
-        private final int condition;
-        private final MapObjectList list;
 
-        public CollectingComparator(MapObjectList list, int condition, Comparator comparator) {
-            this.comparator = comparator;
-            this.condition = condition;
-            this.list = list;
-        }
+    private static class FieldComparator implements Comparator {
+        private final Accessor accessor;
 
-        public int compare(Object a, Object b) {
-            int value = comparator.compare(a, b);
-            if (value == condition){
-                list.add(b);
-            }
-            return value;
-        }
-    }
-
-    private static class FieldValueComparator implements Comparator {
-        private final String field;
-
-        public FieldValueComparator(String field) {
-            this.field = field;
+        public FieldComparator(Accessor accessor) {
+            this.accessor = accessor;
         }
 
         public int compare(Object objectA, Object objectB) {
             try {
-                MapObject mapA = (MapObject) objectA;
-                MapObject mapB = (MapObject) objectB;
-                String a = mapA.fields.get(field)+"";
-                String b = mapB.fields.get(field)+"";
-
-                return a.compareTo(b);
+                Object a = accessor.getValue((MapObject) objectA);
+                Object b = accessor.getValue((MapObject) objectB);
+                if (a instanceof Comparable) {
+                    return ((Comparable) a).compareTo(b);
+                } else {
+                    return a.toString().compareTo(b.toString());
+                }
             } catch (Exception e) {
                 return 0;
             }
         }
     }
 
-    private static class MethodValueComparator implements Comparator {
-        private final Method accessor;
-        private static final Class[] NO_ARGS = new Class[]{};
+    public static class Accessor {
 
-        public MethodValueComparator(Method accessor) {
-            this.accessor = accessor;
-        }
+        private final String field;
+        private final Method method;
 
-        public int compare(Object objectA, Object objectB) {
+        public Accessor(String field, List list) {
+            this.field = field;
+            Method method = null;
             try {
-                Comparable a = (Comparable) accessor.invoke(objectA, NO_ARGS);
-                Comparable b = (Comparable) accessor.invoke(objectB, NO_ARGS);
-                return a.compareTo(b);
-            } catch (Exception e){
-                return 0;
+                MapObject first = (MapObject) list.get(0);
+                StringBuffer sb = new StringBuffer(field);
+                sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+                method = first.getClass().getMethod("get" + sb, new Class[]{});
+            } catch (NoSuchMethodException e) {
             }
+            this.method = method;
         }
-    }
-    /**
-     * This only works as we assume the list is homogeneous
-     */
-    private Method getAccessor(String field) {
-        try {
-            MapObject first = (MapObject) get(0);
-            StringBuffer sb = new StringBuffer(field);
-            sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-            return first.getClass().getMethod("get" + sb, new Class[]{});
-        } catch (NoSuchMethodException e) {
-            return null;
-        }
-    }
 
+        public Object getValue(MapObject mapObject) {
+            try {
+                if (method != null) {
+                    return method.invoke(mapObject, new Object[]{});
+                }
+            } catch (Exception e) {
+            }
+            return mapObject.fields.get(field);
+        }
+
+        public int intValue(MapObject mapObject) throws java.lang.NumberFormatException {
+            Object value = getValue(mapObject);
+            if (value instanceof Number) {
+                Number number = (Number) value;
+                return number.intValue();
+            }
+            return new Integer(value.toString()).intValue();
+        }
+
+        public String stringValue(MapObject mapObject) {
+            Object value;
+            if (method.getReturnType() == String.class) {
+                value = mapObject.fields.get(field);
+            } else {
+                value = getValue(mapObject);
+            }
+            return (value == null) ? null : value.toString();
+        }
+
+        public String getField() {
+            return field;
+        }
+
+        public Method getMethod() {
+            return method;
+        }
+    }
 }

@@ -137,4 +137,15 @@ public class MapObjectListTest extends TestCase {
         assertEquals(5, ((Version) sorted.get(0)).getSequence() );
         assertEquals(1, ((Version) sorted.get(1)).getSequence() );
     }
+
+    public void testSum() throws Exception {
+        assertEquals(41, list.sum("sequence"));
+        assertEquals(0, list.sum("name"));
+    }
+
+    public void testAverage() throws Exception {
+        assertEquals(10, list.average("sequence"));
+        assertEquals(0, list.average("name"));
+    }
+
 }

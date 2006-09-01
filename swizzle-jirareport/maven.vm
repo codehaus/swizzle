@@ -3,9 +3,11 @@
 #foreach( $project in $jira.getProjects().matches("name", "Maven 2.*Plugin") )
    $project.name
 
-#set( $jirarss = $rss.fetch("http://jira.codehaus.org/secure/IssueNavigator.jspa?view=rss&&pid=${project.id}&status=1&sorter/field=issuekey&sorter/order=DESC&tempMax=100&reset=true&decorator=none" )
-#foreach ( $issue in $jirarss.issues.descending("votes") ))
-        -- $issue.votes  $issue.key  $issue.summary
+#set( $url = "http://jira.codehaus.org/secure/IssueNavigator.jspa?view=rss&&pid=${project.id}&status=1&sorter/field=issuekey&sorter/order=DESC&tempMax=100&reset=true&decorator=none" )
+#set( $jirarss = $rss.fetch( $url ))
+#foreach ( $issue in $jirarss.issues.greater("votes", "0").descending("votes") )
+    - $issue.votes  $issue.key  $issue.summary
 #end
 
 #end
+

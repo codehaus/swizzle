@@ -28,6 +28,9 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 
 /**
  * @version $Revision$ $Date$
@@ -48,6 +51,8 @@ public class MapObject {
      */
     protected List xmlrpcNoSend = new ArrayList();
 
+    protected Map attributes;
+
     private final SimpleDateFormat[] formats;
     protected final Map fields;
 
@@ -58,6 +63,11 @@ public class MapObject {
                 new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z"),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S"),
         };
+        attributes = new Attributes();
+    }
+
+    public Map getAttributes() {
+        return attributes;
     }
 
     protected String getString(String key) {
@@ -252,4 +262,62 @@ public class MapObject {
         }
     }
 
+    private class Attributes implements Map {
+        public Attributes() {
+            fields.put("#attributes", new LinkedHashMap());
+            xmlrpcNoSend.add("#attributes");
+        }
+
+        private Map map(){
+            return (Map) fields.get("#attributes");
+        }
+
+        public void clear() {
+            map().clear();
+        }
+
+        public boolean containsKey(Object object) {
+            return map().containsKey(object);
+        }
+
+        public boolean containsValue(Object object) {
+            return map().containsValue(object);
+        }
+
+        public Set entrySet() {
+            return map().entrySet();
+        }
+
+        public Object get(Object object) {
+            return map().get(object);
+        }
+
+        public boolean isEmpty() {
+            return map().isEmpty();
+        }
+
+        public Set keySet() {
+            return map().keySet();
+        }
+
+        public Object put(Object object, Object object1) {
+            return map().put(object, object1);
+        }
+
+        public void putAll(Map context) {
+            map().putAll(context);
+        }
+
+        public Object remove(Object object) {
+            return map().remove(object);
+        }
+
+        public int size() {
+            return map().size();
+        }
+
+        public Collection values() {
+            return map().values();
+        }
+    }
 }

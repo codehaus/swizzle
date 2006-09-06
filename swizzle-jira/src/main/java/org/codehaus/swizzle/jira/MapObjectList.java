@@ -163,9 +163,16 @@ public class MapObjectList extends ArrayList {
         try {
             Class type = get(0).getClass();
             HashMap map = new HashMap();
-            map.put(field, string);
-            Constructor constructor = type.getConstructor(new Class[]{Map.class});
-            Object base = constructor.newInstance(new Object[]{map});
+            Object base;
+            if (field.startsWith("@")) {
+                Constructor constructor = type.getConstructor(new Class[]{Map.class});
+                base = constructor.newInstance(new Object[]{map});
+                ((MapObject)base).getAttributes().put(field.replaceFirst("^@",""), string);
+            } else {
+                map.put(field, string);
+                Constructor constructor = type.getConstructor(new Class[]{Map.class});
+                base = constructor.newInstance(new Object[]{map});
+            }
 
             Comparator comparator = getComparator(field);
 
@@ -173,7 +180,7 @@ public class MapObjectList extends ArrayList {
             for (int i = 0; i < this.size(); i++) {
                 Object object = this.get(i);
                 int value = comparator.compare(object, base);
-                if (value == condition) {
+                if (value / condition > 0) {
                     subset.add(object);
                 }
             }
@@ -226,9 +233,14 @@ public class MapObjectList extends ArrayList {
 
         private final String field;
         private final Method method;
-
+        private final boolean isAttribute;
         public Accessor(String field, List list) {
-            this.field = field;
+            isAttribute = field.startsWith("@");
+            this.field = (isAttribute)?field.replaceFirst("^@","") : field;
+            this.method = (!isAttribute)? method(list, field): null;
+        }
+
+        private Method method(List list, String field) {
             Method method = null;
             try {
                 MapObject first = (MapObject) list.get(0);
@@ -237,7 +249,7 @@ public class MapObjectList extends ArrayList {
                 method = first.getClass().getMethod("get" + sb, new Class[]{});
             } catch (NoSuchMethodException e) {
             }
-            this.method = method;
+            return method;
         }
 
         public Object getValue(MapObject mapObject) {
@@ -247,7 +259,11 @@ public class MapObjectList extends ArrayList {
                 }
             } catch (Exception e) {
             }
-            return mapObject.fields.get(field);
+            return map(mapObject).get(field);
+        }
+
+        private Map map(MapObject mapObject) {
+            return (isAttribute)? mapObject.getAttributes(): mapObject.fields;
         }
 
         public int intValue(MapObject mapObject) throws java.lang.NumberFormatException {
@@ -261,8 +277,8 @@ public class MapObjectList extends ArrayList {
 
         public String stringValue(MapObject mapObject) {
             Object value;
-            if (method.getReturnType() == String.class) {
-                value = mapObject.fields.get(field);
+            if (method != null && method.getReturnType() == String.class) {
+                value = map(mapObject).get(field);
             } else {
                 value = getValue(mapObject);
             }

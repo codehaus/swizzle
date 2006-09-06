@@ -49,11 +49,8 @@ public class SubTasksFiller implements IssueFiller {
         if (!enabled){
             return;
         }
-        ServerInfo serverInfo = jira.getServerInfo();
 
-        String baseUrlString = serverInfo.getBaseUrl();
-
-        List issueKeys = getSubTasks(baseUrlString, issue);
+        List issueKeys = getSubTasks(issue);
         issueKeys.remove(issue.getKey()); // just in case of some freak accident
         for (int i = 0; i < issueKeys.size(); i++) {
             String issueKey = (String) issueKeys.get(i);
@@ -73,7 +70,7 @@ public class SubTasksFiller implements IssueFiller {
             Issue issue = (Issue) issues.get(i);
             String link = issue.getLink();
             link = link.replaceFirst("/browse/.*$", "/");
-            List issueKeys = filler.getSubTasks(link, issue);
+            List issueKeys = filler.getSubTasks(issue);
 
             issueKeys.remove(issue.getKey()); // just in case of some freak accident
 
@@ -90,11 +87,9 @@ public class SubTasksFiller implements IssueFiller {
         return issues;
     }
 
-    private List getSubTasks(String baseUrlString, final Issue issue) {
+    private List getSubTasks(final Issue issue) {
         try {
-            URL baseUrl = new URL(baseUrlString);
-
-            URL url = new URL(baseUrl, "browse/"+issue.getKey()+"?subTaskView=all");
+            URL url = new URL(issue.getLink()+"?subTaskView=all");
 
             ArrayList issueIds = new ArrayList();
 

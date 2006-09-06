@@ -17,6 +17,8 @@
 package org.codehaus.swizzle.jira;
 
 import java.util.List;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 /**
  * @version $Revision$ $Date$
@@ -57,6 +59,14 @@ public class BasicIssueFiller implements IssueFiller {
         for (int i = 0; i < components.size(); i++) {
             Component component = (Component) components.get(i);
             fill(issue, component);
+        }
+        if (issue.getLink() == null && jira != null){
+            try {
+                ServerInfo serverInfo = jira.getServerInfo();
+                URL url = new URL(serverInfo.getBaseUrl()+"/browse/"+issue.getKey());
+                issue.setLink(url.toExternalForm());
+            } catch (MalformedURLException e) {
+            }
         }
     }
 

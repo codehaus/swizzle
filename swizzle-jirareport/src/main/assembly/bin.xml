@@ -1,5 +1,5 @@
 <assembly>
-  <id>nodep</id>
+  <id>dep</id>
   <formats>
     <format>jar</format>
   </formats>

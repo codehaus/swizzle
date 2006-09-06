@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.text.SimpleDateFormat;
 
 /**
@@ -63,11 +64,21 @@ public class Main {
 
     public static void generate(String templateName, PrintStream result) throws Exception {
         VelocityContext context = new VelocityContext();
+        generate(context, templateName, result);
+    }
+
+    public static void generate(VelocityContext context, String templateName, PrintStream result) throws Exception {
+        List keys = Arrays.asList(context.getKeys());
+
         for (Iterator iterator = System.getProperties().entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
             String name = (String) entry.getKey();
             String value = (String) entry.getValue();
-            context.put(name, value);
+
+            // Don't overwrite anything explicitly added to the context.
+            if (!keys.contains(name)){
+                context.put(name, value);
+            }
         }
 
         context.put("rss", new Rss());

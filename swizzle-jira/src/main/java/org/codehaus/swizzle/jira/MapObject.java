@@ -104,7 +104,7 @@ public class MapObject {
 
     protected Date getDate(String key) {
         String value = getString(key);
-        if (value == null) return new Date();
+        if (value == null || value.equals("")) return new Date();
 
         ParseException notParsable = null;
         for (int i = 0; i < formats.length; i++) {

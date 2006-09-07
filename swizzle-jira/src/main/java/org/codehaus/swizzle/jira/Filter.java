@@ -25,18 +25,19 @@ public class Filter extends MapObject {
 
     public Filter(Map data) {
         super(data);
+        xmlrpcRefs.put(User.class,"name");
     }
 
 
     /**
      * the id of this filter
      */
-    public String getId() {
-        return getString("id");
+    public int getId() {
+        return getInt("id");
     }
 
-    public void setId(String id) {
-        setString("id", id);
+    public void setId(int id) {
+        setInt("id", id);
     }
 
     /**
@@ -64,24 +65,29 @@ public class Filter extends MapObject {
     /**
      * the username of this filter's owner
      */
-    public String getAuthor() {
-        return getString("author");
+    public User getAuthor() {
+        return (User) getMapObject("author", User.class);
     }
 
     public void setAuthor(String author) {
         setString("author", author);
     }
 
+    public void setAuthor(User author) {
+        setMapObject("author", author);
+    }
+
     /**
      * the id of the project this search relates to (null if the search is across projects)
      */
-    public String getProject() {
-        return getString("project");
-    }
-
-    public void setProject(String project) {
-        setString("project", project);
-    }
+//    DMB: Taking this away for now
+//    public String getProject() {
+//        return getString("project");
+//    }
+//
+//    public void setProject(String project) {
+//        setString("project", project);
+//    }
 
     /**
      * a complete XML representation of this search request - I don't recommend you use this for now, it's complex :)

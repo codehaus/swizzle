@@ -49,6 +49,7 @@ public class Jira {
         cacheMetadata.put(Resolution.class, new String[]{"id","name"});
         cacheMetadata.put(Version.class, new String[]{"id","name"});
         cacheMetadata.put(Status.class, new String[]{"id","name"});
+        cacheMetadata.put(Filter.class, new String[]{"id","name"});
         cacheMetadata.put(Issue.class, new String[]{"id","key"});
         cacheMetadata.put(Project.class, new String[]{"id","key"});
     }
@@ -180,11 +181,20 @@ public class Jira {
         return getIssuesFromFilter(filter.getId());
     }
 
+    public List getIssuesFromFilter(String filterName) throws Exception {
+        Filter filter = getSavedFilter(filterName);
+        if (filter == null){
+            return toList(new Vector(),Issue.class);
+        } else {
+            return getIssuesFromFilter(filter.getId());
+        }
+    }
+
     /**
      * List<{@link Issue}>:  Executes a saved filter
      */
-    public List getIssuesFromFilter(String filterId) throws Exception {
-        Vector vector = (Vector) call("getIssuesFromFilter", filterId);
+    public List getIssuesFromFilter(int filterId) throws Exception {
+        Vector vector = (Vector) call("getIssuesFromFilter", filterId+"");
         return toList(vector, Issue.class);
     }
 
@@ -295,6 +305,16 @@ public class Jira {
      */
     public List getSavedFilters() {
         return cachedList(new Call("getSavedFilters"), Filter.class);
+    }
+
+    public Filter getSavedFilter(String name) {
+        Map objects = cachedMap(new Call("getSavedFilters"), Filter.class, "name");
+        return (Filter) objects.get(name);
+    }
+
+    public Filter getSavedFilter(int id) {
+        Map objects = cachedMap(new Call("getSavedFilters"), Filter.class, "id");
+        return (Filter) objects.get(id + "");
     }
 
     /**
@@ -529,6 +549,14 @@ public class Jira {
                 for (int i = 0; i < list.size(); i++) {
                     Issue issue = (Issue) list.get(i);
                     fill(issue);
+                }
+            }
+            if (type == Filter.class){
+                for (int i = 0; i < list.size(); i++) {
+                    Filter filter = (Filter) list.get(i);
+                    User dest = filter.getAuthor();
+                    User source = this.getUser(dest.getName());
+                    dest.merge(source);
                 }
             }
             result = indexes;

@@ -1,0 +1,17 @@
+
+New Features:
+
+  * [SWIZZLE-10] Beer fridge for the garage
+
+Improvements:
+
+  * [SWIZZLE-8] Get more colored lights for the disco ball
+
+Bugs:
+
+  * [SWIZZLE-6] Fix the toilet
+  * [SWIZZLE-12] Fix whole in the wall
+
+Tasks:
+
+  * [SWIZZLE-9] Clean the pool

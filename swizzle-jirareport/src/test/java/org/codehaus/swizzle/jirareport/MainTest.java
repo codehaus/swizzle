@@ -31,27 +31,32 @@ import java.io.IOException;
 public class MainTest extends TestCase {
 
     public void testRssTemplate() throws Exception {
-        ClassLoader classLoader = this.getClass().getClassLoader();
-        URL resource = classLoader.getResource("jirarss.vm");
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(baos);
-
-        Main.generate(resource.getFile(), printStream);
-
-        printStream.close();
-
-        resource = classLoader.getResource("jirarss-report.txt");
-        String expected = streamToString(resource.openStream());
-
-        String actual = new String(baos.toByteArray());
-
-        assertEquals(expected,actual);
+        assertTemplate("jirarss.vm", "jirarss-report.txt");
     }
 
     public void testXmlRpcTemplate() throws Exception {
+        assertTemplate("jiraxmlrpc.vm", "jiraxmlrpc-report.txt");
+    }
+
+    public void testVotesTemplate() throws Exception {
+        assertTemplate("votes.vm", "votes-report.txt");
+    }
+
+    public void testByTypeTemplate() throws Exception {
+        assertTemplate("by-type.vm", "by-type-report.txt");
+    }
+
+    public void testSubTasksTemplate() throws Exception {
+        assertTemplate("subtasks.vm", "subtasks-report.txt");
+    }
+
+    public void testAttributesTemplate() throws Exception {
+        assertTemplate("attributes.vm", "attributes-report.txt");
+    }
+
+    private void assertTemplate(String template, String report) throws Exception {
         ClassLoader classLoader = this.getClass().getClassLoader();
-        URL resource = this.getClass().getClassLoader().getResource("jiraxmlrpc.vm");
+        URL resource = this.getClass().getClassLoader().getResource(template);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(baos);
@@ -60,7 +65,7 @@ public class MainTest extends TestCase {
 
         printStream.close();
 
-        resource = classLoader.getResource("jiraxmlrpc-report.txt");
+        resource = classLoader.getResource(report);
         String expected = streamToString(resource.openStream());
 
         String actual = new String(baos.toByteArray());

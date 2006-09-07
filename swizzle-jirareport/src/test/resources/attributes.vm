@@ -1,0 +1,12 @@
+#set( $jira = $xmlrpc.connect("swizzletester:swizzle","http://jira.codehaus.org/rpc/xmlrpc") )
+#set( $issues = $jira.getIssuesFromFilter("swizzle test issues") )
+
+Issues by Score (votes x affect versions)
+
+#foreach ( $issue in $issues )
+#set( $issue.attributes.score = ($issue.votes +1) * ($issue.affectsVersions.size() + 1) )
+#end
+
+#foreach ( $issue in $issues.descending("@score" ) )
+ $issue.attributes.score -- $issue.summary  ($issue.key)
+#end

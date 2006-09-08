@@ -27,11 +27,9 @@ import java.io.PrintWriter;
 import java.io.PrintStream;
 import java.util.Map;
 import java.util.Iterator;
-import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.text.SimpleDateFormat;
 
 /**
  * @version $Revision$ $Date$
@@ -83,6 +81,9 @@ public class Main {
 
         context.put("rss", new Rss());
         context.put("xmlrpc", new Xmlrpc());
+        context.put("arrays", new ArraysUtil());
+        context.put("collections", new CollectionsUtil());
+        context.put("strings", new StringsUtil());
         context.put("date", new DateUtil(System.getProperty("dateFormat", "yyyy-MM-dd")));
         VelocityEngine velocity = new VelocityEngine();
         velocity.setProperty(Velocity.RESOURCE_LOADER, "all");
@@ -112,26 +113,4 @@ public class Main {
         }
     }
 
-    public static class DateUtil {
-        private SimpleDateFormat dateFormat;
-        private Date now = new Date();
-
-        public DateUtil(String format) throws Exception {
-            dateFormat = new SimpleDateFormat(format);
-        }
-
-        public String format(String format){
-            dateFormat = new SimpleDateFormat(format);
-            return dateFormat.format(now);
-        }
-
-        public String as(String format){
-            SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-            return dateFormat.format(now);
-        }
-
-        public String toString() {
-            return dateFormat.format(now);
-        }
-    }
 }

@@ -17,6 +17,7 @@
 package org.codehaus.swizzle.jira;
 
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @version $Revision$ $Date$
@@ -24,5 +25,9 @@ import java.util.Map;
 public class IssueType extends BasicObject {
     public IssueType(Map data) {
         super(data);
+    }
+
+    public IssueType() {
+        super(new HashMap());
     }
 }

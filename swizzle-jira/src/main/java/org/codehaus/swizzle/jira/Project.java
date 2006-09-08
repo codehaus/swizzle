@@ -111,4 +111,22 @@ public class Project extends MapObject {
         return (name != null)? name : key+"";
     }
 
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Project project = (Project) o;
+
+        if (getId() != project.getId()) return false;
+        if (getKey() != null ? !getKey().equals(project.getKey()) : project.getKey() != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = getId();
+        result = 29 * result + (getKey() != null ? getKey().hashCode() : 0);
+        return result;
+    }
 }

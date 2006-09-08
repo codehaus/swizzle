@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @version $Revision$ $Date$
  */
-public class Issue extends MapObject {
+public class Issue extends MapObject implements Comparable {
 
 
     public Issue() {
@@ -140,6 +140,14 @@ public class Issue extends MapObject {
         setMapObjects("components", components);
     }
 
+    public void addComponents(Component component) {
+        getComponents().add(component);
+    }
+
+    public void removeComponents(Component component) {
+        getComponents().remove(component);
+    }
+
     /**
      * List of Versions
      */
@@ -149,6 +157,14 @@ public class Issue extends MapObject {
 
     public void setAffectsVersions(Vector affectsVersions) {
         setMapObjects("affectsVersions", affectsVersions);
+    }
+
+    public void addAffectsVersion(Version version) {
+        getAffectsVersions().add(version);
+    }
+
+    public void removeAffectsVersion(Version version) {
+        getAffectsVersions().remove(version);
     }
 
     /**
@@ -193,6 +209,15 @@ public class Issue extends MapObject {
         setMapObjects("fixVersions", fixVersions);
     }
 
+    public void addFixVersion(Version version) {
+        getFixVersions().add(version);
+    }
+
+    public void removeFixVersion(Version version) {
+        getFixVersions().remove(version);
+    }
+
+
     public List getSubTasks() {
         return getMapObjects("subTasks", Issue.class);
     }
@@ -200,6 +225,16 @@ public class Issue extends MapObject {
     public void setSubTasks(List subTasks) {
         setMapObjects("subTasks", subTasks);
     }
+
+
+    public void addSubTask(Issue issue) {
+        getSubTasks().add(issue);
+    }
+
+    public void removeSubTask(Issue issue) {
+        getSubTasks().remove(issue);
+    }
+
 
     /**
      *
@@ -299,5 +334,38 @@ public class Issue extends MapObject {
         // till we know for sure, best to make sure the tally is current
         setInt("votes", getVoters().size());
         return super.toHashtable();
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Issue issue = (Issue) o;
+
+        if (getId() != issue.getId()) return false;
+        if (getKey() != null ? !getKey().equals(issue.getKey()) : issue.getKey() != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = getId();
+        result = 29 * result + (getKey() != null ? getKey().hashCode() : 0);
+        return result;
+    }
+
+    public int compareTo(Object object) {
+        if (object instanceof Issue) {
+            Issue that = (Issue) object;
+            int a = this.getId();
+            int b = that.getId();
+            if (a > b){
+                return 1;
+            } else if (a < b){
+                return -1;
+            }
+        }
+        return 0;
     }
 }

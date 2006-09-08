@@ -70,4 +70,19 @@ public class User extends MapObject {
         String fullname = getFullname();
         return (fullname != null)? fullname : name;
     }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final User user = (User) o;
+
+        if (getName() != null ? !getName().equals(user.getName()) : user.getName() != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        return (getName() != null ? getName().hashCode() : 0);
+    }
 }

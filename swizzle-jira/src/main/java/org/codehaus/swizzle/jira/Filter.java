@@ -100,4 +100,23 @@ public class Filter extends MapObject {
         setString("xml", xml);
     }
 
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Filter filter = (Filter) o;
+
+        if (getId() != filter.getId()) return false;
+        if (getName() != null ? !getName().equals(filter.getName()) : filter.getName() != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = getId();
+        result = 29 * result + (getName() != null ? getName().hashCode() : 0);
+        return result;
+    }
+
 }

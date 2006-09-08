@@ -21,17 +21,13 @@ import org.apache.xmlrpc.XmlRpcException;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.HashMap;
-import java.util.Collections;
-import java.util.TreeMap;
 import java.util.LinkedHashMap;
 import java.util.Collection;
 import java.util.Iterator;
@@ -397,6 +393,7 @@ public class Jira {
             for (int i = 0; i < vector.size(); i++) {
                 Map data = (Map) vector.elementAt(i);
                 Object object = constructor.newInstance(new Object[]{data});
+                fill(type, object);
                 list.add(object);
             }
         } catch (Exception e) {
@@ -406,10 +403,24 @@ public class Jira {
         return list;
     }
 
+    private void fill(Class type, Object object) {
+        if (autofill && type == Issue.class){
+            fill((Issue)object);
+        }
+        if (type == Filter.class){
+            Filter filter = (Filter) object;
+            User dest = filter.getAuthor();
+            User source = this.getUser(dest.getName());
+            dest.merge(source);
+        }
+    }
+
     private Object toObject(Hashtable data, Class type) {
         try {
             Constructor constructor = type.getConstructor(new Class[]{Map.class});
-            return constructor.newInstance(new Object[]{data});
+            Object object = constructor.newInstance(new Object[]{data});
+            fill(type, object);
+            return object;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -545,26 +556,9 @@ public class Jira {
             }
             indexes.put(List.class, new MapObjectList(list));
 //            indexes.put(List.class, Collections.unmodifiableList(list));
-            if (autofill && type == Issue.class){
-                for (int i = 0; i < list.size(); i++) {
-                    Issue issue = (Issue) list.get(i);
-                    fill(issue);
-                }
-            }
-            if (type == Filter.class){
-                for (int i = 0; i < list.size(); i++) {
-                    Filter filter = (Filter) list.get(i);
-                    User dest = filter.getAuthor();
-                    User source = this.getUser(dest.getName());
-                    dest.merge(source);
-                }
-            }
             result = indexes;
         } else if (result instanceof Hashtable){
             result = toObject((Hashtable)result, type);
-            if (autofill && type == Issue.class){
-                fill((Issue)result);
-            }
         }
 
         callcache.put(call, result);

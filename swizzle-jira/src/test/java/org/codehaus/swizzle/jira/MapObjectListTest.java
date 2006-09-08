@@ -148,4 +148,20 @@ public class MapObjectListTest extends TestCase {
         assertEquals(0, list.average("name"));
     }
 
+    public void testMin() throws Exception {
+        Version version = (Version) list.min("sequence");
+
+        assertNotNull("version", version);
+        assertEquals("Version.getSequence()", 1, version.getSequence());
+        assertEquals("Version.getName()", "one", version.getName());
+    }
+
+    public void testMax() throws Exception {
+        Version version = (Version) list.max("sequence");
+
+        assertNotNull("version", version);
+        assertEquals("Version.getSequence()", 20, version.getSequence());
+        assertEquals("Version.getName()", "four", version.getName());
+    }
+
 }

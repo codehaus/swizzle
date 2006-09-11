@@ -90,6 +90,102 @@ public class MapObjectList extends ArrayList {
         return subset;
     }
 
+    /**
+     * Returns returns a new list with both lists
+     * added together.
+     *
+     * http://en.wikipedia.org/wiki/Set#Unions
+     *
+     * @param list
+     * @return new list c = a + b
+     */
+    public MapObjectList union(List list) {
+        MapObjectList difference = new MapObjectList(this);
+        for (int i = 0; i < list.size(); i++) {
+            Object object = list.get(i);
+            if (!this.contains(object)){
+                difference.add(object);
+            }
+        }
+        return difference;
+    }
+
+    /**
+     * Returns a new list containing the common items
+     * from this list and the specified list.
+     *
+     * Put another way, returns only the items in a and b that overlap.
+     *
+     * http://en.wikipedia.org/wiki/Set#Intersections
+     *
+     * @param list
+     * @return new list c = a && b
+     */
+    public MapObjectList intersection(List list) {
+        MapObjectList common = new MapObjectList();
+        for (int i = 0; i < this.size(); i++) {
+            Object object = this.get(i);
+            if (list.contains(object)){
+                common.add(object);
+            }
+        }
+        return common;
+    }
+
+    /**
+     * Synonym for intersection
+     *
+     * @param list
+     * @return new list c = a && b
+     */
+    public MapObjectList common(List list) {
+        return intersection(list);
+    }
+
+    /**
+     * Returns a new list containing only the items from list a not present in list b.
+     *
+     * http://en.wikipedia.org/wiki/Set#Complements
+     *
+     * @param list
+     * @return new list c = a - b
+     */
+    public MapObjectList subtract(List list) {
+        MapObjectList subtract = new MapObjectList(this);
+        for (int i = 0; i < list.size(); i++) {
+            Object object = list.get(i);
+            subtract.remove(object);
+        }
+        return subtract;
+    }
+
+    /**
+     * Returns a new list containing only the items from list a not present in list b.
+     *
+     * This is logically equivalent to:
+     *
+     * a.union(b).subtract(a.common(b))
+     *
+     * Though this method is more efficient.
+     *
+     * http://en.wikipedia.org/wiki/Symmetric_difference
+     *
+     * @param list
+     * @return new list c = a XOR b
+     */
+    public MapObjectList difference(List list) {
+        MapObjectList difference = new MapObjectList(this);
+        for (int i = 0; i < list.size(); i++) {
+            Object object = list.get(i);
+            if (this.contains(object)){
+                difference.remove(object);
+            } else {
+                difference.add(object);
+            }
+        }
+        return difference;
+    }
+
     public int sum(String field) {
         if (size() == 0) return 0;
         int sum = 0;

@@ -25,11 +25,26 @@ import java.util.List;
  */
 public class MapObjectListTest extends TestCase {
     private MapObjectList list;
+    private MapObjectList listb;
 
     protected void setUp() throws Exception {
         list = new MapObjectList();
+        listb = new MapObjectList();
 
         Version version = new Version();
+        version = new Version();
+        version.setName("six");
+        version.setSequence(25);
+        version.setArchived(false);
+        listb.add(version);
+
+        version = new Version();
+        version.setName("five");
+        version.setSequence(30);
+        version.setArchived(false);
+        listb.add(version);
+
+        version = new Version();
         version.setName("two");
         version.setSequence(5);
         version.setArchived(true);
@@ -46,12 +61,14 @@ public class MapObjectListTest extends TestCase {
         version.setSequence(20);
         version.setArchived(false);
         list.add(version);
+        listb.add(version);
 
         version = new Version();
         version.setName("three");
         version.setSequence(15);
         version.setArchived(false);
         list.add(version);
+        listb.add(version);
 
     }
 
@@ -162,6 +179,52 @@ public class MapObjectListTest extends TestCase {
         assertNotNull("version", version);
         assertEquals("Version.getSequence()", 20, version.getSequence());
         assertEquals("Version.getName()", "four", version.getName());
+    }
+
+    public void testUnique() throws Exception {
+        MapObjectList sublist = list.unique("archived");
+
+        assertEquals("size", 2, sublist.size());
+        assertEquals("two", ((Version) sublist.get(0)).getName() );
+        assertEquals("four", ((Version) sublist.get(1)).getName() );
+    }
+
+    public void testUnion() throws Exception {
+        MapObjectList result = list.union(listb);
+
+        assertEquals("size", 6, result.size());
+        assertEquals("two", ((Version) result.get(0)).getName() );
+        assertEquals("one", ((Version) result.get(1)).getName() );
+        assertEquals("four", ((Version) result.get(2)).getName() );
+        assertEquals("three", ((Version) result.get(3)).getName() );
+        assertEquals("six", ((Version) result.get(4)).getName() );
+        assertEquals("five", ((Version) result.get(5)).getName() );
+    }
+
+    public void testIntersection() throws Exception {
+        MapObjectList result = list.intersection(listb);
+
+        assertEquals("size", 2, result.size());
+        assertEquals("four", ((Version) result.get(0)).getName() );
+        assertEquals("three", ((Version) result.get(1)).getName() );
+    }
+
+    public void testSubtract() throws Exception {
+        MapObjectList result = list.subtract(listb);
+
+        assertEquals("size", 2, result.size());
+        assertEquals("two", ((Version) result.get(0)).getName() );
+        assertEquals("one", ((Version) result.get(1)).getName() );
+    }
+
+    public void testDifference() throws Exception {
+        MapObjectList result = list.difference(listb);
+
+        assertEquals("size", 4, result.size());
+        assertEquals("two", ((Version) result.get(0)).getName() );
+        assertEquals("one", ((Version) result.get(1)).getName() );
+        assertEquals("six", ((Version) result.get(2)).getName() );
+        assertEquals("five", ((Version) result.get(3)).getName() );
     }
 
 }

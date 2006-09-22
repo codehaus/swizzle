@@ -35,6 +35,15 @@ public class DateUtil {
         return dateFormat.format(now);
     }
 
+    public String format(Date date){
+        return dateFormat.format(date);
+    }
+
+    public String format(Date date, String format){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        return dateFormat.format(date);
+    }
+
     public String as(String format){
         SimpleDateFormat dateFormat = new SimpleDateFormat(format);
         return dateFormat.format(now);

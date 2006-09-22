@@ -43,6 +43,19 @@ import java.util.Collections;
  */
 public class CollectionsUtil {
 
+    public String join(List list, String s){
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < list.size(); i++) {
+            Object object = list.get(i);
+            sb.append(object.toString());
+            sb.append(s);
+        }
+        if (sb.length() > 0){
+            sb.delete(sb.length() - s.length(), sb.length());
+        }
+        return sb.toString();
+    }
+    
     public Object first(List list){
         return list.size() > 0? list.get(0): null;
     }

@@ -21,6 +21,10 @@ package org.codehaus.swizzle.jirareport;
  */
 public class StringsUtil {
 
+    public int asInt(String string){
+        return Integer.parseInt(string);
+    }
+
     public String lc(String string){
         if (string == null) return null;
 

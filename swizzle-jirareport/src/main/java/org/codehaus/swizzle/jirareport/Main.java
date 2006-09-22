@@ -84,6 +84,7 @@ public class Main {
         context.put("arrays", new ArraysUtil());
         context.put("collections", new CollectionsUtil());
         context.put("strings", new StringsUtil());
+        context.put("utils", new UtilsUtil());
         context.put("date", new DateUtil(System.getProperty("dateFormat", "yyyy-MM-dd")));
         VelocityEngine velocity = new VelocityEngine();
         velocity.setProperty(Velocity.RESOURCE_LOADER, "all");
@@ -96,6 +97,14 @@ public class Main {
         PrintWriter writer = new PrintWriter(result);
         template.merge(context, writer);
         writer.flush();
+    }
+
+    public static class UtilsUtil {
+        public Object load(String classname) throws Exception {
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            Class clazz = cl.loadClass(classname);
+            return clazz.newInstance();
+        }
     }
 
     public static class Rss {

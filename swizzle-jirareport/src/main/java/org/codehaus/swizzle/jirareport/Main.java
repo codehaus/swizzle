@@ -85,6 +85,7 @@ public class Main {
         context.put("collections", new CollectionsUtil());
         context.put("strings", new StringsUtil());
         context.put("utils", new UtilsUtil());
+        context.put("params", new ParamsUtil(context));
         context.put("date", new DateUtil(System.getProperty("dateFormat", "yyyy-MM-dd")));
         VelocityEngine velocity = new VelocityEngine();
         velocity.setProperty(Velocity.RESOURCE_LOADER, "all");

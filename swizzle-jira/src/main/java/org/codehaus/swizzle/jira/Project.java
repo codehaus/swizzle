@@ -17,6 +17,7 @@
 package org.codehaus.swizzle.jira;
 
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @version $Revision$ $Date$
@@ -27,6 +28,14 @@ public class Project extends MapObject {
         super(data);
     }
 
+    public Project() {
+        super(new HashMap());
+    }
+
+    public Project(String key){
+        this();
+        setKey(key);
+    }
 
     /**
      * the id of the project

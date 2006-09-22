@@ -32,6 +32,11 @@ public class User extends MapObject {
         this(new HashMap());
     }
 
+    public User(String name) {
+        this(new HashMap());
+        setName(name);
+    }
+
     /**
      * the username of this user
      */

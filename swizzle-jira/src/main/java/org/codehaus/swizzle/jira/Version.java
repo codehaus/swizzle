@@ -33,6 +33,11 @@ public class Version extends MapObject implements Comparable {
         this(new HashMap());
     }
 
+    public Version(String name){
+        this();
+        setName(name);
+    }
+
     /**
      * the id of the version
      */

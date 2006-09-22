@@ -25,6 +25,8 @@ import org.codehaus.swizzle.jira.Jira;
 
 import java.io.PrintWriter;
 import java.io.PrintStream;
+import java.io.InputStream;
+import java.io.BufferedInputStream;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
@@ -51,7 +53,19 @@ public class Main {
 
         args = (String[]) newargs.toArray(new String[]{});
 
-        if (args.length > 0){
+        if (args.length == 0 && System.getProperty("export") != null) {
+            String template = System.getProperty("export");
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            InputStream in = cl.getResourceAsStream(template);
+            in = new BufferedInputStream(in);
+            int i = in.read();
+            while (i != -1){
+                System.out.write(i);
+                i = in.read();
+            }
+            in.close();
+            return;
+        } else if (args.length > 0){
             System.setProperty("template", args[0]);
         }
 

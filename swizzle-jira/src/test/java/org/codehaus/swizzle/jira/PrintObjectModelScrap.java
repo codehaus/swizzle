@@ -23,13 +23,12 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Stack;
 import java.util.Comparator;
 
 /**
  * @version $Revision$ $Date$
  */
-public class PrintObjectModelTest extends TestCase {
+public class PrintObjectModelScrap extends TestCase {
     public void testGo() throws Exception {
         skip.add("toHashtable");
         skip.add("toString");

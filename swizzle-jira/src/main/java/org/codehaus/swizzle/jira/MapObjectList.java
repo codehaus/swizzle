@@ -73,6 +73,36 @@ public class MapObjectList extends ArrayList {
         }
     }
 
+    public List collect(String field) {
+        if (size() == 0) return this;
+        Accessor accessor = new Accessor(field, this);
+
+        boolean mapObjectData = true;
+        List collection = new ArrayList();
+        for (int i = 0; i < this.size(); i++) {
+            MapObject mapObject = (MapObject) this.get(i);
+            Object value = accessor.getValue(mapObject);
+            if (value instanceof List) {
+                List list = (List) value;
+                for (int j = 0; j < list.size(); j++) {
+                    Object object = list.get(j);
+                    collection.add(object);
+                    mapObjectData = mapObjectData && object instanceof MapObject;
+                }
+            } else {
+                collection.add(value);
+                mapObjectData = mapObjectData && value instanceof MapObject;
+            }
+        }
+
+        if (mapObjectData){
+            return new MapObjectList(collection);
+        } else {
+            return collection;
+        }
+    }
+
+
     public MapObjectList unique(String field) {
         if (size() == 0) return this;
         Accessor accessor = new Accessor(field, this);

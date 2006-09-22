@@ -51,27 +51,27 @@ public class MapObjectList extends ArrayList {
         return Collections.max(this, getComparator(field));
     }
 
-    public List values(String field) {
-        if (size() == 0) return this;
-        Accessor accessor = new Accessor(field, this);
-
-        boolean mapObjectData = true;
-        List uniqueList = new ArrayList();
-        for (int i = 0; i < this.size(); i++) {
-            MapObject mapObject = (MapObject) this.get(i);
-            Object value = accessor.getValue(mapObject);
-            if (!uniqueList.contains(value)){
-                uniqueList.add(value);
-                mapObjectData = mapObjectData && value instanceof MapObject;
-            }
-        }
-
-        if (mapObjectData){
-            return new MapObjectList(uniqueList);
-        } else {
-            return uniqueList;
-        }
-    }
+//    public List values(String field) {
+//        if (size() == 0) return this;
+//        Accessor accessor = new Accessor(field, this);
+//
+//        boolean mapObjectData = true;
+//        List uniqueList = new ArrayList();
+//        for (int i = 0; i < this.size(); i++) {
+//            MapObject mapObject = (MapObject) this.get(i);
+//            Object value = accessor.getValue(mapObject);
+//            if (!uniqueList.contains(value)){
+//                uniqueList.add(value);
+//                mapObjectData = mapObjectData && value instanceof MapObject;
+//            }
+//        }
+//
+//        if (mapObjectData){
+//            return new MapObjectList(uniqueList);
+//        } else {
+//            return uniqueList;
+//        }
+//    }
 
     public List collect(String field) {
         if (size() == 0) return this;

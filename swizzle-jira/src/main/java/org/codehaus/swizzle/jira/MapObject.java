@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 /**
  * @version $Revision$ $Date$
@@ -96,6 +98,19 @@ public class MapObject {
 
     protected void setBoolean(String key, boolean value) {
         fields.put(key, Boolean.toString(value));
+    }
+
+    protected void setUrl(String key, URL url) {
+        fields.put(key, (url == null) ? null : url.toExternalForm());
+    }
+
+    protected URL getUrl(String key) {
+        try {
+            String value = getString(key);
+            return (value == null)? null : new URL(value);
+        } catch (MalformedURLException e) {
+            return null;
+        }
     }
 
     protected void setDate(String key, Date value) {

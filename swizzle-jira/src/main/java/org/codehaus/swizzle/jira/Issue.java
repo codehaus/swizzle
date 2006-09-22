@@ -46,6 +46,7 @@ public class Issue extends MapObject implements Comparable {
         xmlrpcNoSend.add("link");
         xmlrpcNoSend.add("voters");
         xmlrpcNoSend.add("subTasks");
+        xmlrpcNoSend.add("attachments");
     }
 
     /**
@@ -328,6 +329,15 @@ public class Issue extends MapObject implements Comparable {
     public void setLink(String link) {
         setString("link", link);
     }
+
+    public List getAttachments() {
+        return getMapObjects("attachments", Attachment.class);
+    }
+
+    public void setAttachments(List attachments) {
+        setMapObjects("attachments", attachments);
+    }
+
 
     public Hashtable toHashtable() {
         // It's unlikely that you can even update the votes via xml-rpc

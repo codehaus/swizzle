@@ -54,7 +54,8 @@ public class Jira {
     private String token;
     private HashMap cache;
     private boolean autofill = true;
-    private Map issueFillers = new LinkedHashMap();
+    private final Map issueFillers = new LinkedHashMap();
+    private final Map autofillProviders = new HashMap();
 
     public Jira(String endpoint) throws MalformedURLException {
         if (endpoint.endsWith("/")) {
@@ -71,6 +72,11 @@ public class Jira {
         basicIssueFiller.setEnabled(true);
         issueFillers.put("issue", basicIssueFiller);
         issueFillers.put("project", new ProjectFiller(this));
+        autofillProviders.put("issue", BasicIssueFiller.class.getName());
+        autofillProviders.put("project", ProjectFiller.class.getName());
+        autofillProviders.put("voters", "org.codehaus.swizzle.jira.VotersFiller");
+        autofillProviders.put("subtasks", "org.codehaus.swizzle.jira.SubTasksFiller");
+        autofillProviders.put("attachments", "org.codehaus.swizzle.jira.AttachmentsFiller");
     }
 
     /**
@@ -80,34 +86,22 @@ public class Jira {
      * @param enabled
      */
     public void autofill(String scheme, boolean enabled){
-        if (scheme.equals("voters") && !issueFillers.containsKey("voters")){
-            try {
-                ClassLoader classLoader = this.getClass().getClassLoader();
-                Class clazz = classLoader.loadClass("org.codehaus.swizzle.jira.VotersFiller");
-                Constructor constructor = clazz.getConstructor(new Class[]{Jira.class});
-                IssueFiller issueFiller = (IssueFiller) constructor.newInstance(new Object[]{this});
-                issueFillers.put("voters", issueFiller);
-            } catch (ClassNotFoundException e) {
-                System.err.println("Autofilling votes requires the swizzle-stream library.");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (scheme.equals("subtasks") && !issueFillers.containsKey("subtasks")){
-            try {
-                ClassLoader classLoader = this.getClass().getClassLoader();
-                Class clazz = classLoader.loadClass("org.codehaus.swizzle.jira.SubTasksFiller");
-                Constructor constructor = clazz.getConstructor(new Class[]{Jira.class});
-                IssueFiller issueFiller = (IssueFiller) constructor.newInstance(new Object[]{this});
-                issueFillers.put("subtasks", issueFiller);
-            } catch (ClassNotFoundException e) {
-                System.err.println("Autofilling sub-tasks requires the swizzle-stream library.");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (!autofillProviders.containsKey(scheme)) {
+            throw new UnsupportedOperationException("Autofill Scheme not supported: "+scheme);
         }
+
         IssueFiller filler = (IssueFiller) issueFillers.get(scheme);
         if (filler == null){
-            throw new UnsupportedOperationException("Autofill Scheme not supported: "+scheme);
+            try {
+                ClassLoader classLoader = this.getClass().getClassLoader();
+                Class clazz = classLoader.loadClass((String) autofillProviders.get(scheme));
+                Constructor constructor = clazz.getConstructor(new Class[]{Jira.class});
+                filler = (IssueFiller) constructor.newInstance(new Object[]{this});
+                issueFillers.put(scheme, filler);
+            } catch (Exception e) {
+                System.err.println("Cannot install autofill provider "+scheme);
+                e.printStackTrace();
+            }
         }
         filler.setEnabled(enabled);
     }
@@ -128,6 +122,17 @@ public class Jira {
         return value.booleanValue();
     }
 
+    /**
+     * List<{@link Comment}>:  Returns all comments associated with the issue
+     */
+    public List getComments(String issueKey) {
+        return cachedList(new Call("getComments", issueKey), Comment.class);
+    }
+
+    public List getComments(Issue issue) {
+        return getComments(issue.getKey());
+    }
+    
     /**
      * Adds a comment to an issue
      * TODO: If someone adds a comment to an issue, we should account for that in our caching
@@ -153,13 +158,6 @@ public class Jira {
     public Issue updateIssue(String issueKey, Issue issue) throws Exception {
         Hashtable data = (Hashtable) call("updateIssue", issueKey, issue.toHashtable());
         return (autofill)? fill(new Issue(data)):new Issue(data);
-    }
-
-    /**
-     * List<{@link Comment}>:  Returns all comments associated with the issue
-     */
-    public List getComments(String issueKey) {
-        return cachedList(new Call("getComments", issueKey), Comment.class);
     }
 
 
@@ -356,14 +354,26 @@ public class Jira {
         return cachedList(new Call("getComponents", projectKey), Component.class);
     }
 
+    public List getComponents(Project project) {
+        return getComments(project.getKey());
+    }
+
     public Component getComponent(String projectKey, String name) {
         Map components = cachedMap(new Call("getComponents", projectKey), Component.class, "name");
         return (Component) components.get(name);
     }
 
+    public Component getComponent(Project project, String name) {
+        return getComponent(project.getKey(), name);
+    }
+
     public Component getComponent(String projectKey, int id) {
         Map components = cachedMap(new Call("getComponents", projectKey), Component.class, "id");
         return (Component) components.get(id+"");
+    }
+
+    public Component getComponent(Project project, int id) {
+        return getComponent(project.getKey(), id);
     }
 
     /**
@@ -373,14 +383,26 @@ public class Jira {
         return cachedList(new Call("getVersions", projectKey), Version.class);
     }
 
+    public List getVersions(Project project) {
+        return getVersions(project.getKey());
+    }
+
     public Version getVersion(String projectKey, String name) {
         Map versions = cachedMap(new Call("getVersions", projectKey), Version.class, "name");
         return (Version) versions.get(name);
     }
 
+    public Version getVersion(Project project, String name) {
+        return getVersion(project.getKey(), name);
+    }
+
     public Version getVersion(String projectKey, int id) {
         Map versions = cachedMap(new Call("getVersions", projectKey), Version.class, "id");
         return (Version) versions.get(id+"");
+    }
+
+    public Version getVersion(Project project, int id) {
+        return getVersion(project.getKey(), id);
     }
 
     // ----  PROJECT related data ---- /////////////////////////////////////////////////////

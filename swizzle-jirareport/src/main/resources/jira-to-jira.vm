@@ -1,0 +1,276 @@
+##---------------------------------------------------------------------------
+##
+## Copyright 2006 David Blevins
+##
+##  Licensed under the Apache License, Version 2.0 (the "License");
+##  you may not use this file except in compliance with the License.
+##  You may obtain a copy of the License at
+##
+##     http://www.apache.org/licenses/LICENSE-2.0
+##
+##  Unless required by applicable law or agreed to in writing, software
+##  distributed under the License is distributed on an "AS IS" BASIS,
+##  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+##  See the License for the specific language governing permissions and
+##  limitations under the License.
+##
+##---------------------------------------------------------------------------
+##
+##  Swizzle script to export a JIRA project so it can be imported on
+##  on another JIRA instance.
+##
+##  This script will connect via XML-RPC, RSS, and plain HTTP text/html
+##
+##  It will also download the attachments to the /tmp directory.
+##  If you run this script on a different machine than where the
+##  destination JIRA instance is run, you will have to pack the
+##  attachments up, move them to the JIRA machine and unpack them
+##  into it's /tmp directory.
+##
+##  This script required the following -D flags:
+##
+##     username    : the username to be used for XML-RPC authentication
+##
+##     password    : the password to be used for XML-RPC authentication
+##
+##     projectKey  : the JIRA key of the project to import from
+##
+##     serverUrl   : the base URL where jira is available, e.g.
+##                   e.g. "http://jira.codehaus.org" or "http://issues.apache.org/jira"
+##                   DO NOT put a slash on the end.
+##
+##  These can be supplied as:
+##
+##  java -jar swizzle-jirareport.jar jira-to-jira.xml  -Dusername=joe -Dpassword=cool -DprojectKey=PEANUTS -DserverUrl=http://jira.acme.org
+##
+#############################################################################
+#set( $void = $params.required( "username" , "[a-zA-Z0-9]+", "the username to be used for XML-RPC authentication" ) )
+#set( $void = $params.required( "password" , "[a-zA-Z0-9]+", "the password to be used for XML-RPC authentication" ) )
+#set( $void = $params.required( "projectKey" , "[a-zA-Z0-9]+", "the JIRA key of the project to import from" ) )
+#set( $void = $params.required( "serverUrl" , "https?://.+", "the base URL where jira is available, no trailing slash" ) )
+#set( $void = $params.validate() )
+##
+#set( $xml = $utils.load("org.codehaus.swizzle.jirareport.XmlUtil") )
+#set( $att = $utils.load("org.codehaus.swizzle.jirareport.AttachmentsUtil") )
+#set( $j = $utils.load("org.codehaus.swizzle.jirareport.JellyUtil") )
+##
+##
+#set( $jira = $xmlrpc.connect("$username:$password","$serverUrl/rpc/xmlrpc") )
+#set( $void = $jira.autofill("subtasks", true) )
+#set( $void = $jira.autofill("attachments", true) )
+#set( $void = $date.format("yyyy-MM-dd hh:mm:ss.0") )
+##
+#set( $project = $jira.getProject( $projectKey ) )
+##
+#set( $void = $att.createAttachmentsTmpDir($project) )
+##
+#set( $URL = "http://jira.codehaus.org/secure/IssueNavigator.jspa?view=rss&&pid=${project.id}&tempMax=2000&reset=true&decorator=none")
+#set( $jirarss = $rss.fetch( $URL ) )
+#set( $issues = $jirarss.issues.sort("id") )
+##
+#set( $assignees = $issues.collect("assignee").unique("name").sort("name") )
+#set( $unassigned = $assignees.equals("fullname", "Unassigned") )
+#set( $assignees = $assignees.subtract($unassigned) )
+##
+#set( $users = $assignees.union($issues.collect("reporter")).unique("name").sort("name") )
+##
+#set( $lowkey = $strings.lc($project.key) )
+<JiraJelly xmlns:jira="jelly:com.atlassian.jira.jelly.enterprise.JiraTagLib" xmlns:sql="jelly:sql" xmlns:j="jelly:core">
+
+#foreach( $user in $users )
+#set( $user = $jira.getUser($user.name) )
+  <jira:CreateUser username="$user.name" password="$user.name" confirm="$user.name" fullname="$user.fullname" email="$user.email"/>
+#end
+
+  <jira:CreateGroup group-name="${lowkey}-contributors"/>
+  <jira:CreateGroup group-name="${lowkey}-developers">
+    <jira:AddUserToGroup username="admin"/>
+#foreach( $user in $assignees )
+    <jira:AddUserToGroup username="$user.name"/>
+#end
+  </jira:CreateGroup>
+
+  <jira:CreateProject key="$project.key" name="$project.name" lead="$project.lead">
+
+    <jira:CreatePermissionScheme name="$project.name permissions">
+      <jira:AddPermission type="reporter" permissions="Close"/>
+      <jira:AddPermission group="jira-administrators" permissions="ModifyReporter,Browse,Project,Close,Delete" type="group"/>
+      <jira:AddPermission group="jira-users" permissions="Browse,Create,Comment,Link,Attach,ViewVersionControl" type="group"/>
+      <jira:AddPermission group="${lowkey}-developers" permissions="Browse,Project,ScheduleIssue,Move,Assign,Assignable,Resolve,Close,Work" type="group"/>
+      <jira:AddPermission group="${lowkey}-contributors" permissions="Assignable" type="group"/>
+      <jira:AddPermission group="Anyone" permissions="Browse,ViewVersionControl"/>
+      <jira:SelectProjectScheme/>
+    </jira:CreatePermissionScheme>
+
+#foreach( $component in $jira.getComponents($project.key) )
+    <jira:AddComponent name="$component.name"/>
+#end
+
+#foreach( $version in $jira.getVersions($project.key) )
+    <jira:AddVersion name="$version.name"/>
+#end
+
+  </jira:CreateProject>
+
+#foreach( $issue in $issues )
+#set( $issue = $jira.getIssue( $issue.key ) )
+#if( $issue.type.id == 7 )
+#set( $issue.type = $jira.getIssueType("Task") )
+#end
+  <jira:CreateIssue project-key="$issue.project"
+    issueType="$xml.escape($issue.type)"
+    summary="$xml.escape($issue.summary)"
+    priority="$xml.escape($issue.priority)"
+#if( $issue.components.size() > 0 )
+    components="$xml.escape($collections.join($issue.components, ","))"
+#end
+#if( $issue.affectsVersions.size() > 0 )
+    versions="$xml.escape($collections.join($issue.affectsVersions, ","))"
+#end
+#if( $issue.fixVersions.size() > 0 )
+    fixVersions="$xml.escape($collections.join($issue.fixVersions, ","))"
+#end
+#if( $issue.assignee )
+    assignee="$xml.escape($issue.assignee.name)"
+#else
+    assignee="-1"
+#end
+    reporter="$xml.escape($issue.reporter.name)"
+#if( $issue.environment )
+    environment="$xml.escape($issue.environment)"
+#end
+    description="$xml.escape($issue.description)"
+    duedate="$date.format($issue.duedate, "dd/MMM/yy" )"
+    created="$date.format($issue.created)"
+    updated="$date.format($issue.updated)"
+    issueKeyVar="$j.keyRef($issue)" />
+
+#end
+
+#set( $d = "$" )
+#foreach( $issue in $issues.equals("status", "Closed") )
+  <jira:TransitionWorkflow key="${d}{$j.keyRef($issue)}" workflowAction="Close issue" resolution="$issue.resolution"/>
+#end
+#foreach( $issue in $issues.equals("status", "Resolved") )
+  <jira:TransitionWorkflow key="${d}{$j.keyRef($issue)}" workflowAction="Resolve issue" resolution="$issue.resolution"/>
+#end
+#foreach( $issue in $issues.equals("status", "In Progress") )
+  <jira:TransitionWorkflow key="${d}{$j.keyRef($issue)}" workflowAction="Start progress" user="$issue.assignee.name"/>
+#end
+
+#foreach( $issue in $issues )
+#foreach( $comment in $jira.getIssue( $issue.key ) )
+  <jira:AddComment issue-key="${d}{$j.keyRef($issue)}"
+    commenter="$xml.escape($comment.username)"
+    created="$date.format($comment.timePerformed)"
+    comment="$xml.escape($comment.body)"
+    />
+
+#end
+#end
+
+
+  <!-- =================================== -->
+  <!-- SELECT ISSUE IDS AS JELLY VARIABLES -->
+  <!-- =================================== -->
+
+  <sql:setDataSource dataSource="jdbc/JiraDS" var="db" />
+
+  <issues>
+#foreach( $issue in $issues )
+#set( $issue = $jira.getIssue( $issue.key ) )
+  <sql:query var="results" dataSource="${d}{db}">
+      select id from jiraissue where pkey = '${d}{$j.keyRef($issue)}'
+  </sql:query>
+  <j:set var="$j.idRef($issue)" value="${d}{results.rows[0].ID}"/>
+    <issue src-key="$issue.key" src-id="$issue.id" dest-key="${d}{$j.keyRef($issue)}" dest-id="${d}{$j.idRef($issue)}" />
+#end
+  </issues>
+
+
+  <!-- ===================== -->
+  <!-- SQL HACK FOR SUBTASKS -->
+  <!-- ===================== -->
+
+
+  <!-- GET SUB-TASK TYPE ID -->
+  <sql:query var="results" dataSource="${d}{db}">
+      select id from issuetype where pname = 'Sub-task'
+  </sql:query>
+  <j:set var="subtaskType" value="${d}{results.rows[0].ID}"/>
+
+  <!-- GET SUB-TASK LINK TYPE ID -->
+  <sql:query var="results" dataSource="${d}{db}">
+      select id from issuelinktype where linkname = 'jira_subtask_link'
+  </sql:query>
+  <j:set var="subtaskLinkType" value="${d}{results.rows[0].ID}"/>
+
+  <!-- GET CURRENT ISSUELINK PRIMARY KEY -->
+  <sql:query var="results" dataSource="${d}{db}">
+      select max(id) from issuelink
+  </sql:query>
+  <j:set var="primaryKey" value="${d}{results.rows[0].ID}" />
+  <j:set var="primaryKey" value="${d}{primaryKey + 10}" />
+
+#foreach( $issue in $issues )
+#set( $issue = $jira.getIssue( $issue.key ) )
+#if( $issue.subTasks.size() > 0 )
+  <!-- PARENT ISSUE: $issue.key ($issue.subTasks.size()) -->
+
+#end
+#foreach( $subtask in $issue.subTasks )
+#set( $sequence = $velocityCount - 1 )
+  <!-- CHILD ISSUE: $subtask.key ($velocityCount/$issue.subTasks.size()) -->
+  <sql:update var="results" dataSource="${d}{db}">
+      update jiraissue set issuetype = ${d}{subtaskType} where id = ${d}{$j.idRef($subtask)}
+  </sql:update>
+  <sql:update var="results" dataSource="${d}{db}">
+      insert into issuelink values (${d}{primaryKey}, ${d}{subtaskLinkType}, ${d}{$j.idRef($issue)}, ${d}{$j.idRef($subtask)}, $sequence)
+  </sql:update>
+  <j:set var="primaryKey" value="${d}{primaryKey + 1}" />
+
+#end
+#end
+
+  <!-- ============================================== -->
+  <!-- ATTACH FILES AND UPDATE FILEATTACHMENT RECORDS -->
+  <!-- ============================================== -->
+  <attachments>
+#foreach( $issue in $issues )
+#set( $issue = $jira.getIssue( $issue.key ) )
+#foreach( $attachment in $issue.attachments )
+#if( $issue.reporter.fullname.equals($attachment.author) )
+#set( $username = $issue.reporter.name )
+#elseif( $issue.assignee.fullname.equals($attachment.author) )
+#set( $username = $issue.assignee.name )
+#else
+#set( $username = $collections.first($users.equals("fullname", $attachment.author)).name )
+#end
+#set( $file = $att.saveAttachment($attachment))
+  <jira:AttachFile key="${d}{$j.keyRef($issue)}" filepath="$file.getAbsolutePath()" option="add"/>
+  <sql:query var="results" dataSource="${d}{db}">
+      select max(id) from fileattachment where issueid = ${d}{$j.idRef($issue)} and filename = '$attachment.fileName'
+  </sql:query>
+  <j:set var="$j.idRef($attachment)" value="${d}{results.rows[0].ID}" />
+  <sql:update var="results" dataSource="${d}{db}">
+      update fileattachment set author = '$username', created = '$date.format($attachment.created)' where id = ${d}{$j.idRef($attachment)}
+  </sql:update>
+    <attachment src-id="$attachment.id" dest-id="${d}{$j.idRef($attachment)}" src-user="$attachment.author" dest-user="$username" file="$attachment.fileName" />
+
+#end
+#end
+  </attachments>
+
+
+  <!-- ================================== -->
+  <!-- SQL HACK FOR ISSUE 'UPDATED' TIMES -->
+  <!-- ================================== -->
+
+#foreach( $issue in $issues )
+#set( $issue = $jira.getIssue( $issue.key ) )
+  <sql:update var="results" dataSource="${d}{db}">
+      update jiraissue set updated = '$date.format($issue.updated)' where pkey = '${d}{$j.keyRef($issue)}'
+  </sql:update>
+#end
+
+</JiraJelly>

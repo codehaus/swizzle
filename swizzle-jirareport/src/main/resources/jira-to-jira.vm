@@ -48,6 +48,7 @@
 #set( $void = $params.required( "password" , "[a-zA-Z0-9]+", "the password to be used for XML-RPC authentication" ) )
 #set( $void = $params.required( "projectKey" , "[a-zA-Z0-9]+", "the JIRA key of the project to import from" ) )
 #set( $void = $params.required( "serverUrl" , "https?://.+", "the base URL where jira is available, no trailing slash" ) )
+#set( $void = $params.required( "jiraAdmin" , "[a-zA-Z0-9]+", "the username of the JIRA administrator doing the import" ) )
 #set( $void = $params.validate() )
 ##
 #set( $xml = $utils.load("org.codehaus.swizzle.jirareport.XmlUtil") )
@@ -84,7 +85,7 @@
 
   <jira:CreateGroup group-name="${lowkey}-contributors"/>
   <jira:CreateGroup group-name="${lowkey}-developers">
-    <jira:AddUserToGroup username="admin"/>
+    <jira:AddUserToGroup username="${jiraAdmin}"/>
 #foreach( $user in $assignees )
     <jira:AddUserToGroup username="$user.name"/>
 #end
@@ -95,8 +96,8 @@
     <jira:CreatePermissionScheme name="$project.name permissions">
       <jira:AddPermission type="reporter" permissions="Close"/>
       <jira:AddPermission group="jira-administrators" permissions="ModifyReporter,Browse,Project,Close,Delete" type="group"/>
-      <jira:AddPermission group="jira-users" permissions="Browse,Create,Comment,Link,Attach,ViewVersionControl" type="group"/>
-      <jira:AddPermission group="${lowkey}-developers" permissions="Browse,Project,ScheduleIssue,Move,Assign,Assignable,Resolve,Close,Work" type="group"/>
+      <jira:AddPermission group="jira-users" permissions="Browse,Create,Comment,Attach,ViewVersionControl" type="group"/>
+      <jira:AddPermission group="${lowkey}-developers" permissions="Browse,Project,Edit,Link,ScheduleIssue,Move,Assign,Assignable,Resolve,Close,Work" type="group"/>
       <jira:AddPermission group="${lowkey}-contributors" permissions="Assignable" type="group"/>
       <jira:AddPermission group="Anyone" permissions="Browse,ViewVersionControl"/>
       <jira:SelectProjectScheme/>
@@ -207,9 +208,9 @@
 
   <!-- GET CURRENT ISSUELINK PRIMARY KEY -->
   <sql:query var="results" dataSource="${d}{db}">
-      select max(id) from issuelink
+      select max(id) max from issuelink
   </sql:query>
-  <j:set var="primaryKey" value="${d}{results.rows[0].ID}" />
+  <j:set var="primaryKey" value="${d}{results.rows[0].max}" />
   <j:set var="primaryKey" value="${d}{primaryKey + 10}" />
 
 #foreach( $issue in $issues )
@@ -249,9 +250,9 @@
 #set( $file = $att.saveAttachment($attachment))
   <jira:AttachFile key="${d}{$j.keyRef($issue)}" filepath="$file.getAbsolutePath()" option="add"/>
   <sql:query var="results" dataSource="${d}{db}">
-      select max(id) from fileattachment where issueid = ${d}{$j.idRef($issue)} and filename = '$attachment.fileName'
+      select max(id) max from fileattachment where issueid = ${d}{$j.idRef($issue)} and filename = '$attachment.fileName'
   </sql:query>
-  <j:set var="$j.idRef($attachment)" value="${d}{results.rows[0].ID}" />
+  <j:set var="$j.idRef($attachment)" value="${d}{results.rows[0].max}" />
   <sql:update var="results" dataSource="${d}{db}">
       update fileattachment set author = '$username', created = '$date.format($attachment.created)' where id = ${d}{$j.idRef($attachment)}
   </sql:update>

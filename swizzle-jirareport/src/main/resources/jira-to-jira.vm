@@ -160,7 +160,7 @@
 #end
 
 #foreach( $issue in $issues )
-#foreach( $comment in $jira.getIssue( $issue.key ) )
+#foreach( $comment in $jira.getComments( $issue.key ) )
   <jira:AddComment issue-key="${d}{$j.keyRef($issue)}"
     commenter="$xml.escape($comment.username)"
     created="$date.format($comment.timePerformed)"

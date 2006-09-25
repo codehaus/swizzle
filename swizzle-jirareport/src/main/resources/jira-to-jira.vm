@@ -65,7 +65,7 @@
 ##
 #set( $void = $att.createAttachmentsTmpDir($project) )
 ##
-#set( $URL = "http://jira.codehaus.org/secure/IssueNavigator.jspa?view=rss&&pid=${project.id}&tempMax=2000&reset=true&decorator=none")
+#set( $URL = "http://jira.codehaus.org/secure/IssueNavigator.jspa?view=rss&&pid=${project.id}&tempMax=100000&reset=true&decorator=none")
 #set( $jirarss = $rss.fetch( $URL ) )
 #set( $issues = $jirarss.issues.sort("id") )
 ##
@@ -281,7 +281,7 @@
 #foreach( $issue in $issues.descending("id") )
 #set( $issue = $jira.getIssue( $issue.key ) )
   <sql:update var="results" dataSource="${d}{db}">
-      update jiraissue set pkey = '$issue.key' where id = '${d}{$j.idRef($issue)}' and pkey = '${d}{$j.keyRef($issue)}' 
+      update jiraissue set pkey = '$issue.key' where id = '${d}{$j.idRef($issue)}' and pkey = '${d}{$j.keyRef($issue)}'
   </sql:update>
 #end
 

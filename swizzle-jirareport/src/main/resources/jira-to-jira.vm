@@ -274,4 +274,15 @@
   </sql:update>
 #end
 
+  <!-- ============================ -->
+  <!-- SQL HACK FOR ISSUE KEY NAMES -->
+  <!-- ============================ -->
+
+#foreach( $issue in $issues.descending("id") )
+#set( $issue = $jira.getIssue( $issue.key ) )
+  <sql:update var="results" dataSource="${d}{db}">
+      update jiraissue set pkey = '$issue.key' where id = '${d}{$j.idRef($issue)}' and pkey = '${d}{$j.keyRef($issue)}' 
+  </sql:update>
+#end
+
 </JiraJelly>

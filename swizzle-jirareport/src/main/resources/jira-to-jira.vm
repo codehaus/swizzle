@@ -65,7 +65,7 @@
 ##
 #set( $void = $att.createAttachmentsTmpDir($project) )
 ##
-#set( $URL = "http://jira.codehaus.org/secure/IssueNavigator.jspa?view=rss&&pid=${project.id}&tempMax=100000&reset=true&decorator=none")
+#set( $URL = "${serverUrl}/secure/IssueNavigator.jspa?view=rss&&pid=${project.id}&tempMax=100000&reset=true&decorator=none")
 #set( $jirarss = $rss.fetch( $URL ) )
 #set( $issues = $jirarss.issues.sort("id") )
 ##
@@ -208,10 +208,10 @@
 
   <!-- GET CURRENT ISSUELINK PRIMARY KEY -->
   <sql:query var="results" dataSource="${d}{db}">
-      select max(id) max from issuelink
+      select SEQ_ID from SEQUENCE_VALUE_ITEM where SEQ_NAME='IssueLink'
   </sql:query>
-  <j:set var="primaryKey" value="${d}{results.rows[0].max}" />
-  <j:set var="primaryKey" value="${d}{primaryKey + 10}" />
+  <j:set var="primaryKey" value="${d}{results.rows[0].SEQ_ID}" />
+  <j:set var="primaryKey" value="${d}{primaryKey + 1}" />
 
 #foreach( $issue in $issues )
 #set( $issue = $jira.getIssue( $issue.key ) )
@@ -231,6 +231,10 @@
   <j:set var="primaryKey" value="${d}{primaryKey + 1}" />
 
 #end
+  <sql:update var="results" dataSource="${d}{db}">
+      update SEQUENCE_VALUE_ITEM set SEQ_ID=${d}{primaryKey} where SEQ_NAME='IssueLink'
+  </sql:update>
+
 #end
 
   <!-- ============================================== -->

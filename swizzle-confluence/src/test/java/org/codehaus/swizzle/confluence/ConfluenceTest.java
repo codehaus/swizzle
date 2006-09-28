@@ -39,7 +39,7 @@ public class ConfluenceTest extends TestCase {
 
         String actual = confluence.renderContent(page.getSpace(), page.getId(), "");
 
-        assertTrue("html", actual.contains("<b>hello</b> <em>world</em>"));
+        assertTrue("html", actual.indexOf("<b>hello</b> <em>world</em>") != -1);
 
     }
 

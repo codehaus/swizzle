@@ -7,6 +7,15 @@
   <version>1.1-SNAPSHOT</version>
   <name>Swizzle :: Confluence</name>
   <url>http://swizzle.codehaus.org</url>
+    <build>
+      <extensions>
+        <extension>
+          <groupId>org.apache.maven.wagon</groupId>
+          <artifactId>wagon-webdav</artifactId>
+          <version>1.0-beta-1</version>
+        </extension>
+      </extensions>
+    </build>
   <dependencies>
     <dependency>
       <groupId>xmlrpc</groupId>

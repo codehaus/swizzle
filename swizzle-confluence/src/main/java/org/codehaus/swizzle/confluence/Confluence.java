@@ -209,6 +209,14 @@ public class Confluence {
         return (String) call("renderContent", spaceKey, pageId, content);
     }
 
+    public String renderContent(String spaceKey, String pageId) throws Exception {
+        return renderContent(spaceKey, pageId, "");
+    }
+
+    public String renderContent(PageSummary page) throws Exception {
+        return renderContent(page.getSpace(), page.getId());
+    }
+
     /**
      * Like the above renderContent(), but you can supply an optional hash (map, dictionary, etc) containing additional instructions for the renderer. Currently, only one such parameter is supported:
      */
@@ -508,11 +516,11 @@ public class Confluence {
     }
 
     /**
-     * returns all registered {@link User}s
+     * returns all registered users as Strings
      */
     public List getActiveUsers(boolean viewAll) throws Exception {
         Vector vector = (Vector) call("getActiveUsers", new Boolean(viewAll));
-        return toList(vector, User.class);
+        return new ArrayList(vector);
     }
 
     /**

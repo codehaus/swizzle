@@ -20,8 +20,6 @@ import org.apache.velocity.VelocityContext;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.io.File;
-import java.io.PrintStream;
 
 /**
  * @version $Revision$ $Date$
@@ -57,34 +55,18 @@ public class ParamsUtil {
         for (int i = 0; i < missingArgs.size(); i++) {
             Param param = (Param) missingArgs.get(i);
             sb.append("  [");
-            sb.append(param.status);
+            sb.append(param.getStatus());
             sb.append("]    ");
-            sb.append(param.name);
+            sb.append(param.getName());
             sb.append("    : ");
-            sb.append(param.description);
+            sb.append(param.getDescription());
             sb.append(". Must Match Pattern '");
-            sb.append(param.regex);
+            sb.append(param.getRegex());
             sb.append("'");
             sb.append(lineSeparator);
         }
 
-        throw new IllegalArgumentException(sb.toString());
+        throw new MissingParamsException(sb.toString(), (Param[]) missingArgs.toArray(new Param[]{}));
     }
 
-    private static class Param {
-        public static String MISSING = "MISSING";
-        public static String INVALID = "INVALID";
-
-        private final String status;
-        private final String name;
-        private final String regex;
-        private final String description;
-
-        public Param(String status, String name, String regex, String description) {
-            this.status = status;
-            this.description = description;
-            this.name = name;
-            this.regex = regex;
-        }
-    }
 }

@@ -20,6 +20,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.Template;
+import org.apache.velocity.exception.MethodInvocationException;
 import org.codehaus.swizzle.jira.JiraRss;
 import org.codehaus.swizzle.jira.Jira;
 
@@ -71,7 +72,33 @@ public class Main {
 
         String templateName = System.getProperty("template","report.vm");
 
-        generate(templateName, System.out);
+        try {
+            generate(templateName, System.out);
+        } catch (MethodInvocationException e) {
+            Throwable wrappedThrowable = e.getWrappedThrowable();
+            if (wrappedThrowable instanceof MissingParamsException) {
+                MissingParamsException missingParamsException = (MissingParamsException) wrappedThrowable;
+                Param[] missingArgs = missingParamsException.getParams();
+
+                System.err.println("Invalid or missing arguments.");
+
+                for (int i = 0; i < missingArgs.length; i++) {
+                    Param param = (Param) missingArgs[i];
+                    System.err.print("  [");
+                    System.err.print(param.getStatus());
+                    System.err.print("]    ");
+                    System.err.print(param.getName());
+                    System.err.print("    : ");
+                    System.err.print(param.getDescription());
+                    System.err.print(". Must Match Pattern '");
+                    System.err.print(param.getRegex());
+                    System.err.println("'");
+                }
+                System.exit(1);
+            } else {
+                throw e;
+            }
+        }
     }
 
     public static void generate(String templateName, PrintStream result) throws Exception {

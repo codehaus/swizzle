@@ -72,4 +72,8 @@ public class Attachment extends MapObject {
     public void setCreated(Date created) {
         setDate("created", created);
     }
+
+    public String toString() {
+        return getFileName();
+    }
 }

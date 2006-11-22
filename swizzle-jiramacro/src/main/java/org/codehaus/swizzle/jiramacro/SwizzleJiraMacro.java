@@ -16,13 +16,13 @@
  */
 package org.codehaus.swizzle.jiramacro;
 
+import com.atlassian.confluence.renderer.radeox.macros.MacroUtils;
 import com.atlassian.renderer.v2.RenderMode;
 import com.atlassian.renderer.v2.SubRenderer;
 import com.atlassian.renderer.v2.macro.MacroException;
 import com.atlassian.renderer.v2.macro.basic.AbstractPanelMacro;
-import com.atlassian.confluence.renderer.radeox.macros.MacroUtils;
-import org.codehaus.swizzle.jirareport.Main;
 import org.apache.velocity.VelocityContext;
+import org.codehaus.swizzle.jirareport.Main;
 
 import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
@@ -31,7 +31,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
+import java.util.Iterator;
 
 
 /**
@@ -64,22 +67,35 @@ public class SwizzleJiraMacro extends AbstractPanelMacro {
     }
 
     public String execute(Map params, String body, com.atlassian.renderer.RenderContext renderContext) throws MacroException {
-        params.get("url");
+
+        URL templateUrl = null;
+        try {
+            String url = (String) params.get("template");
+            if (url != null) {
+                templateUrl = new URL(url);
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return "Invalid template url: " + e.getMessage();
+        }
+
         File tempFile = null;
         String content = body;
         String template;
-
-        try {
-            tempFile = File.createTempFile("swizzlejira", ".vm");
-            FileWriter fileWriter = new FileWriter(tempFile);
-            fileWriter.write(content);
-            fileWriter.flush();
-            fileWriter.close();
-            template = tempFile.getAbsolutePath();
-        } catch (IOException e) {
-            throw new MacroException("Unable to save template content to temp file.", e);
+        if (templateUrl != null) {
+            template = templateUrl.toExternalForm();
+        } else {
+            try {
+                tempFile = File.createTempFile("swizzlejira", ".vm");
+                FileWriter fileWriter = new FileWriter(tempFile);
+                fileWriter.write(content);
+                fileWriter.flush();
+                fileWriter.close();
+                template = tempFile.getAbsolutePath();
+            } catch (IOException e) {
+                throw new MacroException("Unable to save template content to temp file.", e);
+            }
         }
-
         PrintStream out = null;
         ByteArrayOutputStream baos = null;
         try {
@@ -87,6 +103,11 @@ public class SwizzleJiraMacro extends AbstractPanelMacro {
             out = new PrintStream(baos);
 
             Map defaults = MacroUtils.defaultVelocityContext();
+            for (Iterator iterator = params.entrySet().iterator(); iterator.hasNext();) {
+                Map.Entry entry = (Map.Entry) iterator.next();
+                defaults.put(entry.getKey(), entry.getValue());
+            }
+
             VelocityContext context = new VelocityContext(defaults);
             context.put("as", new IssuesUtil());
             Main.generate(context, template, out);
@@ -99,8 +120,6 @@ public class SwizzleJiraMacro extends AbstractPanelMacro {
             writer.close();
             String error = new String(trace.toCharArray());
             return error.replaceAll("\n", "<br>");
-        } finally{
-//            IssuesUtil.clear();
         }
 
         try {
@@ -116,59 +135,6 @@ public class SwizzleJiraMacro extends AbstractPanelMacro {
         String velocityOutput = new String(baos.toByteArray());
         return subRenderer.render(velocityOutput, renderContext);
     }
-
-//    protected String getHtml(org.radeox.macro.parameter.MacroParameter macroParameter) throws IllegalArgumentException, IOException {
-//        URL url = null;
-//        try {
-//            String actual = macroParameter.get("url", 0);
-//            url = new URL(actual);
-//        } catch (MalformedURLException e) {
-//        }
-//
-//        File tempFile = null;
-//        String content  = null;
-//        String template;
-//        if (url != null){
-//            template = url.toExternalForm();
-//        } else {
-//            content = macroParameter.getContent();
-//            RenderContext context = macroParameter.getContext();
-//            tempFile = File.createTempFile("swizzlejira", "vm");
-//            FileWriter fileWriter = new FileWriter(tempFile);
-//            fileWriter.write(content);
-//            fileWriter.flush();
-//            fileWriter.close();
-//            template = tempFile.getAbsolutePath();
-//        }
-//
-//        PrintStream out = null;
-//        ByteArrayOutputStream baos = null;
-//        try {
-//            baos = new ByteArrayOutputStream();
-//            out = new PrintStream(baos);
-//            Main.generate(template, out);
-//        } catch (Exception e) {
-//            CharArrayWriter trace = new CharArrayWriter();
-//            PrintWriter writer = new PrintWriter(trace);
-//            writer.println("Template: "+template);
-//            e.printStackTrace(writer);
-//            writer.flush();
-//            writer.close();
-//            String error = new String(trace.toCharArray());
-//            return error.replaceAll("\n","<br>");
-//        }
-//
-//        try {
-//            out.flush();
-//            out.close();
-//            tempFile.delete();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return new String(baos.toByteArray());
-//
-//    }
 
     public String getName() {
         return "swizzlejira";

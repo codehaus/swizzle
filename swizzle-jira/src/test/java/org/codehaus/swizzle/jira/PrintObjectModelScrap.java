@@ -29,6 +29,10 @@ import java.util.Comparator;
  * @version $Revision$ $Date$
  */
 public class PrintObjectModelScrap extends TestCase {
+
+    public static void main(String[] args) throws Exception{
+        new PrintObjectModelScrap().testGo();
+    }
     public void testGo() throws Exception {
         skip.add("toHashtable");
         skip.add("toString");
@@ -36,6 +40,7 @@ public class PrintObjectModelScrap extends TestCase {
         skip.add("compareTo");
         skip.add("hashCode");
         print(Jira.class);
+        print(Comment.class);
         print(JiraRss.class);
         fail("");
     }
@@ -46,11 +51,11 @@ public class PrintObjectModelScrap extends TestCase {
         seen.add(clazz);
 
         String shortName = name(clazz);
-        System.out.println(" * ["+shortName+"|Jira Object Model#"+shortName+"]");
-//        System.out.println("\nh2. " + shortName);
-//        System.out.println("");
-//        System.out.println("[Source|http://fisheye.codehaus.org/browse/swizzle/trunk/swizzle-jira/src/main/java/org/codehaus/swizzle/jira/"+shortName+".java?r=trunk]");
-//        System.out.println("{anchor:"+shortName+"}");
+//        System.out.println(" * ["+shortName+"|Jira Object Model#"+shortName+"]");
+        System.out.println("\nh2. " + shortName);
+        System.out.println("");
+        System.out.println("[Source|http://fisheye.codehaus.org/browse/swizzle/trunk/swizzle-jira/src/main/java/org/codehaus/swizzle/jira/"+shortName+".java?r=trunk]");
+        System.out.println("{anchor:"+shortName+"}");
         Method[] methods = clazz.getMethods();
         Arrays.sort(methods, new Comparator(){
             public int compare(Object object, Object object1) {
@@ -102,20 +107,20 @@ public class PrintObjectModelScrap extends TestCase {
 
         }
 
-//        Class type = method.getReturnType();
-//        System.out.print("| " + name(type));
-//        System.out.print(" | " + method.getName());
-//        Class[] params = method.getParameterTypes();
-//        StringBuffer sb = new StringBuffer();
-//        for (int i = 0; i < params.length; i++) {
-//            Class param = params[i];
-//            sb.append(" _"+name(param)+"_,");
-//        }
-//        if (sb.length() > 0){
-//            sb.deleteCharAt(sb.length()-1);
-//        }
-//        System.out.print(sb.toString()+" |");
-//        System.out.println(" |");
+        Class type = method.getReturnType();
+        System.out.print("| " + name(type));
+        System.out.print(" | " + method.getName());
+        Class[] params = method.getParameterTypes();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < params.length; i++) {
+            Class param = params[i];
+            sb.append(" _"+name(param)+"_,");
+        }
+        if (sb.length() > 0){
+            sb.deleteCharAt(sb.length()-1);
+        }
+        System.out.print(sb.toString()+" |");
+        System.out.println(" |");
 
     }
 

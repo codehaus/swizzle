@@ -35,6 +35,13 @@ import java.lang.reflect.Constructor;
  * @version $Revision$ $Date$
  */
 public class JiraRss {
+    private static final Map autofillProviders = new HashMap();
+    static {
+        autofillProviders.put("voters", "org.codehaus.swizzle.jira.VotersFiller");
+        autofillProviders.put("subtasks", "org.codehaus.swizzle.jira.SubTasksFiller");
+        autofillProviders.put("attachments", "org.codehaus.swizzle.jira.AttachmentsFiller");
+    }
+
     private Map issues = new HashMap();
     private URL url;
 
@@ -70,6 +77,31 @@ public class JiraRss {
         }
     }
 
+    /**
+     * Valid schemes are "issue", "project", "voters", and "attachments"
+     * "issues" is enabled by default
+     * @param scheme
+     */
+    public void autofill(String scheme){
+        if (!autofillProviders.containsKey(scheme)) {
+            throw new UnsupportedOperationException("Autofill Scheme not supported: "+scheme);
+        }
+
+        try {
+            ClassLoader classLoader = this.getClass().getClassLoader();
+            Class clazz = classLoader.loadClass((String) autofillProviders.get(scheme));
+            Method fill = clazz.getMethod("fill", new Class[]{JiraRss.class});
+            List list = (List) fill.invoke(null, new Object[]{this});
+            for (int i = 0; i < list.size(); i++) {
+                Issue issue = (Issue) list.get(i);
+                issues.put(issue.getKey(), issue);
+            }
+        } catch (Exception e) {
+            System.err.println("Cannot install autofill provider "+scheme);
+            e.printStackTrace();
+        }
+    }
+
     public List fillVotes() throws Exception {
         ClassLoader classLoader = this.getClass().getClassLoader();
         Class clazz = classLoader.loadClass("org.codehaus.swizzle.jira.VotersFiller");
@@ -84,6 +116,11 @@ public class JiraRss {
         return (List) fill.invoke(null, new Object[]{this});
     }
 
+    public List fillAttachments() throws Exception {
+        autofill("attachments");
+        return getIssues();
+    }
+    
     public List getIssues() {
         return new MapObjectList(issues.values());
     }

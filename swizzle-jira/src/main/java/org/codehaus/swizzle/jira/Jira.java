@@ -80,7 +80,7 @@ public class Jira {
     }
 
     /**
-     * Valid schemes are "issue", "project", "voters"
+     * Valid schemes are "issue", "project", "voters", and "attachments"
      * "issues" is enabled by default
      * @param scheme
      * @param enabled

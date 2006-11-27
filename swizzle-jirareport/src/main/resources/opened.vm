@@ -21,7 +21,7 @@ SUBJECT: Issues Opened: week of $date
 
 $projectName - $date.as("EEEE, MMMM d, yyyy")
 
-  $issues.size() closed in last 7 days
+  $issues.size() opened in last 7 days
 
 #if ( $issues.size() < 11 )
 #foreach( $issue in $issues )

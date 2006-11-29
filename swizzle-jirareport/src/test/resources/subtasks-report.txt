@@ -1,7 +1,0 @@
-
-Issues with Sub-tasks
-
-[SWIZZLE-2] Need Wilhemina to get some things from the store
-  -  SWIZZLE-3: a loaf of bread
-  -  SWIZZLE-4: a container of milk
-  -  SWIZZLE-5: a stick of butter

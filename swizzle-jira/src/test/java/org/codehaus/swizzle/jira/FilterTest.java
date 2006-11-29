@@ -43,6 +43,11 @@ public class FilterTest extends TestCase {
         jira.login("swizzletester", "swizzle");
 
         List issues = jira.getIssuesFromFilter("swizzle test issues");
+        for (int i = 0; i < issues.size(); i++) {
+            Issue issue = (Issue) issues.get(i);
+            String key = issue.getKey();
+            System.out.println("key = " + key);
+        }
 
         assertNotNull("issues", issues);
         assertEquals("Issues.size()", 7, issues.size());
@@ -59,18 +64,18 @@ public class FilterTest extends TestCase {
 
         issue = (Issue) issues.get(2);
         assertNotNull("issue",issue);
-        assertEquals("Issue.getKey()", "SWIZZLE-11", issue.getKey());
-        assertEquals("Issue.getSummary()", "Make sure the smoke alarms work", issue.getSummary());
-
-        issue = (Issue) issues.get(3);
-        assertNotNull("issue",issue);
         assertEquals("Issue.getKey()", "SWIZZLE-8", issue.getKey());
         assertEquals("Issue.getSummary()", "Get more colored lights for the disco ball", issue.getSummary());
 
-        issue = (Issue) issues.get(4);
+        issue = (Issue) issues.get(3);
         assertNotNull("issue",issue);
         assertEquals("Issue.getKey()", "SWIZZLE-10", issue.getKey());
         assertEquals("Issue.getSummary()", "Beer fridge for the garage", issue.getSummary());
+
+        issue = (Issue) issues.get(4);
+        assertNotNull("issue",issue);
+        assertEquals("Issue.getKey()", "SWIZZLE-11", issue.getKey());
+        assertEquals("Issue.getSummary()", "Make sure the smoke alarms work", issue.getSummary());
 
         issue = (Issue) issues.get(5);
         assertNotNull("issue",issue);

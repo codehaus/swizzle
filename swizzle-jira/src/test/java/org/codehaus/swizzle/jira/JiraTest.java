@@ -160,24 +160,4 @@ public class JiraTest extends TestCase {
         assertEquals("Project.getUrl()", "http://jira.codehaus.org/browse/SWIZZLE", project.getUrl());
     }
 
-//    public void testJiraWrite() throws Exception {
-//        Jira jira = new Jira("http://localhost:8080/rpc/xmlrpc");
-//        jira.login("admin", "galaxy");
-//        Project project = jira.getProject("OPENEJB");
-//
-//        Issue issue = new Issue();
-//        issue.setType(jira.getIssueType("New Feature"));
-//        issue.setProject(project);
-//        issue.setAssignee(jira.getUser("dblevins"));
-//        issue.setReporter(jira.getUser("dblevins"));
-//        issue.getComponents().add(jira.getComponent(project, "container system"));
-//        issue.getAffectsVersions().add(jira.getVersion(project,"1.0"));
-//        issue.getAffectsVersions().add(jira.getVersion(project,"2.0"));
-//        issue.getFixVersions().add(jira.getVersion(project,"2.0"));
-//        issue.setSummary("Issue summary2");
-//        issue.setDescription("Issue Description2");
-//        issue.setResolution(jira.getResolution("Fixed"));
-//        issue.setStatus(jira.getStatus("Closed"));
-//        jira.createIssue(issue);
-//    }
 }

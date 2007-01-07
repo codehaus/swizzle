@@ -47,6 +47,7 @@ public class Issue extends MapObject implements Comparable {
         xmlrpcNoSend.add("voters");
         xmlrpcNoSend.add("subTasks");
         xmlrpcNoSend.add("attachments");
+        xmlrpcNoSend.add("comments");
     }
 
     /**
@@ -128,6 +129,13 @@ public class Issue extends MapObject implements Comparable {
 
     public void setCustomFieldValues(Vector customFieldValues) {
         setVector("customFieldValues", customFieldValues);
+    }
+
+    /**
+     * List of Comments
+     */
+    public List getComments() {
+        return getMapObjects("comments", Comment.class);
     }
 
     /**

@@ -77,6 +77,7 @@ public class Jira {
         autofillProviders.put("voters", "org.codehaus.swizzle.jira.VotersFiller");
         autofillProviders.put("subtasks", "org.codehaus.swizzle.jira.SubTasksFiller");
         autofillProviders.put("attachments", "org.codehaus.swizzle.jira.AttachmentsFiller");
+        autofillProviders.put("comments", "org.codehaus.swizzle.jira.CommentsFiller");
     }
 
     /**

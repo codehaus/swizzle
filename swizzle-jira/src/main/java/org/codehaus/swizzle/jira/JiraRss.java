@@ -390,5 +390,13 @@ public class JiraRss {
         protected Object clone() throws CloneNotSupportedException {
             return new CommentHandler();
         }
+
+        public void endElement(String string, String string1, String string2) throws SAXException {
+            String text = value.toString();
+            text = text.replaceAll("^<p>|</p>$", "");
+            value = new StringBuffer(text);
+            super.endElement(string, string1, string2);
+        }
+
     }
 }

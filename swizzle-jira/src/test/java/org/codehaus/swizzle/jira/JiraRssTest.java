@@ -39,6 +39,8 @@ public class JiraRssTest extends TestCase {
         Version version = (Version) issue.getFixVersions().get(0);
         assertEquals("Version.getName()", "Test Version", version.getName());
 
+        assertEquals("Issue.getComments().size()", 1, issue.getComments().size());
+
         assertEquals("Issue.getComponents().size()", 1, issue.getComponents().size());
         assertTrue("Issue.getComponents instance of Component", issue.getComponents().get(0) instanceof Component);
         Component component = (Component) issue.getComponents().get(0);

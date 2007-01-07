@@ -2,9 +2,9 @@
 Issues by Score (votes x affect versions)
 
 
- 9 -- Beer fridge for the garage  (SWIZZLE-10)
+ 15 -- Beer fridge for the garage  (SWIZZLE-10)
+ 14 -- Fix the toilet  (SWIZZLE-6)
  8 -- Put a TV in the bathroom  (SWIZZLE-7)
- 8 -- Fix the toilet  (SWIZZLE-6)
  4 -- Make sure the smoke alarms work  (SWIZZLE-11)
  2 -- Fix whole in the wall  (SWIZZLE-12)
  2 -- Get more colored lights for the disco ball  (SWIZZLE-8)

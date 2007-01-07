@@ -100,7 +100,7 @@ public class Issue extends MapObject implements Comparable {
     public List getVoters() {
         if (!hasField("voters")){
             List votes = new MapObjectList();
-            for (int i = getInt("votes"); i > votes.size(); i--) {
+            for (int i = getInt("votes"); i > 0; i--) {
                 votes.add(new User());
             }
             setMapObjects("voters", votes);

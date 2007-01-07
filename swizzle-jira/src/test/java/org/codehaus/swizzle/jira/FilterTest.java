@@ -38,7 +38,7 @@ public class FilterTest extends TestCase {
 
     }
 
-    public void testGetIssuesFromFilter() throws Exception {
+    public void _testGetIssuesFromFilter() throws Exception {
         Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
         jira.login("swizzletester", "swizzle");
 

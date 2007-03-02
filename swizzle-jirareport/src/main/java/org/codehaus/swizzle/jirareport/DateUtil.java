@@ -52,4 +52,25 @@ public class DateUtil {
     public String toString() {
         return dateFormat.format(now);
     }
+
+    // need something to return a date
+
+    // dayAgo()
+    // dayFrom(Date)
+    // daysAgo(int)
+    // daysFrom(int, Date)
+    // weekAgo()
+    // weekFrom(Date)
+    // weeksAgo(int)
+    // weeksFrom(int, Date)
+    // monthAgo()
+    // monthFrom(Date)
+    // monthsAgo(int)
+    // monthsFrom(int, Date)
+    // yearAgo()
+    // yearFrom(Date)
+    // yearsAgo(int)
+    // yearsFrom(int, Date)
+
+    // from, to, between
 }

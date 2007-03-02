@@ -33,12 +33,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @version $Revision$ $Date$
  */
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Throwable {
         List newargs = new ArrayList();
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
@@ -74,6 +75,8 @@ public class Main {
 
         try {
             generate(templateName, System.out);
+        } catch (InvocationTargetException e){
+            throw e.getCause();
         } catch (MethodInvocationException e) {
             Throwable wrappedThrowable = e.getWrappedThrowable();
             if (wrappedThrowable instanceof MissingParamsException) {

@@ -25,6 +25,8 @@ import org.codehaus.swizzle.stream.IncludeFilterInputStream;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.net.URL;
 import java.io.InputStream;
 import java.io.BufferedInputStream;
@@ -152,13 +154,20 @@ public class SubTasksFiller implements IssueFiller {
 
     public static class CollectTokensHandler extends StringTokenHandler {
         private final Collection collection;
+//        private Pattern pattern = Pattern.compile(".*");
+        private Pattern pattern = Pattern.compile(".*?([A-Za-z]+-[0-9]+).*");
 
         public CollectTokensHandler(Collection collection) {
             this.collection = collection;
         }
 
         public String handleToken(String token) throws IOException {
-            collection.add(token);
+            Matcher matcher = pattern.matcher(token);
+            boolean b = matcher.find();
+            token = matcher.group(1);
+            if (!collection.contains(token)){
+                collection.add(token);
+            }
             return token;
         }
     }

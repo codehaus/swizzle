@@ -35,6 +35,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Iterator;
+import java.lang.reflect.InvocationTargetException;
 
 
 /**
@@ -111,7 +112,12 @@ public class SwizzleJiraMacro extends AbstractPanelMacro {
             VelocityContext context = new VelocityContext(defaults);
             context.put("as", new IssuesUtil());
             Main.generate(context, template, out);
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            if (e instanceof InvocationTargetException) {
+                InvocationTargetException ite = (InvocationTargetException) e;
+                e = ite.getCause(); 
+            }
+
             CharArrayWriter trace = new CharArrayWriter();
             PrintWriter writer = new PrintWriter(trace);
             writer.println("Template: " + template);

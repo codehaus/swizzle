@@ -6,7 +6,7 @@
   </plugin-info>
 
   <macro name='swizzlejira' class='org.codehaus.swizzle.jiramacro.SwizzleJiraMacro' key='swizzlejira'>
-    <description>Template can be embedded or pointed to via 'url' param</description>
+    <description>Renders an embedded Swizzle Jira Report</description>
   </macro>
 
   <macro name='swizzlejiraissues' class='org.codehaus.swizzle.jiramacro.SwizzleJiraIssuesMacro' key='swizzlejiraissues'>

@@ -16,11 +16,7 @@
  */
 package org.codehaus.swizzle.jiramacro;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * @version $Revision$ $Date$
@@ -31,7 +27,8 @@ public class IssuesUtil {
 
     public String param(List issues) {
         if (issues == null) {
-            throw new NullPointerException("as.param: issues list is null");
+            //throw new NullPointerException("as.param: issues list is null");
+            return "null";
         }
         Random random = new Random();
         String id = issues.toString() + random.nextInt();
@@ -58,6 +55,9 @@ public class IssuesUtil {
     }
 
     public static List getIssues(String id){
+        if (id.equals("null")){
+            return Collections.EMPTY_LIST;
+        }
         return (List) issuesMap().remove(id);
     }
 

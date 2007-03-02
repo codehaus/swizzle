@@ -1,9 +1,42 @@
+#set( $cols = $columns.size() - 2)
 <p>
     <table  width="100%" cellspacing="0" class="grid">
         <tr>
             <th colspan="$columns.size()" style="text-align: left;">
-                $title
-                <span class="smalltext">($issues.size() issues)</span>
+                <table width="100%" valign="middle" align="right" cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+                        <td>
+                            $title&nbsp;
+                            <span class="smalltext">($issues.size()&nbsp;issues)</span>&nbsp;
+                        </td>
+
+                        <td width="100%">
+                                &nbsp;
+                        </td>
+                        <td style="border-width: 1px 1px 0 1px; border-style: solid; border-color: #bbb;" width="1%">
+                            <table height="6" valign="middle" align="right" cellspacing="0" cellpadding="0" border="0">
+                                <tr height="6">
+                                    <td nowrap="true" valign="middle" align="right"><font size="1">&nbsp;Sub-Task Progress:&nbsp;</font></td>
+
+                                    <td width="51" bgcolor="009900" >
+
+                                    <img src="http://jira.codehaus.org/images/border/spacer.gif"
+                                    height=10 width="51" border=0
+                                    title="Resolved Sub-Tasks - 51% (17 issues)" >
+
+                                    </td>
+
+                                    <td width="48" bgcolor="cc0000" >
+
+                                    <img src="http://jira.codehaus.org/images/border/spacer.gif"
+                                    height=10 width="48" border=0
+                                    title="Unresolved Sub-Tasks - 48% (16 issues)" >
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    <tr>
+                </table>
             </th>
         </tr>
         <tr>

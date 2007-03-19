@@ -45,4 +45,8 @@
       <url>dav:https://dav.codehaus.org/swizzle/</url>
     </site>
   </distributionManagement>
+  <scm>
+    <connection>scm:svn:http://svn.codehaus.org/swizzle/trunk/swizzle-confluence/</connection>
+    <developerConnection>scm:svn:https://${maven.username}@svn.codehaus.org/swizzle/trunk/swizzle-confluence/</developerConnection>
+  </scm>
 </project>

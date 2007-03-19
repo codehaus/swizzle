@@ -81,6 +81,12 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>atlassian-bucket</groupId>
+      <artifactId>atlassian-bucket</artifactId>
+      <version>2006.04.11.branch-v0.9</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>atlassian-renderer</groupId>
       <artifactId>atlassian-renderer</artifactId>
       <version>2006.04.13</version>

@@ -52,6 +52,9 @@ public class SubTasksFiller implements IssueFiller {
             return;
         }
 
+        // Subtasks can't have subtasks, so we can skip this one
+        if (issue.getParentTask() != null) return;
+
         List issueKeys = getSubTasks(issue);
         issueKeys.remove(issue.getKey()); // just in case of some freak accident
         for (int i = 0; i < issueKeys.size(); i++) {
@@ -67,9 +70,14 @@ public class SubTasksFiller implements IssueFiller {
     }
     public static List fill(JiraRss jiraRss) throws Exception {
         SubTasksFiller filler = new SubTasksFiller(null);
-        List issues = jiraRss.getIssues();
+        MapObjectList issues = (MapObjectList) jiraRss.getIssues();
+        issues = issues.ascending("id");
         for (int i = 0; i < issues.size(); i++) {
             Issue issue = (Issue) issues.get(i);
+
+            // Subtasks can't have subtasks, so we can skip this one
+            if (issue.getParentTask() != null) continue;
+
             String link = issue.getLink();
             link = link.replaceFirst("/browse/.*$", "/");
             List issueKeys = filler.getSubTasks(issue);
@@ -78,11 +86,18 @@ public class SubTasksFiller implements IssueFiller {
 
             for (int j = 0; j < issueKeys.size(); j++) {
                 String issueKey = (String) issueKeys.get(j);
-                URL issueRssUrl = new URL(link +"browse/"+ issueKey + "?decorator=none&view=rss");
-                JiraRss subtaskJiraRss = new JiraRss(issueRssUrl);
-                Issue subTask = subtaskJiraRss.getIssue(issueKey);
+                Issue subTask = jiraRss.getIssue(issueKey);
                 if (subTask != null) {
                     issue.getSubTasks().add(subTask);
+                    subTask.setParentTask(issue);
+                } else {
+                    URL issueRssUrl = new URL(link +"browse/"+ issueKey + "?decorator=none&view=rss");
+                    JiraRss subtaskJiraRss = new JiraRss(issueRssUrl);
+                    subTask = subtaskJiraRss.getIssue(issueKey);
+                    if (subTask != null) {
+                        issue.getSubTasks().add(subTask);
+                        subTask.setParentTask(issue);
+                    }
                 }
             }
         }

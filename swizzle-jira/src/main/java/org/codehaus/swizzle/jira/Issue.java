@@ -46,6 +46,7 @@ public class Issue extends MapObject implements Comparable {
         xmlrpcNoSend.add("link");
         xmlrpcNoSend.add("voters");
         xmlrpcNoSend.add("subTasks");
+        xmlrpcNoSend.add("parentTask");
         xmlrpcNoSend.add("attachments");
         xmlrpcNoSend.add("comments");
     }
@@ -242,6 +243,14 @@ public class Issue extends MapObject implements Comparable {
 
     public void removeSubTask(Issue issue) {
         getSubTasks().remove(issue);
+    }
+
+    protected Issue getParentTask() {
+        return (Issue) getMapObject("parentTask", Issue.class);
+    }
+
+    protected void setParentTask(Issue parentTask) {
+        setMapObject("parentTask", parentTask);
     }
 
 

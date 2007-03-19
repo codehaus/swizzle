@@ -334,9 +334,10 @@ public class MapObjectList extends ArrayList {
         Comparator comparator = getComparator(field);
 
         comparator = reverse ? new ReverseComparator(comparator) : comparator;
-        Collections.sort(this, comparator);
+        MapObjectList list = new MapObjectList(this);
+        Collections.sort(list, comparator);
 
-        return this;
+        return list;
     }
 
     private MapObjectList compareAndCollect(String field, Object data, int condition) {

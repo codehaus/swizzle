@@ -7,50 +7,44 @@
 #end
 #set( $void = $params.validate() )
 ##
-#set( $url = "${serverUrl}/secure/IssueNavigator.jspa?view=rss&&pid=${projectId}&status=1&tempMax=200&reset=true&decorator=none" )
+#set( $url = "${serverUrl}/secure/IssueNavigator.jspa?view=rss&&pid=${projectId}&status=1&tempMax=1000&reset=true&decorator=none" )
 #set( $jirarss = $rss.fetch( $url ) )
-#set( $issues = $jirarss.fillAttachments() )
+#set( $issues = $jirarss.issues.sort("updated") )
 #set( $void = $date.format("yyyy-MM-dd") )
 ##
 #if ( $email == "true" )
 TO: $to
 FROM: $from
-SUBJECT: $projectName Issues with Attachments: week of $date
+SUBJECT: $projectName Open Issues as of $date
 
 #end
-##
-#foreach( $issue in $issues )
-#set( $issue.attributes.totalAttachments = $issue.attachments.size() )
-#end
-#set( $issues = $issues.greater("@totalAttachments", 0).sort("created") )
 
 $projectName - $date.as("EEEE, MMMM d, yyyy")
 
-  $issues.size() Issues with Attachments
+  $issues.size() open issues
+  (sorted oldest to newest by date updated)
 
-  (sorted oldest to newest)
-
-#if ( $issues.size() < 11 )
+#if ( $issues.size() < 20 )
 #foreach( $issue in $issues )
     [$issue.key] $issue.summary
-      - Created: $date.format($issue.created)
+      - Updated: $date.format($issue.updated)
       - Type: $issue.type
-      - Fix Versions: $issue.fixVersions
-      - Reporter: $issue.reporter
-      - Attachments: $issue.attachments
+      - Assignee: $issue.assignee
+      - Components: $issue.components
+      - Affects Versions: $issue.affectsVersions
       - $issue.link
 
 #end
-#elseif ( $issues.size() < 30 )
+#elseif ( $issues.size() < 100 )
 #foreach( $issue in $issues )
     [$issue.key] $issue.summary
-      ($date.format($issue.created) - $issue.type - $issue.reporter)
+      $date.format($issue.updated) - $issue.assignee - $issue.type - $issue.components
       $issue.link
 
 #end
-#elseif ( $issues.size() < 50 )
+#elseif ( $issues.size() < 200 )
 #foreach( $issue in $issues )
-  $date.format($issue.created) [$issue.key] $issue.summary
+  $date.format($issue.updated) - [$issue.key] $issue.summary
   $issue.link
 
 #end
@@ -60,3 +54,5 @@ $projectName - $date.as("EEEE, MMMM d, yyyy")
 #end
 #end
 
+--
+template: $template

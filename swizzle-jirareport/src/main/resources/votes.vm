@@ -16,7 +16,7 @@
 #if ( $email == "true" )
 TO: $to
 FROM: $from
-SUBJECT: Open Issues by Votes: $date
+SUBJECT: $projectName Open Issues by Votes: $date
 
 #end
 

@@ -15,7 +15,7 @@
 #if ( $email == "true" )
 TO: $to
 FROM: $from
-SUBJECT: Issues Opened: week of $date
+SUBJECT: $projectName Issues Opened: week of $date
 
 #end
 

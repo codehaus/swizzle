@@ -1,0 +1,6 @@
+#set( $void = $params.required( "url" , "https?://.+", "the URL of the parent issue" ) )
+#set( $void = $params.validate() )
+#set( $jira = $rss.fetch($url) )
+#foreach( $issue in $jira.issues.sort("key") )
+  [$issue.key] $issue.summary
+#end

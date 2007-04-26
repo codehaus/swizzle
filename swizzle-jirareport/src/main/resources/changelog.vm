@@ -1,0 +1,36 @@
+#set( $jira = $rss.fetch("https://issues.apache.org/jira/secure/IssueNavigator.jspa?view=rss&&fixfor=12312090&pid=12310530&sorter/field=issuekey&sorter/order=DESC&tempMax=100&reset=true&decorator=none") )
+#set( $issues = $jira.issues )
+
+New Features:
+
+#foreach ( $issue in $issues.equals("type", "New Feature") )
+  * [$issue.key] $issue.summary
+#end
+
+Improvements:
+
+#foreach ( $issue in $issues.equals("type", "Improvement") )
+  * [$issue.key] $issue.summary
+#end
+
+Bugs:
+
+#foreach ( $issue in $issues.equals("type", "Bug") )
+  * [$issue.key] $issue.summary
+#end
+
+Tasks:
+
+#foreach ( $issue in $issues.equals("type", "Task") )
+  * [$issue.key] $issue.summary
+#end
+
+##Other:
+##
+##set( $issues = $issues.subtract($issues.equals("type", "New Feature")) )
+##set( $issues = $issues.subtract($issues.equals("type", "Improvement")) )
+##set( $issues = $issues.subtract($issues.equals("type", "Bug")) )
+##set( $issues = $issues.subtract($issues.equals("type", "Task")) )
+##foreach ( $issue in $issues )
+##  * [$issue.key] $issue.summary
+##end

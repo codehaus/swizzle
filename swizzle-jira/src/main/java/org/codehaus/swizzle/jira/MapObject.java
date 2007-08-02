@@ -223,7 +223,15 @@ public class MapObject {
     }
 
     public Hashtable toHashtable() {
-        Hashtable hashtable = new Hashtable(fields);
+       // The fields table might have some key->null entries,
+       // don't want to add those to the hashtable.
+        Hashtable hashtable = new Hashtable(fields.size());
+        for (Iterator i = fields.entrySet().iterator(); i.hasNext();) {
+                       Map.Entry entry = (Map.Entry) i.next();
+                       if( entry.getValue()!=null ) {
+                               hashtable.put(entry.getKey(), entry.getValue());
+                       }
+               }
 
         // Remove anything marked as "no send"
         for (int i = 0; i < xmlrpcNoSend.size(); i++) {

@@ -16,17 +16,17 @@
  */
 package org.codehaus.swizzle.jira;
 
-import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.client.XmlRpcClient;
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.apache.xmlrpc.XmlRpcException;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Collection;
@@ -66,7 +66,12 @@ public class Jira {
             endpoint += "/rpc/xmlrpc";
         }
 
-        this.client = new XmlRpcClient(endpoint);
+        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
+        clientConfig.setServerURL(new URL(endpoint));
+
+        client = new XmlRpcClient();
+        client.setConfig(clientConfig);
+        
         this.cache = new HashMap();
         BasicIssueFiller basicIssueFiller = new BasicIssueFiller(this);
         basicIssueFiller.setEnabled(true);
@@ -148,16 +153,16 @@ public class Jira {
      * TODO: If someone creates an issue, we should account for that in our caching
      */
     public Issue createIssue(Issue issue) throws Exception {
-        Hashtable data = (Hashtable) call("createIssue", issue.toHashtable());
+        Map data = (Map) call("createIssue", issue.toMap());
         return (autofill)? fill(new Issue(data)):new Issue(data);
     }
 
     /**
-     * Updates an issue in JIRA from a Hashtable object
+     * Updates an issue in JIRA from a HashMap object
      * TODO: If someone updates an issue, we should account for that in our caching
      */
     public Issue updateIssue(String issueKey, Issue issue) throws Exception {
-        Hashtable data = (Hashtable) call("updateIssue", issueKey, issue.toHashtable());
+        Map data = (Map) call("updateIssue", issueKey, issue.toMap());
         return (autofill)? fill(new Issue(data)):new Issue(data);
     }
 
@@ -179,7 +184,7 @@ public class Jira {
     public List getIssuesFromFilter(String filterName) throws Exception {
         Filter filter = getSavedFilter(filterName);
         if (filter == null){
-            return toList(new Vector(),Issue.class);
+            return toList(new Object[]{},Issue.class);
         } else {
             return getIssuesFromFilter(filter.getId());
         }
@@ -189,7 +194,7 @@ public class Jira {
      * List<{@link Issue}>:  Executes a saved filter
      */
     public List getIssuesFromFilter(int filterId) throws Exception {
-        Vector vector = (Vector) call("getIssuesFromFilter", filterId+"");
+        Object[] vector = (Object[]) call("getIssuesFromFilter", filterId+"");
         return toList(vector, Issue.class);
     }
 
@@ -197,15 +202,15 @@ public class Jira {
      * List<{@link Issue}>:  Find issues using a free text search
      */
     public List getIssuesFromTextSearch(String searchTerms) throws Exception {
-        Vector vector = (Vector) call("getIssuesFromTextSearch", searchTerms);
+        Object[] vector = (Object[]) call("getIssuesFromTextSearch", searchTerms);
         return toList(vector, Issue.class);
     }
 
     /**
      * List<{@link Issue}>:  Find issues using a free text search, limited to certain projects
      */
-    public List getIssuesFromTextSearchWithProject(Vector projectKeys, String searchTerms, int maxNumResults) throws Exception {
-        Vector vector = (Vector) call("getIssuesFromTextSearchWithProject", projectKeys, searchTerms, new Integer(maxNumResults));
+    public List getIssuesFromTextSearchWithProject(List projectKeys, String searchTerms, int maxNumResults) throws Exception {
+        Object[] vector = (Object[]) call("getIssuesFromTextSearchWithProject", projectKeys.toArray(), searchTerms, new Integer(maxNumResults));
         return toList(vector, Issue.class);
     }
 
@@ -408,13 +413,13 @@ public class Jira {
 
     // ----  PROJECT related data ---- /////////////////////////////////////////////////////
 
-    private List toList(Vector vector, Class type) {
-        List list = new MapObjectList(vector.size());
+    private List toList(Object[] vector, Class type) {
+        List list = new MapObjectList(vector.length);
 
         try {
             Constructor constructor = type.getConstructor(new Class[]{Map.class});
-            for (int i = 0; i < vector.size(); i++) {
-                Map data = (Map) vector.elementAt(i);
+            for (int i = 0; i < vector.length; i++) {
+                Map data = (Map) vector[i];
                 Object object = constructor.newInstance(new Object[]{data});
                 fill(type, object);
                 list.add(object);
@@ -438,7 +443,7 @@ public class Jira {
         }
     }
 
-    private Object toObject(Hashtable data, Class type) {
+    private Object toObject(Map data, Class type) {
         try {
             Constructor constructor = type.getConstructor(new Class[]{Map.class});
             Object object = constructor.newInstance(new Object[]{data});
@@ -470,9 +475,14 @@ public class Jira {
     }
 
     private Object call(String command, Object[] args) throws XmlRpcException, IOException {
-        Vector vector = new Vector();
-        if (token != null) vector.add(token);
-        vector.addAll(Arrays.asList(args));
+        Object[] vector;
+        if (token != null) {
+            vector = new Object[args.length+1];
+            vector[0] = token;
+            System.arraycopy(args, 0, vector, 1, args.length);
+        } else {
+            vector = args;
+        }
         return client.execute("jira1." + command, vector);
     }
 
@@ -564,8 +574,8 @@ public class Jira {
         }
 
         Object result = exec(call);
-        if (result instanceof Vector) {
-            List list = toList((Vector) result, type);
+        if (result instanceof Object[]) {
+            List list = toList((Object[]) result, type);
             Map indexes = new HashMap();
             String[] uniqueFields = (String[]) cacheMetadata.get(type);
             for (int i = 0; uniqueFields != null && i < uniqueFields.length; i++) {
@@ -580,20 +590,24 @@ public class Jira {
             indexes.put(List.class, new MapObjectList(list));
 //            indexes.put(List.class, Collections.unmodifiableList(list));
             result = indexes;
-        } else if (result instanceof Hashtable){
-            result = toObject((Hashtable)result, type);
+        } else if (result instanceof Map){
+            result = toObject((Map)result, type);
         }
 
         callcache.put(call, result);
         return result;
     }
 
-
     private Object exec(Call call) {
         try {
-            Vector vector = new Vector();
-            if (token != null) vector.add(token);
-            vector.addAll(Arrays.asList(call.args));
+            Object[] vector;
+            if (token != null) {
+                vector = new Object[call.args.length+1];
+                vector[0] = token;
+                System.arraycopy(call.args, 0, vector, 1, call.args.length);
+            } else {
+                vector = call.args;
+            }
             return client.execute("jira1." + call.command, vector);
         } catch (Exception e) {
             throw new RuntimeException(e);

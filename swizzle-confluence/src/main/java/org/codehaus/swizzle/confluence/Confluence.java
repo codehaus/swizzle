@@ -1,18 +1,18 @@
 package org.codehaus.swizzle.confluence;
 
-import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.client.XmlRpcClient;
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.apache.xmlrpc.XmlRpcException;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 /**
  * @version $Revision$ $Date$
@@ -30,7 +30,11 @@ public class Confluence {
             endpoint += "/rpc/xmlrpc";
         }
 
-        this.client = new XmlRpcClient(endpoint);
+        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
+        clientConfig.setServerURL(new URL(endpoint));
+
+        client = new XmlRpcClient();
+        client.setConfig(clientConfig);
     }
 
     public void login(String username, String password) throws Exception {
@@ -56,7 +60,7 @@ public class Confluence {
      * retrieve some basic information about the server being connected to. Useful for clients that need to turn certain features on or off depending on the version of the server. (Since 1.0.3)
      */
     public ServerInfo getServerInfo() throws Exception {
-        Hashtable data = (Hashtable) call("getServerInfo");
+        Map data = (Map) call("getServerInfo");
         return new ServerInfo(data);
     }
 
@@ -64,7 +68,7 @@ public class Confluence {
      * returns all the {@link SpaceSummary} instances that the current user can see.
      */
     public List getSpaces() throws Exception {
-        Vector vector = (Vector) call("getSpaces");
+        Object[] vector = (Object[]) call("getSpaces");
         return toList(vector, SpaceSummary.class);
     }
 
@@ -72,7 +76,7 @@ public class Confluence {
      * returns a single Space.
      */
     public Space getSpace(String spaceKey) throws Exception {
-        Hashtable data = (Hashtable) call("getSpace", spaceKey);
+        Map data = (Map) call("getSpace", spaceKey);
         return new Space(data);
     }
 
@@ -87,7 +91,7 @@ public class Confluence {
      * create a new space, passing in name, key and description.
      */
     public Space addSpace(Space space) throws Exception {
-        Hashtable data = (Hashtable) call("addSpace", space.toHashtable());
+        Map data = (Map) call("addSpace", space.toMap());
         return new Space(data);
     }
 
@@ -102,7 +106,7 @@ public class Confluence {
      * returns all the {@link PageSummary} instances in the space. Doesn't include pages which are in the Trash. Equivalent to calling {{Space.getCurrentPages()}}.
      */
     public List getPages(String spaceKey) throws Exception {
-        Vector vector = (Vector) call("getPages", spaceKey);
+        Object[] vector = (Object[]) call("getPages", spaceKey);
         return toList(vector, PageSummary.class);
     }
 
@@ -110,7 +114,7 @@ public class Confluence {
      * returns a single Page
      */
     public Page getPage(String pageId) throws Exception {
-        Hashtable data = (Hashtable) call("getPage", pageId);
+        Map data = (Map) call("getPage", pageId);
         return new Page(data);
     }
 
@@ -118,7 +122,7 @@ public class Confluence {
      * returns a single Page
      */
     public Page getPage(String spaceKey, String pageTitle) throws Exception {
-        Hashtable data = (Hashtable) call("getPage", spaceKey, pageTitle);
+        Map data = (Map) call("getPage", spaceKey, pageTitle);
         return new Page(data);
     }
 
@@ -126,7 +130,7 @@ public class Confluence {
      * returns all the {@link PageHistorySummary} instances - useful for looking up the previous versions of a page, and who changed them.
      */
     public List getPageHistory(String pageId) throws Exception {
-        Vector vector = (Vector) call("getPageHistory", pageId);
+        Object[] vector = (Object[]) call("getPageHistory", pageId);
         return toList(vector, PageHistorySummary.class);
     }
 
@@ -134,7 +138,7 @@ public class Confluence {
      * returns all the {@link Attachment}s for this page (useful to point users to download them with the full file download URL returned).
      */
     public List getAttachments(String pageId) throws Exception {
-        Vector vector = (Vector) call("getAttachments", pageId);
+        Object[] vector = (Object[]) call("getAttachments", pageId);
         return toList(vector, Attachment.class);
     }
 
@@ -142,7 +146,7 @@ public class Confluence {
      * returns all the ancestors (as {@link PageSummary} instances) of this page (parent, parent's parent etc).
      */
     public List getAncestors(String pageId) throws Exception {
-        Vector vector = (Vector) call("getAncestors", pageId);
+        Object[] vector = (Object[]) call("getAncestors", pageId);
         return toList(vector, PageSummary.class);
     }
 
@@ -150,7 +154,7 @@ public class Confluence {
      * returns all the direct children (as {@link PageSummary} instances) of this page.
      */
     public List getChildren(String pageId) throws Exception {
-        Vector vector = (Vector) call("getChildren", pageId);
+        Object[] vector = (Object[]) call("getChildren", pageId);
         return toList(vector, PageSummary.class);
     }
 
@@ -158,7 +162,7 @@ public class Confluence {
      * returns all the descendents (as {@link PageSummary} instances) of this page (children, children's children etc).
      */
     public List getDescendents(String pageId) throws Exception {
-        Vector vector = (Vector) call("getDescendents", pageId);
+        Object[] vector = (Object[]) call("getDescendents", pageId);
         return toList(vector, PageSummary.class);
     }
 
@@ -166,7 +170,7 @@ public class Confluence {
      * returns all the {@link Comment}s for this page.
      */
     public List getComments(String pageId) throws Exception {
-        Vector vector = (Vector) call("getComments", pageId);
+        Object[] vector = (Object[]) call("getComments", pageId);
         return toList(vector, Comment.class);
     }
 
@@ -174,7 +178,7 @@ public class Confluence {
      * returns an individual comment.
      */
     public Comment getComment(String commentId) throws Exception {
-        Hashtable data = (Hashtable) call("getComment", commentId);
+        Map data = (Map) call("getComment", commentId);
         return new Comment(data);
     }
 
@@ -182,7 +186,7 @@ public class Confluence {
      * adds a comment to the page.
      */
     public Comment addComment(Comment comment) throws Exception {
-        Hashtable data = (Hashtable) call("addComment", comment.toHashtable());
+        Map data = (Map) call("addComment", comment.toMap());
         return new Comment(data);
     }
 
@@ -198,7 +202,7 @@ public class Confluence {
      * add or update a page. For adding, the Page given as an argument should have space, title and content fields at a minimum. For updating, the Page given should have id, space, title, content and version fields at a minimum. The parentId field is always optional. All other fields will be ignored.
      */
     public Page storePage(Page page) throws Exception {
-        Hashtable data = (Hashtable) call("storePage", page.toHashtable());
+        Map data = (Map) call("storePage", page.toMap());
         return new Page(data);
     }
 
@@ -220,7 +224,7 @@ public class Confluence {
     /**
      * Like the above renderContent(), but you can supply an optional hash (map, dictionary, etc) containing additional instructions for the renderer. Currently, only one such parameter is supported:
      */
-    public String renderContent(String spaceKey, String pageId, String content, Hashtable parameters) throws Exception {
+    public String renderContent(String spaceKey, String pageId, String content, Map parameters) throws Exception {
         return (String) call("renderContent", spaceKey, pageId, content, parameters);
     }
 
@@ -235,7 +239,7 @@ public class Confluence {
      * get information about an attachment.
      */
     public Attachment getAttachment(String pageId, String fileName, String versionNumber) throws Exception {
-        Hashtable data = (Hashtable) call("getAttachment", pageId, fileName, versionNumber);
+        Map data = (Map) call("getAttachment", pageId, fileName, versionNumber);
         return new Attachment(data);
     }
 
@@ -250,7 +254,7 @@ public class Confluence {
      * add a new attachment to a content entity object. *Note that this uses a lot of memory -- about 4 times the size of the attachment.*
      */
     public Attachment addAttachment(long contentId, Attachment attachment, byte[] attachmentData) throws Exception {
-        Hashtable data = (Hashtable) call("addAttachment", new Long(contentId), attachment.toHashtable(), attachmentData);
+        Map data = (Map) call("addAttachment", new Long(contentId), attachment.toMap(), attachmentData);
         return new Attachment(data);
     }
 
@@ -274,7 +278,7 @@ public class Confluence {
      * returns all the {@link BlogEntrySummary} instances in the space.
      */
     public List getBlogEntries(String spaceKey) throws Exception {
-        Vector vector = (Vector) call("getBlogEntries", spaceKey);
+        Object[] vector = (Object[]) call("getBlogEntries", spaceKey);
         return toList(vector, BlogEntrySummary.class);
     }
 
@@ -282,7 +286,7 @@ public class Confluence {
      * returns a single BlogEntry.
      */
     public BlogEntry getBlogEntry(String pageId) throws Exception {
-        Hashtable data = (Hashtable) call("getBlogEntry", pageId);
+        Map data = (Map) call("getBlogEntry", pageId);
         return new BlogEntry(data);
     }
 
@@ -290,7 +294,7 @@ public class Confluence {
      * add or update a blog entry. For adding, the BlogEntry given as an argument should have space, title and content fields at a minimum. For updating, the BlogEntry given should have id, space, title, content and version fields at a minimum. All other fields will be ignored.
      */
     public BlogEntry storeBlogEntry(BlogEntry entry) throws Exception {
-        Hashtable data = (Hashtable) call("storeBlogEntry", entry.toHashtable());
+        Map data = (Map) call("storeBlogEntry", entry.toMap());
         return new BlogEntry(data);
     }
 
@@ -298,7 +302,7 @@ public class Confluence {
      * Retrieves a blog post in the Space with the given spaceKey, with the title 'postTitle' and posted on the day 'dayOfMonth'.
      */
     public BlogEntry getBlogEntryByDayAndTitle(String spaceKey, int dayOfMonth, String postTitle) throws Exception {
-        Hashtable data = (Hashtable) call("getBlogEntryByDayAndTitle", spaceKey, new Integer(dayOfMonth), postTitle);
+        Map data = (Map) call("getBlogEntryByDayAndTitle", spaceKey, new Integer(dayOfMonth), postTitle);
         return new BlogEntry(data);
     }
 
@@ -306,7 +310,7 @@ public class Confluence {
      * return a list of {@link SearchResult}s which match a given search query (including pages and other content types). This is the same as a performing a parameterised search (see below) with an empty parameter map.
      */
     public List search(String query, int maxResults) throws Exception {
-        Vector vector = (Vector) call("search", query, new Integer(maxResults));
+        Object[] vector = (Object[]) call("search", query, new Integer(maxResults));
         return toList(vector, SearchResult.class);
     }
 
@@ -314,7 +318,7 @@ public class Confluence {
      * Returns a list of {@link SearchResult}s like the previous search, but you can optionally limit your search by adding parameters to the parameter map. If you do not include a parameter, the default is used instead.
      */
     public List search(String query, Map parameters, int maxResults) throws Exception {
-        Vector vector = (Vector) call("search", query, parameters, new Integer(maxResults));
+        Object[] vector = (Object[]) call("search", query, parameters, new Integer(maxResults));
         return toList(vector, SearchResult.class);
     }
 
@@ -322,7 +326,7 @@ public class Confluence {
      * Returns a List of {@link Permission}s representing the permissions the current user has for this space (a list of "view", "modify", "comment" and / or "admin").
      */
     public List getPermissions(String spaceKey) throws Exception {
-        Vector vector = (Vector) call("getPermissions", spaceKey);
+        Object[] vector = (Object[]) call("getPermissions", spaceKey);
         return toList(vector, Permission.class);
     }
 
@@ -330,7 +334,7 @@ public class Confluence {
      * Returns a List of {@link Permission}s representing the permissions the given user has for this space. (since 2.1.4)
      */
     public List getPermissionsForUser(String spaceKey, String userName) throws Exception {
-        Vector vector = (Vector) call("getPermissionsForUser", spaceKey, userName);
+        Object[] vector = (Object[]) call("getPermissionsForUser", spaceKey, userName);
         return toList(vector, Permission.class);
     }
 
@@ -338,7 +342,7 @@ public class Confluence {
      * Returns a List of {@link Permission}s representing the permissions set on the given page.
      */
     public List getPagePermissions(String pageId) throws Exception {
-        Vector vector = (Vector) call("getPagePermissions", pageId);
+        Object[] vector = (Object[]) call("getPagePermissions", pageId);
         return toList(vector, Permission.class);
     }
 
@@ -346,7 +350,7 @@ public class Confluence {
      * returns List of the space level {@link Permission}s which may be granted. This is a list of possible permissions to use with {{addPermissionToSpace}}, below, not a list of current permissions on a Space.
      */
     public List getSpaceLevelPermissions() throws Exception {
-        Vector vector = (Vector) call("getSpaceLevelPermissions");
+        Object[] vector = (Object[]) call("getSpaceLevelPermissions");
         return toList(vector, Permission.class);
     }
 
@@ -361,8 +365,8 @@ public class Confluence {
     /**
      * Give the entity named {{remoteEntityName}} (either a group or a user) the permissions {{permissions}} on the space with the key {{spaceKey}}.
      */
-    public boolean addPermissionsToSpace(Vector permissions, String remoteEntityName, String spaceKey) throws Exception {
-        Boolean value = (Boolean) call("addPermissionsToSpace", permissions, remoteEntityName, spaceKey);
+    public boolean addPermissionsToSpace(List permissions, String remoteEntityName, String spaceKey) throws Exception {
+        Boolean value = (Boolean) call("addPermissionsToSpace", permissions.toArray(), remoteEntityName, spaceKey);
         return value.booleanValue();
     }
 
@@ -385,8 +389,8 @@ public class Confluence {
     /**
      * Give anonymous users the permissions {{permissions}} on the space with the key {{spaceKey}}. (since 2.0)
      */
-    public boolean addAnonymousPermissionsToSpace(Vector permissions, String spaceKey) throws Exception {
-        Boolean value = (Boolean) call("addAnonymousPermissionsToSpace", permissions, spaceKey);
+    public boolean addAnonymousPermissionsToSpace(List permissions, String spaceKey) throws Exception {
+        Boolean value = (Boolean) call("addAnonymousPermissionsToSpace", permissions.toArray(), spaceKey);
         return value.booleanValue();
     }
 
@@ -410,7 +414,7 @@ public class Confluence {
      * get a single user
      */
     public User getUser(String username) throws Exception {
-        Hashtable data = (Hashtable) call("getUser", username);
+        Map data = (Map) call("getUser", username);
         return new User(data);
     }
 
@@ -418,7 +422,7 @@ public class Confluence {
      * add a new user with the given password
      */
     public void addUser(User user, String password) throws Exception {
-        call("addUser", user.toHashtable(), password);
+        call("addUser", user.toMap(), password);
     }
 
     /**
@@ -432,8 +436,8 @@ public class Confluence {
      * get a user's current groups as a list of {@link String}s
      */
     public List getUserGroups(String username) throws Exception {
-        Vector vector = (Vector) call("getUserGroups", username);
-        return new ArrayList(vector);
+        Object[] vector = (Object[]) call("getUserGroups", username);
+        return Arrays.asList(vector);
     }
 
     /**
@@ -471,8 +475,8 @@ public class Confluence {
      * gets all groups as a list of {@link String}s
      */
     public List getGroups() throws Exception {
-        Vector vector = (Vector) call("getGroups");
-        return new ArrayList(vector);
+        Object[] vector = (Object[]) call("getGroups");
+        return Arrays.asList(vector);
     }
 
     /**
@@ -495,7 +499,7 @@ public class Confluence {
      * edits the details of a user
      */
     public boolean editUser(User remoteUser) throws Exception {
-        Boolean value = (Boolean) call("editUser", remoteUser.toHashtable());
+        Boolean value = (Boolean) call("editUser", remoteUser.toMap());
         return value.booleanValue();
     }
 
@@ -519,15 +523,15 @@ public class Confluence {
      * returns all registered users as Strings
      */
     public List getActiveUsers(boolean viewAll) throws Exception {
-        Vector vector = (Vector) call("getActiveUsers", new Boolean(viewAll));
-        return new ArrayList(vector);
+        Object[] vector = (Object[]) call("getActiveUsers", new Boolean(viewAll));
+        return Arrays.asList(vector);
     }
 
     /**
      * updates user information
      */
     public boolean setUserInformation(UserInformation userInfo) throws Exception {
-        Boolean value = (Boolean) call("setUserInformation", userInfo.toHashtable());
+        Boolean value = (Boolean) call("setUserInformation", userInfo.toMap());
         return value.booleanValue();
     }
 
@@ -535,7 +539,7 @@ public class Confluence {
      * Retrieves user information
      */
     public UserInformation getUserInformation(String username) throws Exception {
-        Hashtable data = (Hashtable) call("getUserInformation", username);
+        Map data = (Map) call("getUserInformation", username);
         return new UserInformation(data);
     }
 
@@ -559,7 +563,7 @@ public class Confluence {
      * Returns all {@link Label}s for the given ContentEntityObject ID
      */
     public List getLabelsById(long objectId) throws Exception {
-        Vector vector = (Vector) call("getLabelsById", new Long(objectId));
+        Object[] vector = (Object[]) call("getLabelsById", new Long(objectId));
         return toList(vector, Label.class);
     }
 
@@ -567,7 +571,7 @@ public class Confluence {
      * Returns the most popular {@link Label}s for the Confluence instance, with a specified maximum number.
      */
     public List getMostPopularLabels(int maxCount) throws Exception {
-        Vector vector = (Vector) call("getMostPopularLabels", new Integer(maxCount));
+        Object[] vector = (Object[]) call("getMostPopularLabels", new Integer(maxCount));
         return toList(vector, Label.class);
     }
 
@@ -575,7 +579,7 @@ public class Confluence {
      * Returns the most popular {@link Label}s for the given {{spaceKey}}, with a specified maximum number of results.
      */
     public List getMostPopularLabelsInSpace(String spaceKey, int maxCount) throws Exception {
-        Vector vector = (Vector) call("getMostPopularLabelsInSpace", spaceKey, new Integer(maxCount));
+        Object[] vector = (Object[]) call("getMostPopularLabelsInSpace", spaceKey, new Integer(maxCount));
         return toList(vector, Label.class);
     }
 
@@ -583,7 +587,7 @@ public class Confluence {
      * Returns the recently used {@link Label}s for the Confluence instance, with a specified maximum number of results.
      */
     public List getRecentlyUsedLabels(int maxResults) throws Exception {
-        Vector vector = (Vector) call("getRecentlyUsedLabels", new Integer(maxResults));
+        Object[] vector = (Object[]) call("getRecentlyUsedLabels", new Integer(maxResults));
         return toList(vector, Label.class);
     }
 
@@ -591,7 +595,7 @@ public class Confluence {
      * Returns the recently used {@link Label}s for the given {{spaceKey}}, with a specified maximum number of results.
      */
     public List getRecentlyUsedLabelsInSpace(String spaceKey, int maxResults) throws Exception {
-        Vector vector = (Vector) call("getRecentlyUsedLabelsInSpace", spaceKey, new Integer(maxResults));
+        Object[] vector = (Object[]) call("getRecentlyUsedLabelsInSpace", spaceKey, new Integer(maxResults));
         return toList(vector, Label.class);
     }
 
@@ -599,7 +603,7 @@ public class Confluence {
      * Returns an array of {@link Space}s that have been labelled with {{labelName}}.
      */
     public List getSpacesWithLabel(String labelName) throws Exception {
-        Vector vector = (Vector) call("getSpacesWithLabel", labelName);
+        Object[] vector = (Object[]) call("getSpacesWithLabel", labelName);
         return toList(vector, Space.class);
     }
 
@@ -607,7 +611,7 @@ public class Confluence {
      * Returns the {@link Label}s related to the given label name, with a specified maximum number of results.
      */
     public List getRelatedLabels(String labelName, int maxResults) throws Exception {
-        Vector vector = (Vector) call("getRelatedLabels", labelName, new Integer(maxResults));
+        Object[] vector = (Object[]) call("getRelatedLabels", labelName, new Integer(maxResults));
         return toList(vector, Label.class);
     }
 
@@ -615,7 +619,7 @@ public class Confluence {
      * Returns the {@link Label}s related to the given label name for the given {{spaceKey}}, with a specified maximum number of results.
      */
     public List getRelatedLabelsInSpace(String labelName, String spaceKey, int maxResults) throws Exception {
-        Vector vector = (Vector) call("getRelatedLabelsInSpace", labelName, spaceKey, new Integer(maxResults));
+        Object[] vector = (Object[]) call("getRelatedLabelsInSpace", labelName, spaceKey, new Integer(maxResults));
         return toList(vector, Label.class);
     }
 
@@ -623,7 +627,7 @@ public class Confluence {
      * Retrieves the {@link Label}s matching the given {{labelName}}, {{namespace}}, {{spaceKey}} or {{owner}}.
      */
     public List getLabelsByDetail(String labelName, String namespace, String spaceKey, String owner) throws Exception {
-        Vector vector = (Vector) call("getLabelsByDetail", labelName, namespace, spaceKey, owner);
+        Object[] vector = (Object[]) call("getLabelsByDetail", labelName, namespace, spaceKey, owner);
         return toList(vector, Label.class);
     }
 
@@ -631,23 +635,23 @@ public class Confluence {
      * Returns the content for a given label ID
      */
     public List getLabelContentById(long labelId) throws Exception {
-        Vector vector = (Vector) call("getLabelContentById", new Long(labelId));
-        return new ArrayList(vector);
+        Object[] vector = (Object[]) call("getLabelContentById", new Long(labelId));
+        return Arrays.asList(vector);
     }
 
     /**
      * Returns the content for a given label name.
      */
     public List getLabelContentByName(String labelName) throws Exception {
-        Vector vector = (Vector) call("getLabelContentByName", labelName);
-        return new ArrayList(vector);
+        Object[] vector = (Object[]) call("getLabelContentByName", labelName);
+        return Arrays.asList(vector);
     }
 
     /**
      * Returns the content for a given Label object.
      */
     public List getLabelContentByObject(Label labelObject) throws Exception {
-        Vector vector = (Vector) call("getLabelContentByObject", labelObject.toHashtable());
+        Object[] vector = (Object[]) call("getLabelContentByObject", labelObject.toMap());
         return toList(vector, Label.class);
     }
 
@@ -655,7 +659,7 @@ public class Confluence {
      * Returns all Spaces that have content labelled with {{labelName}}.
      */
     public List getSpacesContainingContentWithLabel(String labelName) throws Exception {
-        Vector vector = (Vector) call("getSpacesContainingContentWithLabel", labelName);
+        Object[] vector = (Object[]) call("getSpacesContainingContentWithLabel", labelName);
         return toList(vector, Space.class);
     }
 
@@ -679,7 +683,7 @@ public class Confluence {
      * Adds the given label object to the object with the given ContentEntityObject ID.
      */
     public boolean addLabelByObject(Label labelObject, long objectId) throws Exception {
-        Boolean value = (Boolean) call("addLabelByObject", labelObject.toHashtable(), new Long(objectId));
+        Boolean value = (Boolean) call("addLabelByObject", labelObject.toMap(), new Long(objectId));
         return value.booleanValue();
     }
 
@@ -711,7 +715,7 @@ public class Confluence {
      * Removes the given label object from the object with the given ContentEntityObject ID.
      */
     public boolean removeLabelByObject(Label labelObject, long objectId) throws Exception {
-        Boolean value = (Boolean) call("removeLabelByObject", labelObject.toHashtable(), new Long(objectId));
+        Boolean value = (Boolean) call("removeLabelByObject", labelObject.toMap(), new Long(objectId));
         return value.booleanValue();
     }
 
@@ -723,12 +727,12 @@ public class Confluence {
         return value.booleanValue();
     }
 
-    private List toList(Vector vector, Class type) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        List list = new ArrayList(vector.size());
+    private List toList(Object[] vector, Class type) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        List list = new ArrayList(vector.length);
 
         Constructor constructor = type.getConstructor(new Class[]{Map.class});
-        for (int i = 0; i < vector.size(); i++) {
-            Map data = (Map) vector.elementAt(i);
+        for (int i = 0; i < vector.length; i++) {
+            Map data = (Map) vector[i];
             Object object = constructor.newInstance(new Object[]{data});
             list.add(object);
         }
@@ -762,9 +766,14 @@ public class Confluence {
     }
 
     private Object call(String command, Object[] args) throws XmlRpcException, IOException {
-        Vector vector = new Vector();
-        if (token != null) vector.add(token);
-        vector.addAll(Arrays.asList(args));
+        Object[] vector;
+        if (token != null) {
+            vector = new Object[args.length+1];
+            vector[0] = token;
+            System.arraycopy(args, 0, vector, 1, args.length);
+        } else {
+            vector = args;
+        }
         return client.execute("confluence1." + command, vector);
     }
 }

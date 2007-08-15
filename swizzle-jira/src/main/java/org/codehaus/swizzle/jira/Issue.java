@@ -18,10 +18,8 @@ package org.codehaus.swizzle.jira;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
-import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @version $Revision$ $Date$
@@ -124,12 +122,12 @@ public class Issue extends MapObject implements Comparable {
     /**
      * List of something
      */
-    public Vector getCustomFieldValues() {
-        return getVector("customFieldValues");
+    public List getCustomFieldValues() {
+        return getList("customFieldValues");
     }
 
-    public void setCustomFieldValues(Vector customFieldValues) {
-        setVector("customFieldValues", customFieldValues);
+    public void setCustomFieldValues(List customFieldValues) {
+        setList("customFieldValues", customFieldValues);
     }
 
     /**
@@ -165,7 +163,7 @@ public class Issue extends MapObject implements Comparable {
         return getMapObjects("affectsVersions", Version.class);
     }
 
-    public void setAffectsVersions(Vector affectsVersions) {
+    public void setAffectsVersions(List affectsVersions) {
         setMapObjects("affectsVersions", affectsVersions);
     }
 
@@ -356,11 +354,11 @@ public class Issue extends MapObject implements Comparable {
     }
 
 
-    public Hashtable toHashtable() {
+    public Map toMap() {
         // It's unlikely that you can even update the votes via xml-rpc
         // till we know for sure, best to make sure the tally is current
         setInt("votes", getVoters().size());
-        return super.toHashtable();
+        return super.toMap();
     }
 
     public boolean equals(Object o) {

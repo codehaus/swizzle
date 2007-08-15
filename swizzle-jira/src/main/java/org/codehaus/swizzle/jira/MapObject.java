@@ -23,9 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
-import java.util.Vector;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -41,14 +39,14 @@ public class MapObject {
 
     /**
      * When Sending data of the following type, do not
-     * send a Hashtable, instead send a single value
-     * from the hashtable to act as a reference to the
+     * send a HashMap, instead send a single value
+     * from the hashmap to act as a reference to the
      * object.
      */
     protected Map xmlrpcRefs = new HashMap();
 
     /**
-     * A list of fields in this hashtable which should
+     * A list of fields in this hashmap which should
      * not be sent on xml-rpc create or update calls.
      */
     protected List xmlrpcNoSend = new ArrayList();
@@ -134,11 +132,11 @@ public class MapObject {
         return new Date();
     }
 
-    protected Vector getVector(String key) {
-        return (Vector) fields.get(key);
+    protected List getList(String key) {
+        return (List) fields.get(key);
     }
 
-    protected void setVector(String key, Vector value) {
+    protected void setList(String key, List value) {
         fields.put(key, value);
     }
 
@@ -171,8 +169,8 @@ public class MapObject {
     protected List getMapObjects(String key, Class type) {
         List list;
         Object collection = fields.get(key);
-        if (collection instanceof Vector) {
-            Vector vector = (Vector) collection;
+        if (collection instanceof Object[]) {
+            Object[] vector = (Object[]) collection;
             try {
                 list = toList(vector, type);
                 fields.put(key, list);
@@ -193,11 +191,11 @@ public class MapObject {
         fields.put(key, objects);
     }
 
-    protected List toList(Vector vector, Class type) throws Exception {
-        List list = new MapObjectList(vector.size());
+    protected List toList(Object[] vector, Class type) throws Exception {
+        List list = new MapObjectList(vector.length);
 
-        for (int i = 0; i < vector.size(); i++) {
-            Object object = createMapObject(type, vector.elementAt(i));
+        for (int i = 0; i < vector.length; i++) {
+            Object object = createMapObject(type, vector[i]);
             list.add(object);
         }
 
@@ -222,26 +220,26 @@ public class MapObject {
         return (MapObject) object;
     }
 
-    public Hashtable toHashtable() {
+    public Map toMap() {
        // The fields table might have some key->null entries,
-       // don't want to add those to the hashtable.
-        Hashtable hashtable = new Hashtable(fields.size());
+       // don't want to add those to the hashmap.
+        Map map = new HashMap(fields.size());
         for (Iterator i = fields.entrySet().iterator(); i.hasNext();) {
                        Map.Entry entry = (Map.Entry) i.next();
                        if( entry.getValue()!=null ) {
-                               hashtable.put(entry.getKey(), entry.getValue());
+                               map.put(entry.getKey(), entry.getValue());
                        }
                }
 
         // Remove anything marked as "no send"
         for (int i = 0; i < xmlrpcNoSend.size(); i++) {
             String fieldName = (String) xmlrpcNoSend.get(i);
-            hashtable.remove(fieldName);
+            map.remove(fieldName);
         }
 
-        // Expand any MapObject values to be Hashtables
-        // Where specified, use the appropriate Id Field instead of the Hashtable
-        for (Iterator iterator = hashtable.entrySet().iterator(); iterator.hasNext();) {
+        // Expand any MapObject values to be Hashmaps
+        // Where specified, use the appropriate Id Field instead of the Hashmap
+        for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
             Object key = entry.getKey();
             Object value = entry.getValue();
@@ -249,26 +247,26 @@ public class MapObject {
             if (value instanceof MapObject) {
 
                 MapObject mapObject = (MapObject) value;
-                hashtable.put(key, toHashtableOrId(mapObject));
+                map.put(key, toMapOrId(mapObject));
 
-            } else if (value instanceof List && !(value instanceof Vector)) {
+            } else if (value instanceof List && !(value instanceof Object[])) {
 
                 List objects = (List) value;
-                Vector vector = new Vector();
+                Object[] vector = new Object[objects.size()];
 
                 for (int i = 0; i < objects.size(); i++) {
                     MapObject mapObject = (MapObject) objects.get(i);
-                    vector.add(toHashtableOrId(mapObject));
+                    vector[i] = toMapOrId(mapObject);
                 }
 
-                hashtable.put(key, vector);
+                map.put(key, vector);
             }
         }
-        return hashtable;
+        return map;
     }
 
-    private Object toHashtableOrId(MapObject mapObject) {
-        Hashtable child = mapObject.toHashtable();
+    private Object toMapOrId(MapObject mapObject) {
+        Map child = mapObject.toMap();
         Object object;
         String idField = (String) xmlrpcRefs.get(mapObject.getClass());
         if (idField != null){

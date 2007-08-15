@@ -18,7 +18,7 @@ package org.codehaus.swizzle.jira;
 
 import junit.framework.TestCase;
 
-import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * @version $Revision$ $Date$
@@ -75,7 +75,7 @@ public class JiraTest extends TestCase {
         assertEquals("Component.getId()", 12312, component.getId());
 
 
-        Hashtable data = issue.toHashtable();
+        Map data = issue.toMap();
 
         assertEquals("issue.Created", "2006-08-04 20:05:13.157", data.get("created"));
         assertEquals("issue.Summary", "Unit Test Summary", data.get("summary"));
@@ -122,7 +122,7 @@ public class JiraTest extends TestCase {
         assertEquals("Issue.getPriority()", "Blocker", issue.getPriority().getName());
         assertEquals("Issue.getLink()", "http://jira.codehaus.org/browse/SWIZZLE-1", issue.getLink());
 
-        Hashtable data = issue.toHashtable();
+        Map data = issue.toMap();
 
         assertEquals("issue.Created", "2006-08-04 20:05:13.157", data.get("created"));
         assertEquals("issue.Summary", "Unit Test Summary", data.get("summary"));

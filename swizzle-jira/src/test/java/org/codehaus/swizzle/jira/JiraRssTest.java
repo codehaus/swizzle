@@ -7,7 +7,7 @@ import junit.framework.*;
 import org.codehaus.swizzle.jira.JiraRss;
 
 import java.net.URL;
-import java.util.Hashtable;
+import java.util.Map;
 
 public class JiraRssTest extends TestCase {
 
@@ -47,7 +47,7 @@ public class JiraRssTest extends TestCase {
         assertEquals("Component.getName()", "jira client", component.getName());
 
 
-        Hashtable data = issue.toHashtable();
+        Map data = issue.toMap();
 
         assertEquals("issue.Created", "Fri, 4 Aug 2006 20:05:13 -0700 (PDT)", data.get("created"));
         assertEquals("issue.Summary", "Unit Test Summary", data.get("summary"));

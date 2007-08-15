@@ -20,7 +20,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 /**
@@ -75,12 +74,12 @@ public class MapObject {
         }
     }
 
-    public Hashtable toHashtable() {
-        return new Hashtable(fields);
+    public Map toMap() {
+        return new HashMap(fields);
     }
 
 
     public String toString() {
-        return toHashtable().toString();
+        return toMap().toString();
     }
 }

@@ -19,8 +19,8 @@
   <dependencies>
     <dependency>
       <groupId>xmlrpc</groupId>
-      <artifactId>xmlrpc</artifactId>
-      <version>1.2-b1</version>
+      <artifactId>xmlrpc-client</artifactId>
+      <version>3.0</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

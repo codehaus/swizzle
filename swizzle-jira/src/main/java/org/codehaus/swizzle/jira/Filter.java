@@ -23,11 +23,15 @@ import java.util.Map;
  */
 public class Filter extends MapObject {
 
+    public Filter() {
+        super();
+        xmlrpcRefs.put(User.class,"name");
+    }
+    
     public Filter(Map data) {
         super(data);
         xmlrpcRefs.put(User.class,"name");
     }
-
 
     /**
      * the id of this filter

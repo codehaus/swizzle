@@ -23,6 +23,10 @@ import java.util.Map;
  */
 public class Priority extends BasicObject {
 
+    public Priority() {
+        super();
+    }
+    
     public Priority(Map data) {
         super(data);
     }

@@ -56,6 +56,10 @@ public class MapObject {
     private final SimpleDateFormat[] formats;
     protected final Map fields;
 
+    protected MapObject() {
+        this(new HashMap());
+    }
+    
     protected MapObject(Map data) {
         fields = new HashMap(data);
         formats = new SimpleDateFormat[]{

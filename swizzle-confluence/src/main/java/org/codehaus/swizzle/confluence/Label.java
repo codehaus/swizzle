@@ -23,6 +23,10 @@ import java.util.Map;
  */
 public class Label extends MapObject {
 
+    public Label() {
+        super();
+    }
+    
     public Label(Map data) {
         super(data);
     }

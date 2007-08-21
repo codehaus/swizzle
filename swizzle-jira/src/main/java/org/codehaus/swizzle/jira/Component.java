@@ -17,19 +17,18 @@
 package org.codehaus.swizzle.jira;
 
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * @version $Revision$ $Date$
  */
 public class Component extends MapObject {
-
+    
+    public Component() {
+        super();
+    }
+    
     public Component(Map data) {
         super(data);
-    }
-
-    public Component() {
-        super(new HashMap());
     }
 
     public Component(String name) {

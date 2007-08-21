@@ -23,10 +23,13 @@ import java.util.Map;
  */
 public class ServerInfo extends MapObject {
 
+    public ServerInfo() {
+        super();
+    }
+
     public ServerInfo(Map data) {
         super(data);
     }
-
 
     /**
      * the major version number of the Confluence instance

@@ -24,6 +24,10 @@ import java.util.Map;
  */
 public class Page extends PageSummary {
 
+    public Page() {
+        super();
+    }
+    
     public Page(Map data) {
         super(data);
     }

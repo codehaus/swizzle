@@ -23,6 +23,10 @@ import java.util.Map;
  */
 public class BlogEntry extends MapObject {
 
+    public BlogEntry() {
+        super();
+    }
+    
     public BlogEntry(Map data) {
         super(data);
     }

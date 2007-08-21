@@ -23,6 +23,10 @@ import java.util.Map;
  */
 public class Permission extends MapObject {
 
+    public Permission() {
+        super();
+    }
+    
     public Permission(Map data) {
         super(data);
     }

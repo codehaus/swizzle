@@ -23,6 +23,10 @@ import java.util.Map;
  */
 public class SearchResult extends MapObject {
 
+    public SearchResult() {
+        super();
+    }
+    
     public SearchResult(Map data) {
         super(data);
     }

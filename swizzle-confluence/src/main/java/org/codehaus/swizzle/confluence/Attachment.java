@@ -24,6 +24,10 @@ import java.util.Map;
  */
 public class Attachment extends MapObject {
 
+    public Attachment() {
+        super();
+    }
+    
     public Attachment(Map data) {
         super(data);
     }

@@ -17,16 +17,16 @@
 package org.codehaus.swizzle.jira;
 
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * @version $Revision$ $Date$
  */
 public class Status extends BasicObject {
+    public Status() {
+        super();
+    }
+    
     public Status(Map data) {
         super(data);
-    }
-    public Status() {
-        super(new HashMap());
     }
 }

@@ -23,10 +23,13 @@ import java.util.Map;
  */
 public class User extends MapObject {
 
+    public User() {
+        super();
+    }
+
     public User(Map data) {
         super(data);
     }
-
 
     /**
      * the username of this user

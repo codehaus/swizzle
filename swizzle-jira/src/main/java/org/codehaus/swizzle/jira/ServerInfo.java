@@ -24,6 +24,10 @@ import java.util.Map;
  */
 public class ServerInfo extends MapObject {
 
+    public ServerInfo() {
+        super();
+    }
+    
     public ServerInfo(Map data) {
         super(data);
     }

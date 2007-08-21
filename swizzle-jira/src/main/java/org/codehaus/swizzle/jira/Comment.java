@@ -23,6 +23,11 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class Comment extends MapObject {
+    
+    public Comment() {
+        super();
+    }
+    
     public Comment(Map data) {
         super(data);
     }

@@ -24,11 +24,14 @@ import java.util.Map;
  */
 public class UserInformation extends MapObject {
 
+    public UserInformation() {
+        super();
+    }
+
     public UserInformation(Map data) {
         super(data);
     }
-
-
+    
     /**
      * the username of this user
      */

@@ -23,6 +23,10 @@ import java.util.Map;
  */
 public class PageSummary extends MapObject {
 
+    public PageSummary() {
+        super();
+    }
+    
     public PageSummary(Map data) {
         super(data);
     }

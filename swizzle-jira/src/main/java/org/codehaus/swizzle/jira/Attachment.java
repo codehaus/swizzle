@@ -16,21 +16,21 @@
  */
 package org.codehaus.swizzle.jira;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Date;
 import java.net.URL;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * @version $Revision$ $Date$
  */
 public class Attachment extends MapObject {
-    public Attachment(Map data) {
-        super(data);
-    }
 
     public Attachment() {
-        this(new HashMap());
+        super();
+    }
+    
+    public Attachment(Map data) {
+        super(data);
     }
 
     public int getId() {

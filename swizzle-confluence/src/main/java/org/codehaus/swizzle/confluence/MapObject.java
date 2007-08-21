@@ -29,6 +29,11 @@ public class MapObject {
 
     private final SimpleDateFormat format;
     private final Map fields;
+    
+    protected MapObject() {
+        fields = new HashMap();
+        format = new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy");
+    }
 
     protected MapObject(Map data) {
         fields = new HashMap(data);

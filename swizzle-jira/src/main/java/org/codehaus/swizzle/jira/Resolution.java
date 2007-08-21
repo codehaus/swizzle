@@ -22,6 +22,11 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class Resolution extends BasicObject {
+
+    public Resolution() {
+        super();
+    }
+    
     public Resolution(Map data) {
         super(data);
     }

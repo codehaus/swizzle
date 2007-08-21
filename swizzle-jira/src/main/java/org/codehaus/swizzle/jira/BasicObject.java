@@ -23,6 +23,10 @@ import java.util.Map;
  */
 public class BasicObject extends MapObject {
 
+    public BasicObject() {
+        super();
+    }
+    
     public BasicObject(Map data) {
         super(data);
     }

@@ -24,12 +24,12 @@ import java.util.HashMap;
  */
 public class User extends MapObject {
 
+    public User() {
+        super();
+    }
+    
     public User(Map data) {
         super(data);
-    }
-
-    public User() {
-        this(new HashMap());
     }
 
     public User(String name) {

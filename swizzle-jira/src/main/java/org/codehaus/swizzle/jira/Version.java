@@ -16,21 +16,20 @@
  */
 package org.codehaus.swizzle.jira;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @version $Revision$ $Date$
  */
 public class Version extends MapObject implements Comparable {
 
+    public Version(){
+        super();
+    }
+    
     public Version(Map data) {
         super(data);
-    }
-
-    public Version(){
-        this(new HashMap());
     }
 
     public Version(String name){

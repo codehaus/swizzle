@@ -24,6 +24,10 @@ import java.util.Map;
  */
 public class Comment extends MapObject {
 
+    public Comment() {
+        super();
+    }
+    
     public Comment(Map data) {
         super(data);
     }

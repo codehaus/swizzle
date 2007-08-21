@@ -24,6 +24,10 @@ import java.util.Map;
  */
 public class PageHistorySummary extends MapObject {
 
+    public PageHistorySummary() {
+        super();
+    }
+
     public PageHistorySummary(Map data) {
         super(data);
     }

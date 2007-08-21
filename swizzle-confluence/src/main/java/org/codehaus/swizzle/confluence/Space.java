@@ -23,11 +23,14 @@ import java.util.Map;
  */
 public class Space extends MapObject {
 
+    public Space() {
+        super();
+    }
+
     public Space(Map data) {
         super(data);
     }
-
-
+    
     /**
      * the space key
      */

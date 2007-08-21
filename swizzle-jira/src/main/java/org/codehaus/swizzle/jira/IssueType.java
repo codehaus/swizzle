@@ -23,11 +23,12 @@ import java.util.HashMap;
  * @version $Revision$ $Date$
  */
 public class IssueType extends BasicObject {
+
     public IssueType(Map data) {
         super(data);
     }
 
     public IssueType() {
-        super(new HashMap());
+        super();
     }
 }

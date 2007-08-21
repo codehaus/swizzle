@@ -23,13 +23,13 @@ import java.util.HashMap;
  * @version $Revision$ $Date$
  */
 public class Project extends MapObject {
-
+    
+    public Project() {
+        super();
+    }
+    
     public Project(Map data) {
         super(data);
-    }
-
-    public Project() {
-        super(new HashMap());
     }
 
     public Project(String key){

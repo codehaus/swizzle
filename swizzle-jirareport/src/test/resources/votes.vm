@@ -1,8 +1,0 @@
-#set( $jira = $rss.fetch("http://jira.codehaus.org/secure/IssueNavigator.jspa?view=rss&&pid=11230&component=12371&tempMax=25&reset=true&decorator=none") )
-#set( $issues = $jira.issues )
-
-Issue sorted by votes
-
-#foreach ( $issue in $issues.descending("votes") )
- $issue.votes votes -- $issue.summary  ($issue.key)
-#end

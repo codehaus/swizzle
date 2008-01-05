@@ -1,15 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <parent>
-    <artifactId>maven-plugins</artifactId>
-    <groupId>org.apache.maven.plugins</groupId>
-    <version>1</version>
-  </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>dependency-report-plugin</artifactId>
   <groupId>org.codehaus.swizzle</groupId>
+  <artifactId>dependency-report-plugin</artifactId>
   <packaging>maven-plugin</packaging>
+  <version>1.0-SNAPSHOT</version>
   <name>Dependency Report Plugin</name>
-  <version>1.0</version>
   <prerequisites>
     <maven>2.0.4</maven>
   </prerequisites>
@@ -64,8 +59,8 @@
     </site>
   </distributionManagement>
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/plugins/tags/dependency-report-plugin-1.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/plugins/tags/dependency-report-plugin-1.0</developerConnection>
-    <url>scm:svn:https://svn.apache.org/repos/asf/maven/plugins/tags/dependency-report-plugin-1.0</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/plugins/trunk/dependency-report-plugin</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/plugins/trunk/dependency-report-plugin</developerConnection>
+    <url>scm:svn:https://svn.apache.org/repos/asf/maven/plugins/trunk/dependency-report-plugin</url>
   </scm>
 </project>

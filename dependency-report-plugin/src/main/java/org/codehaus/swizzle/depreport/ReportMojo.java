@@ -200,8 +200,26 @@ public class ReportMojo
             if (parent == 0) {
                 rootDep.addChild(dep);
             } else {
-                Dependency parentDep = (Dependency) deps.get(trail.get(parent));
-                parentDep.addChild(dep);
+                String parentId = (String) trail.get(parent);
+                Dependency parentDep = (Dependency) deps.get(parentId);
+
+                if (parentDep == null && parentId.endsWith("SNAPSHOT")){
+                    for (Iterator iter = deps.entrySet().iterator(); iter.hasNext();) {
+                        Map.Entry entry = (Map.Entry) iter.next();
+                        String id = (String) entry.getKey();
+                        id = id.substring(0, id.lastIndexOf(':'));
+                        if (parentId.startsWith(id)){
+                            parentDep = (Dependency) entry.getValue();
+                            break;
+                        }
+                    }
+                }
+                if (parentDep == null){
+                    rootDep.addChild(dep);
+                    getLog().info("Couldn't find parent for "+dep.getId());
+                } else {
+                    parentDep.addChild(dep);
+                }
             }
         }
 

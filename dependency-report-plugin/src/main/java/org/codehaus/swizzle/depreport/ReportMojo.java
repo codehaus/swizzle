@@ -45,7 +45,6 @@ import java.util.Set;
  *
  * @goal report
  * @requiresDependencyResolution test
- * @aggregator
  */
 public class ReportMojo
         extends AbstractMojo {
@@ -119,10 +118,6 @@ public class ReportMojo
     public void execute()
             throws MojoExecutionException, MojoFailureException {
 
-        if (!outputDirectory.exists()){
-            outputDirectory.mkdirs();
-        }
-
         Map deps = new HashMap();
 
         AndArtifactFilter filter = new AndArtifactFilter();
@@ -148,12 +143,21 @@ public class ReportMojo
 
         RootDep rootDep = asDependencyTree(deps);
 
+        if (rootDep.getChildern().size() == 0){
+            getLog().info("No dependencies to report");
+            return;
+        }
+
         List formats = getFormats();
         for (int i = 0; i < formats.size(); i++) {
             try {
                 String format = (String) formats.get(i);
 
                 String filename = name + "." + format;
+
+                if (!outputDirectory.exists()){
+                    outputDirectory.mkdirs();
+                }
 
                 File destFile = new File(outputDirectory, filename);
 
@@ -195,31 +199,41 @@ public class ReportMojo
         // Link
         for (Iterator iterator = deps.values().iterator(); iterator.hasNext();) {
             Dependency dep = (Dependency) iterator.next();
-            List trail = dep.getArtifact().getDependencyTrail();
-            int parent = trail.size() - 2;
-            if (parent == 0) {
-                rootDep.addChild(dep);
-            } else {
-                String parentId = (String) trail.get(parent);
-                Dependency parentDep = (Dependency) deps.get(parentId);
+            try {
+                List trail = dep.getArtifact().getDependencyTrail();
+                if (trail == null){
+                    rootDep.artifact = dep.getArtifact();
+                    continue;
+                }
 
-                if (parentDep == null && parentId.endsWith("SNAPSHOT")){
-                    for (Iterator iter = deps.entrySet().iterator(); iter.hasNext();) {
-                        Map.Entry entry = (Map.Entry) iter.next();
-                        String id = (String) entry.getKey();
-                        id = id.substring(0, id.lastIndexOf(':'));
-                        if (parentId.startsWith(id)){
-                            parentDep = (Dependency) entry.getValue();
-                            break;
+                int parent = trail.size() - 2;
+
+                if (parent == 0) {
+                    rootDep.addChild(dep);
+                } else {
+                    String parentId = (String) trail.get(parent);
+                    Dependency parentDep = (Dependency) deps.get(parentId);
+
+                    if (parentDep == null && parentId.endsWith("SNAPSHOT")){
+                        for (Iterator iter = deps.entrySet().iterator(); iter.hasNext();) {
+                            Map.Entry entry = (Map.Entry) iter.next();
+                            String id = (String) entry.getKey();
+                            id = id.substring(0, id.lastIndexOf(':'));
+                            if (parentId.startsWith(id)){
+                                parentDep = (Dependency) entry.getValue();
+                                break;
+                            }
                         }
                     }
+                    if (parentDep == null){
+                        rootDep.addChild(dep);
+                        getLog().info("Couldn't find parent for "+dep.getId());
+                    } else {
+                        parentDep.addChild(dep);
+                    }
                 }
-                if (parentDep == null){
-                    rootDep.addChild(dep);
-                    getLog().info("Couldn't find parent for "+dep.getId());
-                } else {
-                    parentDep.addChild(dep);
-                }
+            } catch (Exception e) {
+                getLog().error("Could not link dep "+dep.getId(), e);
             }
         }
 
@@ -239,12 +253,19 @@ public class ReportMojo
     }
 
     public static class RootDep extends Dependency {
+
+        private Artifact artifact;
+
         public RootDep() {
             super(null);
         }
 
+        public Artifact getArtifact() {
+            return artifact;
+        }
+
         public String getId() {
-            return "root";
+            return (artifact == null)? "root": artifact.getId();
         }
     }
 

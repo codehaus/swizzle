@@ -36,7 +36,7 @@ public class XmlFormatter extends Formatter {
 
     public void format(Dependency root) throws IOException {
         out.println("<dependencies>");
-        print(root.getChildern(), indent);
+        print(root.getChildren(), indent);
         out.println("</dependencies>");
     }
 
@@ -79,9 +79,9 @@ public class XmlFormatter extends Formatter {
             print(s, "optional", dep.getArtifact().isOptional()+"");
         }
 
-        if (dep.getChildern().size() > 0){
+        if (dep.getChildren().size() > 0){
             out.println(">");
-            print(dep.getChildern(), s + indent);
+            print(dep.getChildren(), s + indent);
             out.print(s);
             out.println("</dependency>");
         } else {

@@ -20,6 +20,11 @@ import org.apache.maven.artifact.Artifact;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.io.IOException;
 
 /**
  * @version $Rev$ $Date$
@@ -29,9 +34,55 @@ public class Dependency {
 
     private final List childern = new ArrayList();
 
+    private final Set usedClasses = new HashSet();
+
+    private final ResourceFinder finder;
+
+    private boolean duplicate;
+
+    public Dependency() {
+        this.artifact = null;
+        this.finder = null;
+    }
     public Dependency(Artifact artifact) {
         this.artifact = artifact;
 
+        try {
+            this.finder = new ResourceFinder(artifact.getFile().toURL());
+        } catch (Exception e) {
+            throw new IllegalStateException(artifact.getId(), e);
+        }
+    }
+
+    public boolean provides(String className) {
+        try {
+            URL classUrl = finder.find(className + ".class");
+            if (classUrl != null) {
+                usedClasses.add(className);
+                return true;
+            }
+            return false;
+        } catch (IOException e) {
+            return false;
+        } catch(Exception e){
+            throw new IllegalStateException(getId(), e);
+        }
+    }
+
+    public boolean isDuplicate() {
+        return duplicate;
+    }
+
+    public void setDuplicate(boolean duplicate) {
+        this.duplicate = duplicate;
+    }
+
+    public boolean isUsed(){
+        return usedClasses.size() > 0;
+    }
+
+    public Set getUsedClasses() {
+        return usedClasses;
     }
 
     public Artifact getArtifact() {
@@ -42,7 +93,7 @@ public class Dependency {
         childern.add(dep);
     }
 
-    public List getChildern() {
+    public List getChildren() {
         return childern;
     }
 

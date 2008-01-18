@@ -30,7 +30,7 @@ public class PlainTextFormatter extends Formatter {
     }
 
     public void format(Dependency root) throws IOException {
-        print(root.getChildern(), "");
+        print(root.getChildren(), "");
     }
 
     private void print(List childern, String s) {
@@ -43,7 +43,7 @@ public class PlainTextFormatter extends Formatter {
                 out.print(" (optional)");
             }
             out.println();
-            print(dep.getChildern(), s + " ");
+            print(dep.getChildren(), s + " ");
         }
     }
 }

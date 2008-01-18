@@ -30,7 +30,7 @@ public class WikiFormatter extends Formatter {
     }
 
     public void format(Dependency root) throws IOException {
-        print(root.getChildern(), "");
+        print(root.getChildren(), "");
     }
 
     private void print(List childern, String s) {
@@ -44,7 +44,7 @@ public class WikiFormatter extends Formatter {
                 out.print(" _(optional)_");
             }
             out.println("");
-            print(dep.getChildern(), s + " ");
+            print(dep.getChildren(), s + " ");
         }
 
     }

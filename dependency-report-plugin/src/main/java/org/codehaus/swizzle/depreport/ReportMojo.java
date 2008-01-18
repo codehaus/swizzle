@@ -143,7 +143,7 @@ public class ReportMojo
 
         RootDep rootDep = asDependencyTree(deps);
 
-        if (rootDep.getChildern().size() == 0){
+        if (rootDep.getChildren().size() == 0){
             getLog().info("No dependencies to report");
             return;
         }
@@ -241,7 +241,7 @@ public class ReportMojo
         deps.put(rootDep.getId(), rootDep);
         for (Iterator iterator = deps.values().iterator(); iterator.hasNext();) {
             Dependency dep = (Dependency) iterator.next();
-            Collections.sort(dep.getChildern(), new Comparator() {
+            Collections.sort(dep.getChildren(), new Comparator() {
                 public int compare(Object o1, Object o2) {
                     String a = ((Dependency) o1).getArtifact().getFile().getName();
                     String b = ((Dependency) o2).getArtifact().getFile().getName();
@@ -257,7 +257,7 @@ public class ReportMojo
         private Artifact artifact;
 
         public RootDep() {
-            super(null);
+            super();
         }
 
         public Artifact getArtifact() {

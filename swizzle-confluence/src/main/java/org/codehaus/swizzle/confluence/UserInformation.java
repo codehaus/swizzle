@@ -119,4 +119,12 @@ public class UserInformation extends MapObject {
     public void setLastModificationDate(Date lastModificationDate) {
         setDate("lastModificationDate", lastModificationDate);
     }
+
+    public Map toRawMap() {
+        Map map = super.toRawMap();
+        map.put("version", new Integer(getVersion()));
+        map.put("creationDate", getCreationDate());
+        map.put("lastModificationDate", getLastModificationDate());
+        return map;
+    }
 }

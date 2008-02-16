@@ -16,41 +16,15 @@
  */
 package org.codehaus.swizzle.confluence;
 
-import java.util.Map;
+import java.net.MalformedURLException;
 
 /**
  * @version $Revision$ $Date$
  */
-public class Space extends SpaceSummary {
+public class XWiki extends Confluence {
 
-    public Space() {
-        super();
+    public XWiki(String endpoint) throws MalformedURLException {
+        super(endpoint);
+        super.sendRawData = true;
     }
-
-    public Space(Map data) {
-        super(data);
-    }
-    
-    /**
-     * the id of the space homepage
-     */
-    public String getHomepage() {
-        return getString("homepage");
-    }
-
-    public void setHomepage(String homepage) {
-        setString("homepage", homepage);
-    }
-
-    /**
-     * the HTML rendered space description
-     */
-    public String getDescription() {
-        return getString("description");
-    }
-
-    public void setDescription(String description) {
-        setString("description", description);
-    }
-
 }

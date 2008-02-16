@@ -19,6 +19,7 @@ import org.apache.xmlrpc.client.XmlRpcClientException;
 public class Confluence {
     private final XmlRpcClient client;
     private String token;
+    protected boolean sendRawData;
 
     public Confluence(String endpoint) throws MalformedURLException {
         if (endpoint.endsWith("/")) {
@@ -34,8 +35,16 @@ public class Confluence {
 
         client = new XmlRpcClient();
         client.setConfig(clientConfig);
-        
+
         token = ""; // empty token allows anonymous access
+    }
+
+    public boolean willSendRawData() {
+        return sendRawData;
+    }
+
+    public void sendRawData(boolean sendRawData) {
+        this.sendRawData = sendRawData;
     }
 
     public void login(String username, String password) throws SwizzleException, ConfluenceException {
@@ -92,7 +101,7 @@ public class Confluence {
      * create a new space, passing in name, key and description.
      */
     public Space addSpace(Space space) throws SwizzleException, ConfluenceException {
-        Map data = (Map) call("addSpace", space.toMap());
+        Map data = (Map) call("addSpace", space);
         return new Space(data);
     }
 
@@ -187,7 +196,7 @@ public class Confluence {
      * adds a comment to the page.
      */
     public Comment addComment(Comment comment) throws SwizzleException, ConfluenceException {
-        Map data = (Map) call("addComment", comment.toMap());
+        Map data = (Map) call("addComment", comment);
         return new Comment(data);
     }
 
@@ -203,7 +212,7 @@ public class Confluence {
      * add or update a page. For adding, the Page given as an argument should have space, title and content fields at a minimum. For updating, the Page given should have id, space, title, content and version fields at a minimum. The parentId field is always optional. All other fields will be ignored.
      */
     public Page storePage(Page page) throws SwizzleException, ConfluenceException {
-        Map data = (Map) call("storePage", page.toMap());
+        Map data = (Map) call("storePage", page);
         return new Page(data);
     }
 
@@ -255,7 +264,7 @@ public class Confluence {
      * add a new attachment to a content entity object. *Note that this uses a lot of memory -- about 4 times the size of the attachment.*
      */
     public Attachment addAttachment(long contentId, Attachment attachment, byte[] attachmentData) throws SwizzleException, ConfluenceException {
-        Map data = (Map) call("addAttachment", new Long(contentId), attachment.toMap(), attachmentData);
+        Map data = (Map) call("addAttachment", new Long(contentId), attachment, attachmentData);
         return new Attachment(data);
     }
 
@@ -295,7 +304,7 @@ public class Confluence {
      * add or update a blog entry. For adding, the BlogEntry given as an argument should have space, title and content fields at a minimum. For updating, the BlogEntry given should have id, space, title, content and version fields at a minimum. All other fields will be ignored.
      */
     public BlogEntry storeBlogEntry(BlogEntry entry) throws SwizzleException, ConfluenceException {
-        Map data = (Map) call("storeBlogEntry", entry.toMap());
+        Map data = (Map) call("storeBlogEntry", entry);
         return new BlogEntry(data);
     }
 
@@ -423,7 +432,7 @@ public class Confluence {
      * add a new user with the given password
      */
     public void addUser(User user, String password) throws SwizzleException, ConfluenceException {
-        call("addUser", user.toMap(), password);
+        call("addUser", user, password);
     }
 
     /**
@@ -500,7 +509,7 @@ public class Confluence {
      * edits the details of a user
      */
     public boolean editUser(User remoteUser) throws SwizzleException, ConfluenceException {
-        Boolean value = (Boolean) call("editUser", remoteUser.toMap());
+        Boolean value = (Boolean) call("editUser", remoteUser);
         return value.booleanValue();
     }
 
@@ -532,7 +541,7 @@ public class Confluence {
      * updates user information
      */
     public boolean setUserInformation(UserInformation userInfo) throws SwizzleException, ConfluenceException {
-        Boolean value = (Boolean) call("setUserInformation", userInfo.toMap());
+        Boolean value = (Boolean) call("setUserInformation", userInfo);
         return value.booleanValue();
     }
 
@@ -652,7 +661,7 @@ public class Confluence {
      * Returns the content for a given Label object.
      */
     public List getLabelContentByObject(Label labelObject) throws SwizzleException, ConfluenceException {
-        Object[] vector = (Object[]) call("getLabelContentByObject", labelObject.toMap());
+        Object[] vector = (Object[]) call("getLabelContentByObject", labelObject);
         return toList(vector, Label.class);
     }
 
@@ -684,7 +693,7 @@ public class Confluence {
      * Adds the given label object to the object with the given ContentEntityObject ID.
      */
     public boolean addLabelByObject(Label labelObject, long objectId) throws SwizzleException, ConfluenceException {
-        Boolean value = (Boolean) call("addLabelByObject", labelObject.toMap(), new Long(objectId));
+        Boolean value = (Boolean) call("addLabelByObject", labelObject, new Long(objectId));
         return value.booleanValue();
     }
 
@@ -716,7 +725,7 @@ public class Confluence {
      * Removes the given label object from the object with the given ContentEntityObject ID.
      */
     public boolean removeLabelByObject(Label labelObject, long objectId) throws SwizzleException, ConfluenceException {
-        Boolean value = (Boolean) call("removeLabelByObject", labelObject.toMap(), new Long(objectId));
+        Boolean value = (Boolean) call("removeLabelByObject", labelObject, new Long(objectId));
         return value.booleanValue();
     }
 
@@ -772,6 +781,17 @@ public class Confluence {
     }
 
     private Object call(String command, Object[] args) throws SwizzleException {
+        for (int i = 0; i < args.length; i++) {
+            Object arg = args[i];
+            if (arg instanceof MapObject) {
+                MapObject map = (MapObject) arg;
+                if (sendRawData){
+                    args[i] = map.toRawMap();
+                } else {
+                    args[i] = map.toMap();
+                }
+            }
+        }
         Object[] vector;
         if (!command.equals("login")) {
             vector = new Object[args.length+1];

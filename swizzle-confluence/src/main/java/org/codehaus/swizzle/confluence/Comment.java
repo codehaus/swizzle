@@ -110,4 +110,9 @@ public class Comment extends MapObject {
         setString("creator", creator);
     }
 
+    public Map toRawMap() {
+        Map map = super.toRawMap();
+        map.put("created", getCreated());
+        return map;
+    }
 }

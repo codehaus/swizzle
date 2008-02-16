@@ -131,4 +131,13 @@ public class Page extends PageSummary {
         setBoolean("current", current);
     }
 
+    public Map toRawMap() {
+        Map map = super.toRawMap();
+        map.put("created", getCreated());
+        map.put("modified", getModified());
+        map.put("homePage", new Boolean(isHomePage()));
+        map.put("current", new Boolean(isCurrent()));
+        map.put("version", new Integer(getVersion()));
+        return map;
+    }
 }

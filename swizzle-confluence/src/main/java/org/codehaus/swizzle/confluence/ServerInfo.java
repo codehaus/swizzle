@@ -97,4 +97,12 @@ public class ServerInfo extends MapObject {
         setString("baseUrl", baseUrl);
     }
 
+    public Map toRawMap() {
+        Map map = super.toRawMap();
+        map.put("majorVersion", new Integer(getMajorVersion()));
+        map.put("minorVersion", new Integer(getMinorVersion()));
+        map.put("patchLevel", new Integer(getPatchLevel()));
+        map.put("developmentBuild", new Boolean(isDevelopmentBuild()));
+        return map;
+    }
 }

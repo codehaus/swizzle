@@ -41,7 +41,17 @@ public class MapObject {
     }
 
     protected String getString(String key) {
-        return (String) fields.get(key);
+        Object o = fields.get(key);
+        if (o instanceof String) {
+            return (String) o;
+        }
+
+        if (o instanceof Integer) setInt(key, ((Integer) o).intValue());
+        else if (o instanceof Boolean) setBoolean(key, ((Boolean) o).booleanValue());
+        else if (o instanceof Date) setDate(key, ((Date) o));
+        else throw new IllegalStateException("Unsupported data type: "+o.getClass().getName());
+
+        return getString(key);
     }
 
     protected boolean getBoolean(String key) {
@@ -83,6 +93,9 @@ public class MapObject {
         return new HashMap(fields);
     }
 
+    public Map toRawMap(){
+        return toMap();
+    }
 
     public String toString() {
         return toMap().toString();

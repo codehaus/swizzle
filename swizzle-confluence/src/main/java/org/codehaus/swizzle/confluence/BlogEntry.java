@@ -109,4 +109,11 @@ public class BlogEntry extends MapObject {
         setInt("locks", locks);
     }
 
+    public Map toRawMap() {
+        Map map = super.toRawMap();
+        map.put("version", new Integer(getVersion()));
+        map.put("locks", new Integer(getLocks()));
+        return map;
+    }
+
 }

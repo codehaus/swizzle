@@ -99,4 +99,11 @@ public class BlogEntrySummary extends MapObject {
         setDate("publishDate", publishDate);
     }
 
+    public Map toRawMap() {
+        Map map = super.toRawMap();
+        map.put("publishDate", getPublishDate());
+        map.put("locks", new Integer(getLocks()));
+        return map;
+    }
+
 }

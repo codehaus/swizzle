@@ -18,6 +18,7 @@ package org.codehaus.swizzle.confluence;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @version $Revision$ $Date$
@@ -27,7 +28,7 @@ public class Attachment extends MapObject {
     public Attachment() {
         super();
     }
-    
+
     public Attachment(Map data) {
         super(data);
     }
@@ -143,4 +144,9 @@ public class Attachment extends MapObject {
         setString("comment", comment);
     }
 
+    public Map toRawMap() {
+        Map map = super.toRawMap();
+        map.put("created", getCreated());
+        return map;
+    }
 }

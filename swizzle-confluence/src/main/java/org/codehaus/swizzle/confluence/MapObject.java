@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Iterator;
 
 /**
  * @version $Revision$ $Date$
@@ -29,7 +30,7 @@ public class MapObject {
 
     private final SimpleDateFormat format;
     private final Map fields;
-    
+
     protected MapObject() {
         fields = new HashMap();
         format = new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy");
@@ -38,20 +39,24 @@ public class MapObject {
     protected MapObject(Map data) {
         fields = new HashMap(data);
         format = new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy");
+
+        for (Iterator iterator = fields.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            String key = (String) entry.getKey();
+            Object o = entry.getValue();
+
+            if (o instanceof String) continue;
+
+            if (o instanceof Integer) setInt(key, ((Integer) o).intValue());
+            else if (o instanceof Boolean) setBoolean(key, ((Boolean) o).booleanValue());
+            else if (o instanceof Date) setDate(key, ((Date) o));
+            else throw new IllegalStateException("Unsupported data type: "+o.getClass().getName());
+
+        }
     }
 
     protected String getString(String key) {
-        Object o = fields.get(key);
-        if (o instanceof String) {
-            return (String) o;
-        }
-
-        if (o instanceof Integer) setInt(key, ((Integer) o).intValue());
-        else if (o instanceof Boolean) setBoolean(key, ((Boolean) o).booleanValue());
-        else if (o instanceof Date) setDate(key, ((Date) o));
-        else throw new IllegalStateException("Unsupported data type: "+o.getClass().getName());
-
-        return getString(key);
+        return (String) fields.get(key);
     }
 
     protected boolean getBoolean(String key) {

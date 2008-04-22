@@ -123,6 +123,10 @@ public class Confluence {
     /**
      * returns a single Page
      */
+    public Page getPage(PageSummary summary) throws SwizzleException, ConfluenceException {
+        return getPage(summary.getId());
+    }
+
     public Page getPage(String pageId) throws SwizzleException, ConfluenceException {
         Map data = (Map) call("getPage", pageId);
         return new Page(data);
@@ -337,7 +341,7 @@ public class Confluence {
      */
     public List getPermissions(String spaceKey) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getPermissions", spaceKey);
-        return toList(vector, Permission.class);
+        return Arrays.asList(vector);
     }
 
     /**

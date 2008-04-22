@@ -18,9 +18,12 @@ package org.codehaus.swizzle.confluence;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -29,30 +32,30 @@ import java.util.Map;
 public class MapObject {
 
     private static final SimpleDateFormat[] formats;
+
     static {
         formats = new SimpleDateFormat[]{
-                new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy"),
-                new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z"),
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S"),
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SZ"),
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S"),
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ"),
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"),
-                new SimpleDateFormat("yyyy-MM-dd HH:mmZ"),
-                new SimpleDateFormat("yyyy-MM-dd HH:mm"),
+                new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy", Locale.US),
+                new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SZ", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd HH:mmZ", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US),
                 // XML-RPC spec compliant iso8601 formats
-                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SZ"),
-                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S"),
-                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ"),
-                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"),
-                new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ"),
-                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm"),
-                new SimpleDateFormat("yyyy-MM-dd"),
-                new SimpleDateFormat("yyyyMMdd"),
-        };
+                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SZ", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd", Locale.US),
+                new SimpleDateFormat("yyyyMMdd", Locale.US)};
     }
-    
-    private final Map fields;
+
+    protected final Map fields;
 
     protected MapObject() {
         this(new HashMap());
@@ -133,7 +136,6 @@ public class MapObject {
         throw new IllegalStateException("Field '" + key + "' is of unknown type: " + o.getClass().getName());
     }
 
-
     protected void setDate(String key, Date value) {
         fields.put(key, value);
     }
@@ -177,6 +179,91 @@ public class MapObject {
 
         notParsable.printStackTrace();
         return new Date();
+    }
+
+    /*
+     * Defensive programming. Since we are allowing users to insert arrays and maps in MapObjects,
+     * we check that those structured types don't contain any not supported types.
+     */
+    private void checkXmlRpcTypes(Object object) {
+        boolean checkPassed = false;
+
+        if (object.getClass().isArray()) {
+            Object[] objects = (Object[]) object;
+            for (int i = 0; i < objects.length; i++) {
+                checkXmlRpcTypes(objects[i]);
+            }
+
+            checkPassed = true;
+        } else if (object instanceof List) {
+            List list = (List) object;
+            for (int i = 0; i < list.size(); i++) {
+                checkXmlRpcTypes(list.get(i));
+            }
+
+            checkPassed = true;
+        } else if (object instanceof Map) {
+            Map map = (Map) object;
+            Iterator i = map.keySet().iterator();
+            while (i.hasNext()) {
+                Object key = i.next();
+                Object value = map.get(key);
+                checkXmlRpcTypes(value);
+            }
+
+            checkPassed = true;
+        } else if (object instanceof String) {
+            checkPassed = true;
+        } else if (object instanceof Date) {
+            checkPassed = true;
+        } else if (object instanceof Integer) {
+            checkPassed = true;
+        } else if (object instanceof Boolean) {
+            checkPassed = true;
+        }
+
+        if (!checkPassed) {
+            throw new IllegalStateException("Object '" + object.toString() + "' has a not supported type " + object.getClass().getName());
+        }
+    }
+
+    protected void setList(String key, List value) {
+        checkXmlRpcTypes(value);
+        fields.put(key, value);
+    }
+
+    protected List getList(String key) {
+        Object objects = fields.get(key);
+
+        if (objects == null) return null;
+
+        if (objects instanceof List) return (List) objects;
+
+        if (objects.getClass().isArray()) {
+            ArrayList result = new ArrayList();
+            Object[] array = (Object[]) objects;
+            for (int i = 0; i < array.length; i++) {
+                result.add(array[i]);
+            }
+            return result; // Arrays.asList((Object[]) objects);
+        }
+
+        throw new IllegalStateException("Field '" + key + "' is of unknown type: " + objects.getClass().getName());
+    }
+
+    protected void setMap(String key, Map value) {
+        checkXmlRpcTypes(value);
+        fields.put(key, value);
+    }
+
+    protected Map getMap(String key) {
+        Object object = fields.get(key);
+
+        if (object == null) return null;
+
+        if (object instanceof Map) return (Map) object;
+
+        throw new IllegalStateException("Field '" + key + "' is of unknown type: " + object.getClass().getName());
     }
 
     public Map toMap() {

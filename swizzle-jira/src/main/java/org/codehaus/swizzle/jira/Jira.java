@@ -16,21 +16,21 @@
  */
 package org.codehaus.swizzle.jira;
 
-import org.apache.xmlrpc.client.XmlRpcClient;
-import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.apache.xmlrpc.XmlRpcException;
-
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Collection;
-import java.util.Iterator;
+
+import org.apache.xmlrpc.XmlRpcException;
+import org.apache.xmlrpc.client.XmlRpcClient;
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 /**
  * @version $Revision$ $Date$
@@ -253,16 +253,33 @@ public class Jira {
      * List<{@link Project}>:  Returns a list of projects available to the user
      */
     public List getProjects() {
-        return cachedList(new Call("getProjects"), Project.class);
+        if ( getServerInfo().getVersion().substring( 0, 4 ).compareTo( "3.13" ) < 0 )
+            // In Jira < 3.13
+            return cachedList( new Call( "getProjects" ), Project.class );
+        else
+            // Otherwise
+            return cachedList( new Call( "getProjectsNoSchemes" ), Project.class );
     }
 
     public Project getProject(String key) {
-        Map objects = cachedMap(new Call("getProjects"), Project.class, "key");
+        Map objects;
+        if ( getServerInfo().getVersion().substring( 0, 4 ).compareTo( "3.13" ) < 0 )
+            // In Jira < 3.13
+            objects = cachedMap( new Call( "getProjects" ), Project.class, "key" );
+        else
+            // Otherwise
+            objects = cachedMap( new Call( "getProjectsNoSchemes" ), Project.class, "key" );
         return (Project) objects.get(key);
     }
 
     public Project getProject(int id) {
-        Map objects = cachedMap(new Call("getProjects"), Project.class, "id");
+        Map objects;
+        if ( getServerInfo().getVersion().substring( 0, 4 ).compareTo( "3.13" ) < 0 )
+            // In Jira < 3.13
+            objects = cachedMap( new Call( "getProjects" ), Project.class, "id" );
+        else
+            // Otherwise
+            objects = cachedMap( new Call( "getProjectsNoSchemes" ), Project.class, "id" );
         return (Project) objects.get(id + "");
     }
 

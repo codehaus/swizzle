@@ -16,9 +16,9 @@
  */
 package org.codehaus.swizzle.jira;
 
-import java.util.List;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 
 /**
  * @version $Revision$ $Date$
@@ -124,5 +124,5 @@ public class BasicIssueFiller implements IssueFiller {
         IssueType source = jira.getIssueType(dest.getId());
         if (source == null) source = jira.getIssueType(dest.getName());
         dest.merge(source);
-    }
+    }    
 }

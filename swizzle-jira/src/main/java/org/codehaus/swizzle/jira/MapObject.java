@@ -18,19 +18,19 @@ package org.codehaus.swizzle.jira;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.net.URL;
-import java.net.MalformedURLException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @version $Revision$ $Date$
@@ -177,6 +177,7 @@ public class MapObject {
             Object[] vector = (Object[]) collection;
             try {
                 list = toList(vector, type);
+                Iterator iter = list.iterator();
                 fields.put(key, list);
             } catch (Exception e) {
                 list = new MapObjectList();

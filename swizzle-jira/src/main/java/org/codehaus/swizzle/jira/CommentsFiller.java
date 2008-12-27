@@ -17,8 +17,6 @@
 package org.codehaus.swizzle.jira;
 
 import java.util.List;
-import java.net.URL;
-import java.net.MalformedURLException;
 
 /**
  * @version $Revision$ $Date$

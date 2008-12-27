@@ -123,11 +123,11 @@ public class Issue extends MapObject implements Comparable {
      * List of something
      */
     public List getCustomFieldValues() {
-        return getList("customFieldValues");
+        return getMapObjects( "customFieldValues", CustomFieldValue.class );
     }
 
     public void setCustomFieldValues(List customFieldValues) {
-        setList("customFieldValues", customFieldValues);
+        setMapObjects( "customFieldValues", customFieldValues );
     }
 
     /**

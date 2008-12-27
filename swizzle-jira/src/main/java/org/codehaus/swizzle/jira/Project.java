@@ -17,7 +17,6 @@
 package org.codehaus.swizzle.jira;
 
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * @version $Revision$ $Date$

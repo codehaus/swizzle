@@ -16,30 +16,34 @@
  */
 package org.codehaus.swizzle.jira;
 
-import junit.framework.TestCase;
-
+import java.text.SimpleDateFormat;
 import java.util.Map;
+
+import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$
  */
 public class JiraTest extends TestCase {
 
+    // Date is retrieved without timezone from xmlrpc (@codehaus?)
+    SimpleDateFormat formatter = new SimpleDateFormat( "EEE MMM dd HH:mm:ss yyyy" );
+
     public void testJira() throws Exception {
         Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
         jira.login("swizzletester", "swizzle");
 
         Issue issue = jira.getIssue("SWIZZLE-1");
-        assertEquals("Issue.getCreated()", "Fri Aug 04 20:05:13 PDT 2006", issue.getCreated().toString());
+        assertEquals( "Issue.getCreated()", "Fri Aug 04 20:05:13 2006", formatter.format( issue.getCreated() ) );
         assertEquals("Issue.getSummary()", "Unit Test Summary", issue.getSummary());
         assertEquals("Issue.getType()", 2, issue.getType().getId());
         assertEquals("Issue.getEnvironment()", "Unit Test Environment", issue.getEnvironment());
         assertEquals("Issue.getStatus()", 6, issue.getStatus().getId());
-        assertEquals("Issue.getUpdated()", "Fri Aug 04 21:33:48 PDT 2006", issue.getUpdated().toString());
+        assertEquals( "Issue.getUpdated()", "Fri Aug 04 21:33:48 2006", formatter.format( issue.getUpdated() ) );
         assertEquals("Issue.getId()", 40099, issue.getId());
         assertEquals("Issue.getKey()", "SWIZZLE-1", issue.getKey());
         assertEquals("Issue.getDescription()", "Unit Test Description", issue.getDescription());
-        assertEquals("Issue.getDuedate()", "Sun Aug 06 00:00:00 PDT 2006", issue.getDuedate().toString());
+        assertEquals( "Issue.getDuedate()", "Sun Aug 06 00:00:00 2006", formatter.format( issue.getDuedate() ) );
         assertEquals("Issue.getReporter()", "dblevins", issue.getReporter().getName());
         assertEquals("Issue.getProject()", "SWIZZLE", issue.getProject().getKey());
         assertEquals("Issue.getResolution()", 1, issue.getResolution().getId());
@@ -54,7 +58,8 @@ public class JiraTest extends TestCase {
         assertEquals("Version.getName()", "Test Version", version.getName());
         assertEquals("Version.getReleased()", false, version.getReleased());
         assertEquals("Version.getArchived()", false, version.getArchived());
-        assertEquals("Version.getReleaseDate()", "Sun Aug 06 00:00:00 PDT 2006", version.getReleaseDate().toString());
+        assertEquals( "Version.getReleaseDate()", "Sun Aug 06 00:00:00 2006",
+                      formatter.format( version.getReleaseDate() ) );
         assertEquals("Version.getSequence()", 1, version.getSequence());
         assertEquals("Version.getId()", 12831, version.getId());
 
@@ -64,7 +69,8 @@ public class JiraTest extends TestCase {
         assertEquals("Version.getName()", "Test Version", version.getName());
         assertEquals("Version.getReleased()", false, version.getReleased());
         assertEquals("Version.getArchived()", false, version.getArchived());
-        assertEquals("Version.getReleaseDate()", "Sun Aug 06 00:00:00 PDT 2006", version.getReleaseDate().toString());
+        assertEquals( "Version.getReleaseDate()", "Sun Aug 06 00:00:00 2006",
+                      formatter.format( version.getReleaseDate() ) );
         assertEquals("Version.getSequence()", 1, version.getSequence());
         assertEquals("Version.getId()", 12831, version.getId());
 
@@ -104,16 +110,16 @@ public class JiraTest extends TestCase {
         Issue issue = jira.getIssue("SWIZZLE-1");
         issue = jira.fill(issue);
 
-        assertEquals("Issue.getCreated()", "Fri Aug 04 20:05:13 PDT 2006", issue.getCreated().toString());
+        assertEquals( "Issue.getCreated()", "Fri Aug 04 20:05:13 2006", formatter.format( issue.getCreated() ) );
         assertEquals("Issue.getSummary()", "Unit Test Summary", issue.getSummary());
         assertEquals("Issue.getType()", "New Feature", issue.getType().getName());
         assertEquals("Issue.getEnvironment()", "Unit Test Environment", issue.getEnvironment());
         assertEquals("Issue.getStatus()", "Closed", issue.getStatus().getName());
-        assertEquals("Issue.getUpdated()", "Fri Aug 04 21:33:48 PDT 2006", issue.getUpdated().toString());
+        assertEquals( "Issue.getUpdated()", "Fri Aug 04 21:33:48 2006", formatter.format( issue.getUpdated() ) );
         assertEquals("Issue.getId()", 40099, issue.getId());
         assertEquals("Issue.getKey()", "SWIZZLE-1", issue.getKey());
         assertEquals("Issue.getDescription()", "Unit Test Description", issue.getDescription());
-        assertEquals("Issue.getDuedate()", "Sun Aug 06 00:00:00 PDT 2006", issue.getDuedate().toString());
+        assertEquals( "Issue.getDuedate()", "Sun Aug 06 00:00:00 2006", formatter.format( issue.getDuedate() ) );
         assertEquals("Issue.getReporter()", "David Blevins", issue.getReporter().getFullname());
         assertEquals("Issue.getProject()", "SWIZZLE", issue.getProject().getKey());
         assertEquals("Issue.getResolution()", "Fixed", issue.getResolution().getName());

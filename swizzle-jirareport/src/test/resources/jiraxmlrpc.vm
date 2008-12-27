@@ -11,9 +11,9 @@
     - components:  $issue.components
     - status:  $issue.status
     - resolution:  $issue.resolution
-    - created:  $issue.created
-    - updated:  $issue.updated
-    - duedate:  $issue.duedate
+    - created:  $date.format($issue.created,'EEE MMM dd HH:mm:ss yyyy')
+    - updated:  $date.format($issue.updated,'EEE MMM dd HH:mm:ss yyyy')
+    - duedate:  $date.format($issue.duedate,'EEE MMM dd HH:mm:ss yyyy')
     - reporter:  $issue.reporter
     - assignee:  $issue.assignee
     - votes:  $issue.votes

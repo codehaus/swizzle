@@ -16,15 +16,19 @@
  */
 package org.codehaus.swizzle.jira;
 
-import junit.framework.TestCase;
-
+import java.text.SimpleDateFormat;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$
  */
 public class AttachmentsTest extends TestCase {
-
+    
+    // Date is retrieved without timezone from xmlrpc (@codehaus?)
+    SimpleDateFormat formatter = new SimpleDateFormat( "EEE MMM dd HH:mm:ss yyyy" );
+    
     public void testJira() throws Exception {
         Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
         jira.login("swizzletester", "swizzle");
@@ -48,21 +52,21 @@ public class AttachmentsTest extends TestCase {
         assertEquals("Attachment.getUrl()", "http://jira.codehaus.org/secure/attachment/22972/ONE.patch", attachment.getUrl().toExternalForm());
         assertEquals("Attachment.getId()", 22972, attachment.getId());
         assertEquals("Attachment.getAuthor()", "David Blevins", attachment.getAuthor());
-        assertEquals("Attachment.getCreated()", "Tue Sep 19 22:42:00 PDT 2006", attachment.getCreated().toString());
+        assertEquals( "Attachment.getCreated()", "Tue Sep 19 22:42:00 2006", formatter.format( attachment.getCreated() ) );
 
         attachment = (Attachment) attachments.get(1);
         assertEquals("Attachment.getFileName()", "THREE.tar.gz", attachment.getFileName());
         assertEquals("Attachment.getUrl()", "http://jira.codehaus.org/secure/attachment/22975/THREE.tar.gz", attachment.getUrl().toExternalForm());
         assertEquals("Attachment.getId()", 22975, attachment.getId());
         assertEquals("Attachment.getAuthor()", "David Blevins", attachment.getAuthor());
-        assertEquals("Attachment.getCreated()", "Tue Sep 19 22:43:00 PDT 2006", attachment.getCreated().toString());
+        assertEquals( "Attachment.getCreated()", "Tue Sep 19 22:43:00 2006", formatter.format( attachment.getCreated() ) );
 
         attachment = (Attachment) attachments.get(2);
         assertEquals("Attachment.getFileName()", "TWO.txt", attachment.getFileName());
         assertEquals("Attachment.getUrl()", "http://jira.codehaus.org/secure/attachment/22973/TWO.txt", attachment.getUrl().toExternalForm());
         assertEquals("Attachment.getId()", 22973, attachment.getId());
         assertEquals("Attachment.getAuthor()", "David Blevins", attachment.getAuthor());
-        assertEquals("Attachment.getCreated()", "Tue Sep 19 22:42:00 PDT 2006", attachment.getCreated().toString());
+        assertEquals( "Attachment.getCreated()", "Tue Sep 19 22:42:00 2006", formatter.format( attachment.getCreated() ) );
 
     }
 

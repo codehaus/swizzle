@@ -16,28 +16,31 @@
  */
 package org.codehaus.swizzle.jira;
 
-import junit.framework.TestCase;
-
-import java.util.Hashtable;
+import java.text.SimpleDateFormat;
 import java.util.List;
+
+import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$
  */
 public class SubTasksTest extends TestCase {
-
+    
+    // Date is retrieved without timezone from xmlrpc (@codehaus?)
+    SimpleDateFormat formatter = new SimpleDateFormat( "EEE MMM dd HH:mm:ss yyyy" );
+    
     public void testJira() throws Exception {
         Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
         jira.login("swizzletester", "swizzle");
         jira.autofill("subtasks", true);
 
         Issue issue = jira.getIssue("SWIZZLE-2");
-        assertEquals("Issue.getCreated()", "Sun Aug 27 18:23:40 PDT 2006", issue.getCreated().toString());
+        assertEquals( "Issue.getCreated()", "Sun Aug 27 18:23:40 2006", formatter.format( issue.getCreated() ) );
         assertEquals("Issue.getSummary()", "Need Wilhemina to get some things from the store", issue.getSummary());
         assertEquals("Issue.getType()", 3, issue.getType().getId());
         assertEquals("Issue.getEnvironment()", null, issue.getEnvironment());
         assertEquals("Issue.getStatus()", 6, issue.getStatus().getId());
-        assertEquals("Issue.getUpdated()", "Sun Aug 27 18:27:49 PDT 2006", issue.getUpdated().toString());
+        assertEquals( "Issue.getUpdated()", "Sun Aug 27 18:27:49 2006", formatter.format( issue.getUpdated() ) );
         assertEquals("Issue.getId()", 40911, issue.getId());
         assertEquals("Issue.getKey()", "SWIZZLE-2", issue.getKey());
         assertEquals("Issue.getDescription()", null, issue.getDescription());

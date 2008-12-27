@@ -16,14 +16,13 @@
  */
 package org.codehaus.swizzle.jira;
 
-import junit.framework.TestCase;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$
@@ -42,7 +41,7 @@ public class PrintVelocityObjectModelScrap extends TestCase {
         print(Jira.class);
         print(Comment.class);
         print(JiraRss.class);
-        fail("");
+        // fail("");
     }
 
     public void print(Class clazz) throws Exception {

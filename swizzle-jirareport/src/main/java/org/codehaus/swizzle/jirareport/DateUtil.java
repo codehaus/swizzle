@@ -18,6 +18,7 @@ package org.codehaus.swizzle.jirareport;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * @version $Revision$ $Date$
@@ -42,6 +43,13 @@ public class DateUtil {
     public String format(Date date, String format){
         SimpleDateFormat dateFormat = new SimpleDateFormat(format);
         return dateFormat.format(date);
+    }
+
+    public String format( Date date, String format, String timeZone )
+    {
+        SimpleDateFormat dateFormat = new SimpleDateFormat( format );
+        dateFormat.setTimeZone( TimeZone.getTimeZone( timeZone ) );
+        return dateFormat.format( date );
     }
 
     public String as(String format){

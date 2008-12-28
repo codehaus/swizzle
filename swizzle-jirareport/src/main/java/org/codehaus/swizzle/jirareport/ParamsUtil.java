@@ -16,10 +16,10 @@
  */
 package org.codehaus.swizzle.jirareport;
 
-import org.apache.velocity.VelocityContext;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.velocity.VelocityContext;
 
 /**
  * @version $Revision$ $Date$

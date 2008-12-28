@@ -16,17 +16,17 @@
  */
 package org.codehaus.swizzle.jirareport;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.Collection;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.Collections;
 
 /**
  * I wish we could subclass java.util.Collections and simply add two methods, but

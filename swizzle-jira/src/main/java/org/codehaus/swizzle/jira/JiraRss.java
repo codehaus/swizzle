@@ -16,20 +16,21 @@
  */
 package org.codehaus.swizzle.jira;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.SAXParser;
-import java.util.Map;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
-import java.util.EmptyStackException;
-import java.net.URL;
-import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
 /**
  * @version $Revision$ $Date$

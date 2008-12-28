@@ -16,20 +16,21 @@
  */
 package org.codehaus.swizzle.jiramacro;
 
-import com.atlassian.confluence.renderer.radeox.macros.AbstractHtmlGeneratingMacro;
-import com.atlassian.confluence.renderer.radeox.macros.MacroUtils;
-import com.atlassian.confluence.util.JiraIconMappingManager;
-import com.atlassian.confluence.util.velocity.VelocityUtils;
-import org.radeox.macro.parameter.MacroParameter;
-import org.codehaus.swizzle.jira.Issue;
-
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.net.URL;
+
+import org.codehaus.swizzle.jira.Issue;
+import org.radeox.macro.parameter.MacroParameter;
+
+import com.atlassian.confluence.renderer.radeox.macros.AbstractHtmlGeneratingMacro;
+import com.atlassian.confluence.renderer.radeox.macros.MacroUtils;
+import com.atlassian.confluence.util.JiraIconMappingManager;
+import com.atlassian.confluence.util.velocity.VelocityUtils;
 
 /**
  * @version $Revision$ $Date$

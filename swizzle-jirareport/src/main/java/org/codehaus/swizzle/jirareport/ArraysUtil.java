@@ -16,9 +16,9 @@
  */
 package org.codehaus.swizzle.jirareport;
 
-import java.util.List;
-import java.util.Comparator;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * I wish we could subclass java.util.Arrays and simply add two methods, but

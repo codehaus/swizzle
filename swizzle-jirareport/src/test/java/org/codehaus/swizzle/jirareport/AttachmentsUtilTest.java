@@ -16,13 +16,14 @@
  */
 package org.codehaus.swizzle.jirareport;
 
-import junit.framework.TestCase;
-import org.codehaus.swizzle.jira.Jira;
-import org.codehaus.swizzle.jira.Issue;
-import org.codehaus.swizzle.jira.Attachment;
-
-import java.util.List;
 import java.io.File;
+import java.util.List;
+
+import junit.framework.TestCase;
+
+import org.codehaus.swizzle.jira.Attachment;
+import org.codehaus.swizzle.jira.Issue;
+import org.codehaus.swizzle.jira.Jira;
 
 /**
  * @version $Revision$ $Date$

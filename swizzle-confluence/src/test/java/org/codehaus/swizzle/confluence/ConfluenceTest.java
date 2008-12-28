@@ -16,9 +16,9 @@
  */
 package org.codehaus.swizzle.confluence;
 
-import junit.framework.TestCase;
-
 import java.util.List;
+
+import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$

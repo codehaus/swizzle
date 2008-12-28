@@ -16,9 +16,9 @@
  */
 package org.codehaus.swizzle.jirareport;
 
-import junit.framework.TestCase;
-
 import java.util.ArrayList;
+
+import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$

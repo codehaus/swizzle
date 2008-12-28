@@ -16,16 +16,16 @@
  */
 package org.codehaus.swizzle.jira;
 
-import org.codehaus.swizzle.stream.StreamLexer;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
-import java.net.URL;
-import java.io.InputStream;
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.codehaus.swizzle.stream.StreamLexer;
 
 /**
  * @version $Revision$ $Date$

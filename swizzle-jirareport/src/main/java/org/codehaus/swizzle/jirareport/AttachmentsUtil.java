@@ -16,15 +16,15 @@
  */
 package org.codehaus.swizzle.jirareport;
 
-import org.codehaus.swizzle.jira.Attachment;
-import org.codehaus.swizzle.jira.Project;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+
+import org.codehaus.swizzle.jira.Attachment;
+import org.codehaus.swizzle.jira.Project;
 
 /**
  * @version $Revision$ $Date$

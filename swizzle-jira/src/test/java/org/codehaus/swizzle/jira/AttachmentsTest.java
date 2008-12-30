@@ -16,10 +16,10 @@
  */
 package org.codehaus.swizzle.jira;
 
+import junit.framework.TestCase;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$

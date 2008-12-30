@@ -16,6 +16,15 @@
  */
 package org.codehaus.swizzle.jirareport;
 
+import org.codehaus.swizzle.jira.Jira;
+import org.codehaus.swizzle.jira.JiraRss;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.exception.MethodInvocationException;
+
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -26,14 +35,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.exception.MethodInvocationException;
-import org.codehaus.swizzle.jira.Jira;
-import org.codehaus.swizzle.jira.JiraRss;
 
 /**
  * @version $Revision$ $Date$

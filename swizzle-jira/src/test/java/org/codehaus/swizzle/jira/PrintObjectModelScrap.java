@@ -16,14 +16,14 @@
  */
 package org.codehaus.swizzle.jira;
 
+import junit.framework.TestCase;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$

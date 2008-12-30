@@ -16,6 +16,17 @@
  */
 package org.codehaus.swizzle.jiramacro;
 
+import org.codehaus.swizzle.jirareport.Main;
+
+import com.atlassian.confluence.core.ContentEntityObject;
+import com.atlassian.confluence.renderer.PageContext;
+import com.atlassian.confluence.renderer.radeox.macros.MacroUtils;
+import com.atlassian.renderer.v2.RenderMode;
+import com.atlassian.renderer.v2.SubRenderer;
+import com.atlassian.renderer.v2.macro.MacroException;
+import com.atlassian.renderer.v2.macro.basic.AbstractPanelMacro;
+import org.apache.velocity.VelocityContext;
+
 import java.io.ByteArrayOutputStream;
 import java.io.CharArrayWriter;
 import java.io.File;
@@ -31,17 +42,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
-
-import org.apache.velocity.VelocityContext;
-import org.codehaus.swizzle.jirareport.Main;
-
-import com.atlassian.confluence.core.ContentEntityObject;
-import com.atlassian.confluence.renderer.PageContext;
-import com.atlassian.confluence.renderer.radeox.macros.MacroUtils;
-import com.atlassian.renderer.v2.RenderMode;
-import com.atlassian.renderer.v2.SubRenderer;
-import com.atlassian.renderer.v2.macro.MacroException;
-import com.atlassian.renderer.v2.macro.basic.AbstractPanelMacro;
 
 
 /**

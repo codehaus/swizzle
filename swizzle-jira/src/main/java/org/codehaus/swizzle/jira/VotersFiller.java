@@ -16,16 +16,16 @@
  */
 package org.codehaus.swizzle.jira;
 
+import org.codehaus.swizzle.stream.DelimitedTokenReplacementInputStream;
+import org.codehaus.swizzle.stream.IncludeFilterInputStream;
+import org.codehaus.swizzle.stream.StringTokenHandler;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.codehaus.swizzle.stream.DelimitedTokenReplacementInputStream;
-import org.codehaus.swizzle.stream.IncludeFilterInputStream;
-import org.codehaus.swizzle.stream.StringTokenHandler;
 
 /**
  * @version $Revision$ $Date$

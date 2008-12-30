@@ -16,6 +16,12 @@
  */
 package org.codehaus.swizzle.jira;
 
+import org.codehaus.swizzle.stream.DelimitedTokenReplacementInputStream;
+import org.codehaus.swizzle.stream.IncludeFilterInputStream;
+import org.codehaus.swizzle.stream.ReplaceStringInputStream;
+import org.codehaus.swizzle.stream.StreamTokenHandler;
+import org.codehaus.swizzle.stream.StringTokenHandler;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,12 +31,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.codehaus.swizzle.stream.DelimitedTokenReplacementInputStream;
-import org.codehaus.swizzle.stream.IncludeFilterInputStream;
-import org.codehaus.swizzle.stream.ReplaceStringInputStream;
-import org.codehaus.swizzle.stream.StreamTokenHandler;
-import org.codehaus.swizzle.stream.StringTokenHandler;
 
 /**
  * @version $Revision$ $Date$

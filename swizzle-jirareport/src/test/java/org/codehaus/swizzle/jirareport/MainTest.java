@@ -16,13 +16,13 @@
  */
 package org.codehaus.swizzle.jirareport;
 
+import junit.framework.TestCase;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URL;
-
-import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$

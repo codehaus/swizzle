@@ -16,6 +16,8 @@
  */
 package org.codehaus.swizzle.jira;
 
+import org.codehaus.swizzle.stream.StreamLexer;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -24,8 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import org.codehaus.swizzle.stream.StreamLexer;
 
 /**
  * @version $Revision$ $Date$

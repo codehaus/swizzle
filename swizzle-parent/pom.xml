@@ -25,11 +25,16 @@
   <name>Swizzle :: Parent</name>
   <version>1-SNAPSHOT</version>
   <description>Parent POM to share settings between swizzle modules</description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
   <build>
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
-        <artifactId>wagon-webdav</artifactId>
+     <artifactId>wagon-webdav</artifactId>
         <version>1.0-beta-1</version>
       </extension>
     </extensions>

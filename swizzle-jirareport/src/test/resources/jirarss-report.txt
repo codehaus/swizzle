@@ -6,7 +6,7 @@
     - priority:  Blocker
     - affectsVersions:  []
     - fixVersions:  [Test Version]
-    - components:  [jira client]
+    - components:  [swizzle-jira]
     - status:  Closed
     - resolution:  Fixed
     - created:  Fri Aug 04 18:05:13 PDT 2006

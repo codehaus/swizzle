@@ -8,6 +8,7 @@
   <name>Swizzle</name>
   <url>http://swizzle.codehaus.org</url>
   <modules>
+    <module>swizzle-parent</module>
     <module>swizzle-stream</module>
     <module>swizzle-confluence</module>
     <module>swizzle-jira</module>

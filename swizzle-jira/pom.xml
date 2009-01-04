@@ -49,6 +49,8 @@
     </dependency>
   </dependencies>
   <scm>
+    <connection>scm:svn:http://svn.codehaus.org/swizzle/trunk/swizzle-jira/</connection>
+    <developerConnection>scm:svn:https://${maven.username}@svn.codehaus.org/swizzle/trunk/swizzle-jira/</developerConnection>
   </scm>
   <profiles>
     <profile>

@@ -29,39 +29,39 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 
 /**
- * I wish we could subclass java.util.Collections and simply add two methods, but
- * that class has only one constructor and it's private and cannot be subclassed.
- *
- * We're forced to use delegation.  The downside is that any methods added after
+ * I wish we could subclass java.util.Collections and simply add two methods,
+ * but that class has only one constructor and it's private and cannot be
+ * subclassed.
+ * 
+ * We're forced to use delegation. The downside is that any methods added after
  * java 1.4 won't automatically be available here.
- *
- * This class adds two methods not available in Collections.
- *  - Object first(List list)
- *  - Object last(List list)
- *
+ * 
+ * This class adds two methods not available in Collections. - Object first(List
+ * list) - Object last(List list)
+ * 
  * @version $Revision$ $Date$
  */
 public class CollectionsUtil {
 
-    public String join(List list, String s){
+    public String join(List list, String s) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < list.size(); i++) {
             Object object = list.get(i);
             sb.append(object.toString());
             sb.append(s);
         }
-        if (sb.length() > 0){
+        if (sb.length() > 0) {
             sb.delete(sb.length() - s.length(), sb.length());
         }
         return sb.toString();
     }
-    
-    public Object first(List list){
-        return list.size() > 0? list.get(0): null;
+
+    public Object first(List list) {
+        return list.size() > 0 ? list.get(0) : null;
     }
 
-    public Object last(List list){
-        return list.size() > 0? list.get(list.size() -1): null;
+    public Object last(List list) {
+        return list.size() > 0 ? list.get(list.size() - 1) : null;
     }
 
     public int binarySearch(List list, Object o) {

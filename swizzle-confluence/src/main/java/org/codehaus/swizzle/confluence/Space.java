@@ -30,7 +30,7 @@ public class Space extends SpaceSummary {
     public Space(Map data) {
         super(data);
     }
-    
+
     /**
      * the id of the space homepage
      */

@@ -54,7 +54,7 @@ public class Main {
             }
         }
 
-        args = (String[]) newargs.toArray(new String[]{});
+        args = (String[]) newargs.toArray(new String[] {});
 
         if (args.length == 0 && System.getProperty("export") != null) {
             String template = System.getProperty("export");
@@ -62,21 +62,21 @@ public class Main {
             InputStream in = cl.getResourceAsStream(template);
             in = new BufferedInputStream(in);
             int i = in.read();
-            while (i != -1){
+            while (i != -1) {
                 System.out.write(i);
                 i = in.read();
             }
             in.close();
             return;
-        } else if (args.length > 0){
+        } else if (args.length > 0) {
             System.setProperty("template", args[0]);
         }
 
-        String templateName = System.getProperty("template","report.vm");
+        String templateName = System.getProperty("template", "report.vm");
 
         try {
             generate(templateName, System.out);
-        } catch (InvocationTargetException e){
+        } catch (InvocationTargetException e) {
             throw e.getCause();
         } catch (MethodInvocationException e) {
             Throwable wrappedThrowable = e.getWrappedThrowable();
@@ -119,7 +119,7 @@ public class Main {
             String value = (String) entry.getValue();
 
             // Don't overwrite anything explicitly added to the context.
-            if (!keys.contains(name)){
+            if (!keys.contains(name)) {
                 context.put(name, value);
             }
         }
@@ -138,7 +138,6 @@ public class Main {
         velocity.init();
 
         Template template = velocity.getTemplate(templateName);
-
 
         PrintWriter writer = new PrintWriter(result);
         template.merge(context, writer);

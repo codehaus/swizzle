@@ -22,15 +22,14 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class SpaceSummary extends MapObject {
-    
+
     public SpaceSummary() {
         super();
     }
-    
+
     public SpaceSummary(Map data) {
         super(data);
     }
-
 
     /**
      * the space key

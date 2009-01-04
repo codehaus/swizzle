@@ -69,7 +69,7 @@ public class MainTest extends TestCase {
 
         String actual = new String(baos.toByteArray());
 
-        assertEquals(expected,actual);
+        assertEquals(expected, actual);
     }
 
     public static String streamToString(InputStream in) throws IOException {

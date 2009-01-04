@@ -26,7 +26,7 @@ public class Confluence {
             endpoint = endpoint.substring(0, endpoint.length() - 1);
         }
 
-        if (! endpoint.endsWith("/rpc/xmlrpc")) {
+        if (!endpoint.endsWith("/rpc/xmlrpc")) {
             endpoint += "/rpc/xmlrpc";
         }
 
@@ -52,7 +52,9 @@ public class Confluence {
     }
 
     /**
-     * remove this token from the list of logged in tokens. Returns true if the user was logged out, false if they were not logged in in the first place (we don't really need this return, but void seems to kill XML-RPC for me)
+     * remove this token from the list of logged in tokens. Returns true if the
+     * user was logged out, false if they were not logged in in the first place
+     * (we don't really need this return, but void seems to kill XML-RPC for me)
      */
     public boolean logout() throws SwizzleException, ConfluenceException {
         Boolean value = (Boolean) call("logout");
@@ -60,14 +62,18 @@ public class Confluence {
     }
 
     /**
-     * exports a Confluence instance and returns a String holding the URL for the download. The boolean argument indicates whether or not attachments ought to be included in the export.
+     * exports a Confluence instance and returns a String holding the URL for
+     * the download. The boolean argument indicates whether or not attachments
+     * ought to be included in the export.
      */
     public String exportSite(boolean exportAttachments) throws SwizzleException, ConfluenceException {
         return (String) call("exportSite", new Boolean(exportAttachments));
     }
 
     /**
-     * retrieve some basic information about the server being connected to. Useful for clients that need to turn certain features on or off depending on the version of the server. (Since 1.0.3)
+     * retrieve some basic information about the server being connected to.
+     * Useful for clients that need to turn certain features on or off depending
+     * on the version of the server. (Since 1.0.3)
      */
     public ServerInfo getServerInfo() throws SwizzleException, ConfluenceException {
         Map data = (Map) call("getServerInfo");
@@ -75,7 +81,8 @@ public class Confluence {
     }
 
     /**
-     * returns all the {@link SpaceSummary} instances that the current user can see.
+     * returns all the {@link SpaceSummary} instances that the current user can
+     * see.
      */
     public List getSpaces() throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getSpaces");
@@ -91,7 +98,10 @@ public class Confluence {
     }
 
     /**
-     * exports a space and returns a String holding the URL for the download. The export type argument indicates whether or not to export in XML, PDF, or HTML format - use "TYPE_XML", "TYPE_PDF", or "TYPE_HTML" respectively. Also, using "all" will select TYPE_XML.
+     * exports a space and returns a String holding the URL for the download.
+     * The export type argument indicates whether or not to export in XML, PDF,
+     * or HTML format - use "TYPE_XML", "TYPE_PDF", or "TYPE_HTML" respectively.
+     * Also, using "all" will select TYPE_XML.
      */
     public String exportSpace(String spaceKey, String exportType) throws SwizzleException, ConfluenceException {
         return (String) call("exportSpace", spaceKey, exportType);
@@ -113,7 +123,9 @@ public class Confluence {
     }
 
     /**
-     * returns all the {@link PageSummary} instances in the space. Doesn't include pages which are in the Trash. Equivalent to calling {{Space.getCurrentPages()}}.
+     * returns all the {@link PageSummary} instances in the space. Doesn't
+     * include pages which are in the Trash. Equivalent to calling
+     * {{Space.getCurrentPages()}}.
      */
     public List getPages(String spaceKey) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getPages", spaceKey);
@@ -141,7 +153,8 @@ public class Confluence {
     }
 
     /**
-     * returns all the {@link PageHistorySummary} instances - useful for looking up the previous versions of a page, and who changed them.
+     * returns all the {@link PageHistorySummary} instances - useful for looking
+     * up the previous versions of a page, and who changed them.
      */
     public List getPageHistory(String pageId) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getPageHistory", pageId);
@@ -149,7 +162,8 @@ public class Confluence {
     }
 
     /**
-     * returns all the {@link Attachment}s for this page (useful to point users to download them with the full file download URL returned).
+     * returns all the {@link Attachment}s for this page (useful to point users
+     * to download them with the full file download URL returned).
      */
     public List getAttachments(String pageId) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getAttachments", pageId);
@@ -157,7 +171,8 @@ public class Confluence {
     }
 
     /**
-     * returns all the ancestors (as {@link PageSummary} instances) of this page (parent, parent's parent etc).
+     * returns all the ancestors (as {@link PageSummary} instances) of this page
+     * (parent, parent's parent etc).
      */
     public List getAncestors(String pageId) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getAncestors", pageId);
@@ -165,7 +180,8 @@ public class Confluence {
     }
 
     /**
-     * returns all the direct children (as {@link PageSummary} instances) of this page.
+     * returns all the direct children (as {@link PageSummary} instances) of
+     * this page.
      */
     public List getChildren(String pageId) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getChildren", pageId);
@@ -173,7 +189,8 @@ public class Confluence {
     }
 
     /**
-     * returns all the descendents (as {@link PageSummary} instances) of this page (children, children's children etc).
+     * returns all the descendents (as {@link PageSummary} instances) of this
+     * page (children, children's children etc).
      */
     public List getDescendents(String pageId) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getDescendents", pageId);
@@ -213,7 +230,11 @@ public class Confluence {
     }
 
     /**
-     * add or update a page. For adding, the Page given as an argument should have space, title and content fields at a minimum. For updating, the Page given should have id, space, title, content and version fields at a minimum. The parentId field is always optional. All other fields will be ignored.
+     * add or update a page. For adding, the Page given as an argument should
+     * have space, title and content fields at a minimum. For updating, the Page
+     * given should have id, space, title, content and version fields at a
+     * minimum. The parentId field is always optional. All other fields will be
+     * ignored.
      */
     public Page storePage(Page page) throws SwizzleException, ConfluenceException {
         Map data = (Map) call("storePage", page);
@@ -221,9 +242,14 @@ public class Confluence {
     }
 
     /**
-     * returns the HTML rendered content for this page. If 'content' is provided, then that is rendered as if it were the body of the page (useful for a 'preview page' function). If it's not provided, then the existing content of the page is used instead (ie useful for 'view page' function).
+     * returns the HTML rendered content for this page. If 'content' is
+     * provided, then that is rendered as if it were the body of the page
+     * (useful for a 'preview page' function). If it's not provided, then the
+     * existing content of the page is used instead (ie useful for 'view page'
+     * function).
      */
-    public String renderContent(String spaceKey, String pageId, String content) throws SwizzleException, ConfluenceException {
+    public String renderContent(String spaceKey, String pageId, String content) throws SwizzleException,
+            ConfluenceException {
         return (String) call("renderContent", spaceKey, pageId, content);
     }
 
@@ -236,9 +262,12 @@ public class Confluence {
     }
 
     /**
-     * Like the above renderContent(), but you can supply an optional hash (map, dictionary, etc) containing additional instructions for the renderer. Currently, only one such parameter is supported:
+     * Like the above renderContent(), but you can supply an optional hash (map,
+     * dictionary, etc) containing additional instructions for the renderer.
+     * Currently, only one such parameter is supported:
      */
-    public String renderContent(String spaceKey, String pageId, String content, Map parameters) throws SwizzleException, ConfluenceException {
+    public String renderContent(String spaceKey, String pageId, String content, Map parameters)
+            throws SwizzleException, ConfluenceException {
         return (String) call("renderContent", spaceKey, pageId, content, parameters);
     }
 
@@ -252,7 +281,8 @@ public class Confluence {
     /**
      * get information about an attachment.
      */
-    public Attachment getAttachment(String pageId, String fileName, String versionNumber) throws SwizzleException, ConfluenceException {
+    public Attachment getAttachment(String pageId, String fileName, String versionNumber) throws SwizzleException,
+            ConfluenceException {
         Map data = (Map) call("getAttachment", pageId, fileName, versionNumber);
         return new Attachment(data);
     }
@@ -260,14 +290,17 @@ public class Confluence {
     /**
      * get the contents of an attachment.
      */
-    public byte[] getAttachmentData(String pageId, String fileName, String versionNumber) throws SwizzleException, ConfluenceException {
+    public byte[] getAttachmentData(String pageId, String fileName, String versionNumber) throws SwizzleException,
+            ConfluenceException {
         return (byte[]) call("getAttachmentData", pageId, fileName, versionNumber);
     }
 
     /**
-     * add a new attachment to a content entity object. *Note that this uses a lot of memory -- about 4 times the size of the attachment.*
+     * add a new attachment to a content entity object. *Note that this uses a
+     * lot of memory -- about 4 times the size of the attachment.*
      */
-    public Attachment addAttachment(long contentId, Attachment attachment, byte[] attachmentData) throws SwizzleException, ConfluenceException {
+    public Attachment addAttachment(long contentId, Attachment attachment, byte[] attachmentData)
+            throws SwizzleException, ConfluenceException {
         Map data = (Map) call("addAttachment", new Long(contentId), attachment, attachmentData);
         return new Attachment(data);
     }
@@ -281,9 +314,11 @@ public class Confluence {
     }
 
     /**
-     * move an attachment to a different content entity object and/or give it a new name.
+     * move an attachment to a different content entity object and/or give it a
+     * new name.
      */
-    public boolean moveAttachment(String originalContentId, String originalName, String newContentEntityId, String newName) throws SwizzleException, ConfluenceException {
+    public boolean moveAttachment(String originalContentId, String originalName, String newContentEntityId,
+            String newName) throws SwizzleException, ConfluenceException {
         Boolean value = (Boolean) call("moveAttachment", originalContentId, originalName, newContentEntityId, newName);
         return value.booleanValue();
     }
@@ -305,7 +340,10 @@ public class Confluence {
     }
 
     /**
-     * add or update a blog entry. For adding, the BlogEntry given as an argument should have space, title and content fields at a minimum. For updating, the BlogEntry given should have id, space, title, content and version fields at a minimum. All other fields will be ignored.
+     * add or update a blog entry. For adding, the BlogEntry given as an
+     * argument should have space, title and content fields at a minimum. For
+     * updating, the BlogEntry given should have id, space, title, content and
+     * version fields at a minimum. All other fields will be ignored.
      */
     public BlogEntry storeBlogEntry(BlogEntry entry) throws SwizzleException, ConfluenceException {
         Map data = (Map) call("storeBlogEntry", entry);
@@ -313,15 +351,20 @@ public class Confluence {
     }
 
     /**
-     * Retrieves a blog post in the Space with the given spaceKey, with the title 'postTitle' and posted on the day 'dayOfMonth'.
+     * Retrieves a blog post in the Space with the given spaceKey, with the
+     * title 'postTitle' and posted on the day 'dayOfMonth'.
      */
-    public BlogEntry getBlogEntryByDayAndTitle(String spaceKey, int dayOfMonth, String postTitle) throws SwizzleException, ConfluenceException {
+    public BlogEntry getBlogEntryByDayAndTitle(String spaceKey, int dayOfMonth, String postTitle)
+            throws SwizzleException, ConfluenceException {
         Map data = (Map) call("getBlogEntryByDayAndTitle", spaceKey, new Integer(dayOfMonth), postTitle);
         return new BlogEntry(data);
     }
 
     /**
-     * return a list of {@link SearchResult}s which match a given search query (including pages and other content types). This is the same as a performing a parameterised search (see below) with an empty parameter map.
+     * return a list of {@link SearchResult}s which match a given search query
+     * (including pages and other content types). This is the same as a
+     * performing a parameterised search (see below) with an empty parameter
+     * map.
      */
     public List search(String query, int maxResults) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("search", query, new Integer(maxResults));
@@ -329,7 +372,9 @@ public class Confluence {
     }
 
     /**
-     * Returns a list of {@link SearchResult}s like the previous search, but you can optionally limit your search by adding parameters to the parameter map. If you do not include a parameter, the default is used instead.
+     * Returns a list of {@link SearchResult}s like the previous search, but you
+     * can optionally limit your search by adding parameters to the parameter
+     * map. If you do not include a parameter, the default is used instead.
      */
     public List search(String query, Map parameters, int maxResults) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("search", query, parameters, new Integer(maxResults));
@@ -337,7 +382,9 @@ public class Confluence {
     }
 
     /**
-     * Returns a List of {@link Permission}s representing the permissions the current user has for this space (a list of "view", "modify", "comment" and / or "admin").
+     * Returns a List of {@link Permission}s representing the permissions the
+     * current user has for this space (a list of "view", "modify", "comment"
+     * and / or "admin").
      */
     public List getPermissions(String spaceKey) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getPermissions", spaceKey);
@@ -345,7 +392,8 @@ public class Confluence {
     }
 
     /**
-     * Returns a List of {@link Permission}s representing the permissions the given user has for this space. (since 2.1.4)
+     * Returns a List of {@link Permission}s representing the permissions the
+     * given user has for this space. (since 2.1.4)
      */
     public List getPermissionsForUser(String spaceKey, String userName) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getPermissionsForUser", spaceKey, userName);
@@ -353,7 +401,8 @@ public class Confluence {
     }
 
     /**
-     * Returns a List of {@link Permission}s representing the permissions set on the given page.
+     * Returns a List of {@link Permission}s representing the permissions set on
+     * the given page.
      */
     public List getPagePermissions(String pageId) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getPagePermissions", pageId);
@@ -361,7 +410,10 @@ public class Confluence {
     }
 
     /**
-     * returns List of the space level {@link Permission}s which may be granted. This is a list of possible permissions to use with {{addPermissionToSpace}}, below, not a list of current permissions on a Space.
+     * returns List of the space level {@link Permission}s which may be granted.
+     * This is a list of possible permissions to use with
+     * {{addPermissionToSpace}}, below, not a list of current permissions on a
+     * Space.
      */
     public List getSpaceLevelPermissions() throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getSpaceLevelPermissions");
@@ -369,49 +421,62 @@ public class Confluence {
     }
 
     /**
-     * Give the entity named {{remoteEntityName}} (either a group or a user) the permission {{permission}} on the space with the key {{spaceKey}}.
+     * Give the entity named {{remoteEntityName}} (either a group or a user) the
+     * permission {{permission}} on the space with the key {{spaceKey}}.
      */
-    public boolean addPermissionToSpace(String permission, String remoteEntityName, String spaceKey) throws SwizzleException, ConfluenceException {
+    public boolean addPermissionToSpace(String permission, String remoteEntityName, String spaceKey)
+            throws SwizzleException, ConfluenceException {
         Boolean value = (Boolean) call("addPermissionToSpace", permission, remoteEntityName, spaceKey);
         return value.booleanValue();
     }
 
     /**
-     * Give the entity named {{remoteEntityName}} (either a group or a user) the permissions {{permissions}} on the space with the key {{spaceKey}}.
+     * Give the entity named {{remoteEntityName}} (either a group or a user) the
+     * permissions {{permissions}} on the space with the key {{spaceKey}}.
      */
-    public boolean addPermissionsToSpace(List permissions, String remoteEntityName, String spaceKey) throws SwizzleException, ConfluenceException {
+    public boolean addPermissionsToSpace(List permissions, String remoteEntityName, String spaceKey)
+            throws SwizzleException, ConfluenceException {
         Boolean value = (Boolean) call("addPermissionsToSpace", permissions.toArray(), remoteEntityName, spaceKey);
         return value.booleanValue();
     }
 
     /**
-     * Remove the permission {{permission} from the entity named {{remoteEntityName}} (either a group or a user) on the space with the key {{spaceKey}}.
+     * Remove the permission {{permission} from the entity named
+     * {{remoteEntityName}} (either a group or a user) on the space with the key
+     * {{spaceKey}}.
      */
-    public boolean removePermissionFromSpace(String permission, String remoteEntityName, String spaceKey) throws SwizzleException, ConfluenceException {
+    public boolean removePermissionFromSpace(String permission, String remoteEntityName, String spaceKey)
+            throws SwizzleException, ConfluenceException {
         Boolean value = (Boolean) call("removePermissionFromSpace", permission, remoteEntityName, spaceKey);
         return value.booleanValue();
     }
 
     /**
-     * Give anonymous users the permission {{permission}} on the space with the key {{spaceKey}}. (since 2.0)
+     * Give anonymous users the permission {{permission}} on the space with the
+     * key {{spaceKey}}. (since 2.0)
      */
-    public boolean addAnonymousPermissionToSpace(String permission, String spaceKey) throws SwizzleException, ConfluenceException {
+    public boolean addAnonymousPermissionToSpace(String permission, String spaceKey) throws SwizzleException,
+            ConfluenceException {
         Boolean value = (Boolean) call("addAnonymousPermissionToSpace", permission, spaceKey);
         return value.booleanValue();
     }
 
     /**
-     * Give anonymous users the permissions {{permissions}} on the space with the key {{spaceKey}}. (since 2.0)
+     * Give anonymous users the permissions {{permissions}} on the space with
+     * the key {{spaceKey}}. (since 2.0)
      */
-    public boolean addAnonymousPermissionsToSpace(List permissions, String spaceKey) throws SwizzleException, ConfluenceException {
+    public boolean addAnonymousPermissionsToSpace(List permissions, String spaceKey) throws SwizzleException,
+            ConfluenceException {
         Boolean value = (Boolean) call("addAnonymousPermissionsToSpace", permissions.toArray(), spaceKey);
         return value.booleanValue();
     }
 
     /**
-     * Remove the permission {{permission} from anonymous users on the space with the key {{spaceKey}}. (since 2.0)
+     * Remove the permission {{permission} from anonymous users on the space
+     * with the key {{spaceKey}}. (since 2.0)
      */
-    public boolean removeAnonymousPermissionFromSpace(String permission, String spaceKey) throws SwizzleException, ConfluenceException {
+    public boolean removeAnonymousPermissionFromSpace(String permission, String spaceKey) throws SwizzleException,
+            ConfluenceException {
         Boolean value = (Boolean) call("removeAnonymousPermissionFromSpace", permission, spaceKey);
         return value.booleanValue();
     }
@@ -478,7 +543,8 @@ public class Confluence {
     }
 
     /**
-     * remove a group. If {{defaultGroupName}} is specified, users belonging to {{groupname}} will be added to {{defaultGroupName}}.
+     * remove a group. If {{defaultGroupName}} is specified, users belonging to
+     * {{groupname}} will be added to {{defaultGroupName}}.
      */
     public boolean removeGroup(String groupname, String defaultGroupName) throws SwizzleException, ConfluenceException {
         Boolean value = (Boolean) call("removeGroup", groupname, defaultGroupName);
@@ -582,7 +648,8 @@ public class Confluence {
     }
 
     /**
-     * Returns the most popular {@link Label}s for the Confluence instance, with a specified maximum number.
+     * Returns the most popular {@link Label}s for the Confluence instance, with
+     * a specified maximum number.
      */
     public List getMostPopularLabels(int maxCount) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getMostPopularLabels", new Integer(maxCount));
@@ -590,7 +657,8 @@ public class Confluence {
     }
 
     /**
-     * Returns the most popular {@link Label}s for the given {{spaceKey}}, with a specified maximum number of results.
+     * Returns the most popular {@link Label}s for the given {{spaceKey}}, with
+     * a specified maximum number of results.
      */
     public List getMostPopularLabelsInSpace(String spaceKey, int maxCount) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getMostPopularLabelsInSpace", spaceKey, new Integer(maxCount));
@@ -598,7 +666,8 @@ public class Confluence {
     }
 
     /**
-     * Returns the recently used {@link Label}s for the Confluence instance, with a specified maximum number of results.
+     * Returns the recently used {@link Label}s for the Confluence instance,
+     * with a specified maximum number of results.
      */
     public List getRecentlyUsedLabels(int maxResults) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getRecentlyUsedLabels", new Integer(maxResults));
@@ -606,15 +675,18 @@ public class Confluence {
     }
 
     /**
-     * Returns the recently used {@link Label}s for the given {{spaceKey}}, with a specified maximum number of results.
+     * Returns the recently used {@link Label}s for the given {{spaceKey}}, with
+     * a specified maximum number of results.
      */
-    public List getRecentlyUsedLabelsInSpace(String spaceKey, int maxResults) throws SwizzleException, ConfluenceException {
+    public List getRecentlyUsedLabelsInSpace(String spaceKey, int maxResults) throws SwizzleException,
+            ConfluenceException {
         Object[] vector = (Object[]) call("getRecentlyUsedLabelsInSpace", spaceKey, new Integer(maxResults));
         return toList(vector, Label.class);
     }
 
     /**
-     * Returns an array of {@link Space}s that have been labelled with {{labelName}}.
+     * Returns an array of {@link Space}s that have been labelled with
+     * {{labelName}}.
      */
     public List getSpacesWithLabel(String labelName) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getSpacesWithLabel", labelName);
@@ -622,7 +694,8 @@ public class Confluence {
     }
 
     /**
-     * Returns the {@link Label}s related to the given label name, with a specified maximum number of results.
+     * Returns the {@link Label}s related to the given label name, with a
+     * specified maximum number of results.
      */
     public List getRelatedLabels(String labelName, int maxResults) throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getRelatedLabels", labelName, new Integer(maxResults));
@@ -630,17 +703,21 @@ public class Confluence {
     }
 
     /**
-     * Returns the {@link Label}s related to the given label name for the given {{spaceKey}}, with a specified maximum number of results.
+     * Returns the {@link Label}s related to the given label name for the given
+     * {{spaceKey}}, with a specified maximum number of results.
      */
-    public List getRelatedLabelsInSpace(String labelName, String spaceKey, int maxResults) throws SwizzleException, ConfluenceException {
+    public List getRelatedLabelsInSpace(String labelName, String spaceKey, int maxResults) throws SwizzleException,
+            ConfluenceException {
         Object[] vector = (Object[]) call("getRelatedLabelsInSpace", labelName, spaceKey, new Integer(maxResults));
         return toList(vector, Label.class);
     }
 
     /**
-     * Retrieves the {@link Label}s matching the given {{labelName}}, {{namespace}}, {{spaceKey}} or {{owner}}.
+     * Retrieves the {@link Label}s matching the given {{labelName}},
+     * {{namespace}}, {{spaceKey}} or {{owner}}.
      */
-    public List getLabelsByDetail(String labelName, String namespace, String spaceKey, String owner) throws SwizzleException, ConfluenceException {
+    public List getLabelsByDetail(String labelName, String namespace, String spaceKey, String owner)
+            throws SwizzleException, ConfluenceException {
         Object[] vector = (Object[]) call("getLabelsByDetail", labelName, namespace, spaceKey, owner);
         return toList(vector, Label.class);
     }
@@ -686,7 +763,8 @@ public class Confluence {
     }
 
     /**
-     * Adds a label with the given ID to the object with the given ContentEntityObject ID.
+     * Adds a label with the given ID to the object with the given
+     * ContentEntityObject ID.
      */
     public boolean addLabelById(long labelId, long objectId) throws SwizzleException, ConfluenceException {
         Boolean value = (Boolean) call("addLabelById", new Long(labelId), new Long(objectId));
@@ -694,7 +772,8 @@ public class Confluence {
     }
 
     /**
-     * Adds the given label object to the object with the given ContentEntityObject ID.
+     * Adds the given label object to the object with the given
+     * ContentEntityObject ID.
      */
     public boolean addLabelByObject(Label labelObject, long objectId) throws SwizzleException, ConfluenceException {
         Boolean value = (Boolean) call("addLabelByObject", labelObject, new Long(objectId));
@@ -704,13 +783,15 @@ public class Confluence {
     /**
      * Adds a label to the object with the given ContentEntityObject ID.
      */
-    public boolean addLabelByNameToSpace(String labelName, String spaceKey) throws SwizzleException, ConfluenceException {
+    public boolean addLabelByNameToSpace(String labelName, String spaceKey) throws SwizzleException,
+            ConfluenceException {
         Boolean value = (Boolean) call("addLabelByNameToSpace", labelName, spaceKey);
         return value.booleanValue();
     }
 
     /**
-     * Removes the given label from the object with the given ContentEntityObject ID.
+     * Removes the given label from the object with the given
+     * ContentEntityObject ID.
      */
     public boolean removeLabelByName(String labelName, long objectId) throws SwizzleException, ConfluenceException {
         Boolean value = (Boolean) call("removeLabelByName", labelName, new Long(objectId));
@@ -718,7 +799,8 @@ public class Confluence {
     }
 
     /**
-     * Removes the label with the given ID from the object with the given ContentEntityObject ID.
+     * Removes the label with the given ID from the object with the given
+     * ContentEntityObject ID.
      */
     public boolean removeLabelById(long labelId, long objectId) throws SwizzleException, ConfluenceException {
         Boolean value = (Boolean) call("removeLabelById", new Long(labelId), new Long(objectId));
@@ -726,7 +808,8 @@ public class Confluence {
     }
 
     /**
-     * Removes the given label object from the object with the given ContentEntityObject ID.
+     * Removes the given label object from the object with the given
+     * ContentEntityObject ID.
      */
     public boolean removeLabelByObject(Label labelObject, long objectId) throws SwizzleException, ConfluenceException {
         Boolean value = (Boolean) call("removeLabelByObject", labelObject, new Long(objectId));
@@ -736,22 +819,23 @@ public class Confluence {
     /**
      * Removes the given label from the given {{spaceKey}}.
      */
-    public boolean removeLabelByNameFromSpace(String labelName, String spaceKey) throws SwizzleException, ConfluenceException {
+    public boolean removeLabelByNameFromSpace(String labelName, String spaceKey) throws SwizzleException,
+            ConfluenceException {
         Boolean value = (Boolean) call("removeLabelByNameFromSpace", labelName, spaceKey);
         return value.booleanValue();
     }
 
-    private List toList(Object[] vector, Class type) throws SwizzleException  {
+    private List toList(Object[] vector, Class type) throws SwizzleException {
         try {
             List list = new ArrayList(vector.length);
-            
-            Constructor constructor = type.getConstructor(new Class[]{Map.class});
+
+            Constructor constructor = type.getConstructor(new Class[] { Map.class });
             for (int i = 0; i < vector.length; i++) {
                 Map data = (Map) vector[i];
-                Object object = constructor.newInstance(new Object[]{data});
+                Object object = constructor.newInstance(new Object[] { data });
                 list.add(object);
             }
-            
+
             return list;
 
         } catch (Exception e) {
@@ -765,22 +849,24 @@ public class Confluence {
     }
 
     private Object call(String command, Object arg1) throws SwizzleException, ConfluenceException {
-        Object[] args = {arg1};
+        Object[] args = { arg1 };
         return call(command, args);
     }
 
     private Object call(String command, Object arg1, Object arg2) throws SwizzleException, ConfluenceException {
-        Object[] args = {arg1, arg2};
+        Object[] args = { arg1, arg2 };
         return call(command, args);
     }
 
-    private Object call(String command, Object arg1, Object arg2, Object arg3) throws SwizzleException, ConfluenceException {
-        Object[] args = {arg1, arg2, arg3};
+    private Object call(String command, Object arg1, Object arg2, Object arg3) throws SwizzleException,
+            ConfluenceException {
+        Object[] args = { arg1, arg2, arg3 };
         return call(command, args);
     }
 
-    private Object call(String command, Object arg1, Object arg2, Object arg3, Object arg4) throws SwizzleException, ConfluenceException {
-        Object[] args = {arg1, arg2, arg3, arg4};
+    private Object call(String command, Object arg1, Object arg2, Object arg3, Object arg4) throws SwizzleException,
+            ConfluenceException {
+        Object[] args = { arg1, arg2, arg3, arg4 };
         return call(command, args);
     }
 
@@ -789,7 +875,7 @@ public class Confluence {
             Object arg = args[i];
             if (arg instanceof MapObject) {
                 MapObject map = (MapObject) arg;
-                if (sendRawData){
+                if (sendRawData) {
                     args[i] = map.toRawMap();
                 } else {
                     args[i] = map.toMap();
@@ -798,7 +884,7 @@ public class Confluence {
         }
         Object[] vector;
         if (!command.equals("login")) {
-            vector = new Object[args.length+1];
+            vector = new Object[args.length + 1];
             vector[0] = token;
             System.arraycopy(args, 0, vector, 1, args.length);
         } else {

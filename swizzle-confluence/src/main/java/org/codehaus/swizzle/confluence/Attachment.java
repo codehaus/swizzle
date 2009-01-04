@@ -32,7 +32,6 @@ public class Attachment extends MapObject {
         super(data);
     }
 
-
     /**
      * numeric id of the attachment
      */

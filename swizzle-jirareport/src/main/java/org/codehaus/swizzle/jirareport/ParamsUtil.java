@@ -35,7 +35,7 @@ public class ParamsUtil {
 
     public void required(String param, String regex, String description) {
         Object object = context.get(param);
-        if ( object == null ){
+        if (object == null) {
             missingArgs.add(new Param(Param.MISSING, param, regex, description));
         } else if (!object.toString().matches(regex)) {
             missingArgs.add(new Param(Param.INVALID, param, regex, description));
@@ -43,7 +43,7 @@ public class ParamsUtil {
     }
 
     public void validate() throws IllegalArgumentException {
-        if (missingArgs.size() == 0){
+        if (missingArgs.size() == 0) {
             return;
         }
         String lineSeparator = System.getProperty("line.separator");
@@ -66,7 +66,7 @@ public class ParamsUtil {
             sb.append(lineSeparator);
         }
 
-        throw new MissingParamsException(sb.toString(), (Param[]) missingArgs.toArray(new Param[]{}));
+        throw new MissingParamsException(sb.toString(), (Param[]) missingArgs.toArray(new Param[] {}));
     }
 
 }

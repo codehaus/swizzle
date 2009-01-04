@@ -23,7 +23,7 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class BlogEntrySummary extends MapObject {
-    
+
     public BlogEntrySummary() {
         super();
     }
@@ -31,7 +31,6 @@ public class BlogEntrySummary extends MapObject {
     public BlogEntrySummary(Map data) {
         super(data);
     }
-
 
     /**
      * the id of the blog entry

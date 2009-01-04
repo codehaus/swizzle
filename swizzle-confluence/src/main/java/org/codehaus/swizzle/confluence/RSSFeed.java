@@ -26,11 +26,10 @@ public class RSSFeed extends MapObject {
     public RSSFeed() {
         super();
     }
-    
+
     public RSSFeed(Map data) {
         super(data);
     }
-
 
     /**
      * the URL of the RSS feed

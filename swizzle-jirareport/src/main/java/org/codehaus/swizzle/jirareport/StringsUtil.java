@@ -21,45 +21,49 @@ package org.codehaus.swizzle.jirareport;
  */
 public class StringsUtil {
 
-    public int asInt(String string){
+    public int asInt(String string) {
         return Integer.parseInt(string);
     }
 
-    public String lc(String string){
-        if (string == null) return null;
+    public String lc(String string) {
+        if (string == null)
+            return null;
 
         StringBuffer sb = new StringBuffer(string);
         for (int i = 0; i < sb.length(); i++) {
-              sb.setCharAt(i, Character.toLowerCase(sb.charAt(i)));
+            sb.setCharAt(i, Character.toLowerCase(sb.charAt(i)));
         }
         return sb.toString();
     }
 
-    public String uc(String string){
-        if (string == null) return null;
+    public String uc(String string) {
+        if (string == null)
+            return null;
 
         StringBuffer sb = new StringBuffer(string);
         for (int i = 0; i < sb.length(); i++) {
-              sb.setCharAt(i, Character.toUpperCase(sb.charAt(i)));
+            sb.setCharAt(i, Character.toUpperCase(sb.charAt(i)));
         }
         return sb.toString();
     }
 
-    public String ucfirst(String string){
-        if (string == null) return null;
+    public String ucfirst(String string) {
+        if (string == null)
+            return null;
 
         StringBuffer sb = new StringBuffer(string);
-        if (sb.length() > 0){
+        if (sb.length() > 0) {
             sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
         }
         return sb.toString();
     }
 
-    public String lcfirst(String string){
-        if (string == null) return null;
+    public String lcfirst(String string) {
+        if (string == null)
+            return null;
 
         StringBuffer sb = new StringBuffer(string);
-        if (sb.length() > 0){
+        if (sb.length() > 0) {
             sb.setCharAt(0, Character.toLowerCase(sb.charAt(0)));
         }
         return sb.toString();

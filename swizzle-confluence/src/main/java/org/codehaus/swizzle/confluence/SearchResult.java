@@ -26,11 +26,10 @@ public class SearchResult extends MapObject {
     public SearchResult() {
         super();
     }
-    
+
     public SearchResult(Map data) {
         super(data);
     }
-
 
     /**
      * the feed's title
@@ -66,7 +65,8 @@ public class SearchResult extends MapObject {
     }
 
     /**
-     * the type of this result - page, comment, spacedesc, attachment, userinfo, blogpost
+     * the type of this result - page, comment, spacedesc, attachment, userinfo,
+     * blogpost
      */
     public String getType() {
         return getString("type");

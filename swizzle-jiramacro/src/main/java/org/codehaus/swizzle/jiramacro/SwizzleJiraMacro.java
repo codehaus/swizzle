@@ -43,14 +43,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-
 /**
  * @version $Revision$ $Date$
  */
 public class SwizzleJiraMacro extends AbstractPanelMacro {
 
     private WeakHashMap cache = new WeakHashMap();
-    private long timeToLive = (60 * 60 * 1000);  // 1 hour
+    private long timeToLive = (60 * 60 * 1000); // 1 hour
 
     public static class Key {
         private static MessageDigest md;
@@ -72,8 +71,10 @@ public class SwizzleJiraMacro extends AbstractPanelMacro {
         }
 
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
 
             final Key key = (Key) o;
 
@@ -144,7 +145,8 @@ public class SwizzleJiraMacro extends AbstractPanelMacro {
         return pageCache.getCache();
     }
 
-    public String execute(Map params, String body, com.atlassian.renderer.RenderContext renderContext) throws MacroException {
+    public String execute(Map params, String body, com.atlassian.renderer.RenderContext renderContext)
+            throws MacroException {
         PageContext pageContext = (PageContext) renderContext;
         ContentEntityObject entity = pageContext.getEntity();
 
@@ -170,7 +172,8 @@ public class SwizzleJiraMacro extends AbstractPanelMacro {
         }
     }
 
-    private String generateContent(Map params, String body, com.atlassian.renderer.RenderContext renderContext) throws MacroException {
+    private String generateContent(Map params, String body, com.atlassian.renderer.RenderContext renderContext)
+            throws MacroException {
         URL templateUrl = null;
         try {
             String url = (String) params.get("template");
@@ -237,7 +240,6 @@ public class SwizzleJiraMacro extends AbstractPanelMacro {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         SubRenderer subRenderer = getSubRenderer();
         String velocityOutput = new String(baos.toByteArray());

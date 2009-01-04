@@ -32,7 +32,7 @@ public class IssuesUtil {
 
     public String param(List issues) {
         if (issues == null) {
-            //throw new NullPointerException("as.param: issues list is null");
+            // throw new NullPointerException("as.param: issues list is null");
             return "null";
         }
         Random random = new Random();
@@ -59,8 +59,8 @@ public class IssuesUtil {
         return map;
     }
 
-    public static List getIssues(String id){
-        if (id.equals("null")){
+    public static List getIssues(String id) {
+        if (id.equals("null")) {
             return Collections.EMPTY_LIST;
         }
         return (List) issuesMap().remove(id);

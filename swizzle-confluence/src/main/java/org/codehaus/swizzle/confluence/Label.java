@@ -26,11 +26,10 @@ public class Label extends MapObject {
     public Label() {
         super();
     }
-    
+
     public Label(Map data) {
         super(data);
     }
-
 
     /**
      * the nameof the label

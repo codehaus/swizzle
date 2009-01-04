@@ -23,15 +23,15 @@ import org.codehaus.swizzle.jira.Issue;
  * @version $Revision$ $Date$
  */
 public class JellyUtil {
-    public String idRef(Attachment attachment){
+    public String idRef(Attachment attachment) {
         return "att" + attachment.getId();
     }
 
-    public String idRef(Issue issue){
-        return "id" + issue.getKey().replaceFirst(".*-","");
+    public String idRef(Issue issue) {
+        return "id" + issue.getKey().replaceFirst(".*-", "");
     }
 
-    public String keyRef(Issue issue){
-        return issue.getKey().replaceFirst("-","");
+    public String keyRef(Issue issue) {
+        return issue.getKey().replaceFirst("-", "");
     }
 }

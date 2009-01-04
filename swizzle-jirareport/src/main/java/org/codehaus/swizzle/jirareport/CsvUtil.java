@@ -21,7 +21,7 @@ package org.codehaus.swizzle.jirareport;
  */
 public class CsvUtil {
     public static String escape(Object object) {
-        return (object == null)? "" : escape(object.toString());
+        return (object == null) ? "" : escape(object.toString());
     }
 
     public static String escape(String text) {
@@ -32,7 +32,7 @@ public class CsvUtil {
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
             if (ch == '"') {
-               // escaped.append("\\\"");
+                // escaped.append("\\\"");
             } else {
                 escaped.append(ch);
             }

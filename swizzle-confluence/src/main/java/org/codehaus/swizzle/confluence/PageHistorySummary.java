@@ -32,7 +32,6 @@ public class PageHistorySummary extends MapObject {
         super(data);
     }
 
-
     /**
      * the id of the historical page
      */

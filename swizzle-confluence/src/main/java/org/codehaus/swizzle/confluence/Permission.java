@@ -26,11 +26,10 @@ public class Permission extends MapObject {
     public Permission() {
         super();
     }
-    
+
     public Permission(Map data) {
         super(data);
     }
-
 
     /**
      * The type of permission. One of 'View' or 'Edit'

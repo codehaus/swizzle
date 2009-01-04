@@ -41,7 +41,6 @@ public class AttachmentsUtil {
 
     private File attachmentsDir;
 
-
     public File saveAttachment(File dir, Attachment attachment) throws IOException {
         File idDir = new File(dir, attachment.getId() + "");
         idDir.mkdir();
@@ -70,16 +69,15 @@ public class AttachmentsUtil {
     }
 
     public File createAttachmentsTmpDir(Project project) throws IOException {
-        return getOrCreateAttachmentsDir(project.getKey().toLowerCase()+"-attachments");
+        return getOrCreateAttachmentsDir(project.getKey().toLowerCase() + "-attachments");
     }
 
     private File getOrCreateAttachmentsDir(String prefix) throws IOException {
-        if (attachmentsDir != null){
+        if (attachmentsDir != null) {
             return attachmentsDir;
         }
         File tempFile = File.createTempFile("foo", "bar");
         File tmpDir = tempFile.getParentFile();
-
 
         int suffix = 1;
         File dir = new File(tmpDir, prefix);

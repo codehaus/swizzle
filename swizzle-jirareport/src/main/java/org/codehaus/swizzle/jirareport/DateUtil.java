@@ -31,28 +31,27 @@ public class DateUtil {
         dateFormat = new SimpleDateFormat(format);
     }
 
-    public String format(String format){
+    public String format(String format) {
         dateFormat = new SimpleDateFormat(format);
         return dateFormat.format(now);
     }
 
-    public String format(Date date){
+    public String format(Date date) {
         return dateFormat.format(date);
     }
 
-    public String format(Date date, String format){
+    public String format(Date date, String format) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(format);
         return dateFormat.format(date);
     }
 
-    public String format( Date date, String format, String timeZone )
-    {
-        SimpleDateFormat dateFormat = new SimpleDateFormat( format );
-        dateFormat.setTimeZone( TimeZone.getTimeZone( timeZone ) );
-        return dateFormat.format( date );
+    public String format(Date date, String format, String timeZone) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
+        return dateFormat.format(date);
     }
 
-    public String as(String format){
+    public String as(String format) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(format);
         return dateFormat.format(now);
     }

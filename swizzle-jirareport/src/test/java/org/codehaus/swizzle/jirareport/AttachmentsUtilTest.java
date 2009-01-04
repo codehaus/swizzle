@@ -46,7 +46,8 @@ public class AttachmentsUtilTest extends TestCase {
 
         Attachment attachment = (Attachment) attachments.get(0);
         assertEquals("Attachment.getFileName()", "ONE.patch", attachment.getFileName());
-        assertEquals("Attachment.getUrl()", "http://jira.codehaus.org/secure/attachment/22972/ONE.patch", attachment.getUrl().toExternalForm());
+        assertEquals("Attachment.getUrl()", "http://jira.codehaus.org/secure/attachment/22972/ONE.patch", attachment
+                .getUrl().toExternalForm());
 
         File file = attachmentsUtil.saveAttachment(attachment);
         assertEquals("File.exists()", true, file.exists());

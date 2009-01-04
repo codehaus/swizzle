@@ -64,10 +64,10 @@ public class SwizzleJiraIssuesMacro extends AbstractHtmlGeneratingMacro {
         String issuesRef = (String) macroParameter.getParams().get("issues");
         String columnsString = (String) macroParameter.getParams().get("columns");
         String title = (String) macroParameter.getParams().get("title");
-        String style = (String) macroParameter.getParams().get("style")+"";
+        String style = (String) macroParameter.getParams().get("style") + "";
 
         String template = "swizzlejiraissues.vm";
-        if (style.equals("progress")){
+        if (style.equals("progress")) {
             template = "swizzlejiraissues-progress.vm";
         }
 
@@ -77,17 +77,17 @@ public class SwizzleJiraIssuesMacro extends AbstractHtmlGeneratingMacro {
         }
 
         String iconsUrl = null;
-        if (issues.size() > 0){
+        if (issues.size() > 0) {
             Issue issue = (Issue) issues.get(0);
             String link = issue.getLink();
             iconsUrl = link.replaceFirst("/browse/.*$", "/images/icons/");
-            if (title ==null){
+            if (title == null) {
                 URL url = new URL(issue.getLink());
                 title = url.getHost();
             }
         }
 
-        if (title == null){
+        if (title == null) {
             title = "issues";
         }
 
@@ -111,7 +111,7 @@ public class SwizzleJiraIssuesMacro extends AbstractHtmlGeneratingMacro {
             Map.Entry entry = (Map.Entry) iterator.next();
             Object key = entry.getKey();
             Object value = entry.getValue();
-            System.out.println("columns entry: "+key+"="+value);
+            System.out.println("columns entry: " + key + "=" + value);
         }
 
         context.put("columns", columns);
@@ -120,13 +120,11 @@ public class SwizzleJiraIssuesMacro extends AbstractHtmlGeneratingMacro {
         context.put("title", title);
         context.put("icons", prepareIconMap(iconsUrl));
 
-        return VelocityUtils.getRenderedTemplate("swizzle/jira/templates/"+template, context);
+        return VelocityUtils.getRenderedTemplate("swizzle/jira/templates/" + template, context);
     }
-
 
     private Map prepareIconMap(String iconsUrl) {
         Map map = new HashMap();
-
 
         Map iconMappings = jiraIconMappingManager.getIconMappings();
         for (Iterator iterator = iconMappings.entrySet().iterator(); iterator.hasNext();) {
@@ -137,11 +135,10 @@ public class SwizzleJiraIssuesMacro extends AbstractHtmlGeneratingMacro {
             map.put(key, icon);
         }
 
-        map.put("spacer", iconsUrl.replace("images/icons/","images/border/spacer.gif"));
+        map.put("spacer", iconsUrl.replace("images/icons/", "images/border/spacer.gif"));
 
         return map;
     }
-
 
     public String getName() {
         return "swizzlejiraissues";

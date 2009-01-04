@@ -22,22 +22,23 @@ import java.util.List;
 
 /**
  * I wish we could subclass java.util.Arrays and simply add two methods, but
- * that class has only one constructor and it's private and cannot be subclassed.
- *
- * We're forced to use delegation.  The downside is that any methods added after
+ * that class has only one constructor and it's private and cannot be
+ * subclassed.
+ * 
+ * We're forced to use delegation. The downside is that any methods added after
  * java 1.4 won't automatically be available here.
- *
- * This class adds two methods not available in Arrays.
- *  - <type> first(<type>[] array)
- *  - <type> last(<type>[] array)
- *
+ * 
+ * This class adds two methods not available in Arrays. - <type> first(<type>[]
+ * array) - <type> last(<type>[] array)
+ * 
  * Both are overloaded to accommodate the possible array types
+ * 
  * @version $Revision$ $Date$
  */
-public class ArraysUtil  {
+public class ArraysUtil {
 
     public Object first(Object[] objects) {
-        return objects.length > 0 ? objects[0]: null;
+        return objects.length > 0 ? objects[0] : null;
     }
 
     public byte first(byte[] bytes) {
@@ -73,7 +74,7 @@ public class ArraysUtil  {
     }
 
     public Object last(Object[] objects) {
-        return objects.length > 0 ? objects[objects.length-1]: null;
+        return objects.length > 0 ? objects[objects.length - 1] : null;
     }
 
     public byte last(byte[] bytes) {

@@ -30,12 +30,10 @@ public class ConfluenceTest extends TestCase {
         confluence.login("swizzletester", "swizzle");
         Page page = confluence.getPage("SWIZZLE", "UnitTest Page");
 
-
         assertNotNull("page", page);
         assertEquals("Page.getId()", "62967", page.getId());
         assertEquals("Page.getTitle()", "UnitTest Page", page.getTitle());
         assertEquals("Page.getSpace()", "SWIZZLE", page.getSpace());
-
 
         String actual = confluence.renderContent(page.getSpace(), page.getId(), "");
 
@@ -48,7 +46,7 @@ public class ConfluenceTest extends TestCase {
         confluence.login("swizzletester", "swizzle");
 
         List activeUsers = confluence.getActiveUsers(true);
-        for (int i = 0; i < activeUsers.size() && i < 10 ; i++) {
+        for (int i = 0; i < activeUsers.size() && i < 10; i++) {
             String username = (String) activeUsers.get(i);
 
             assertTrue("hasUser", confluence.hasUser(username));
@@ -69,6 +67,5 @@ public class ConfluenceTest extends TestCase {
             }
         }
     }
-
 
 }

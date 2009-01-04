@@ -31,7 +31,7 @@ public class UserInformation extends MapObject {
     public UserInformation(Map data) {
         super(data);
     }
-    
+
     /**
      * the username of this user
      */

@@ -21,5 +21,6 @@ package org.codehaus.swizzle.jira;
  */
 public interface IssueFiller {
     void fill(Issue issue);
+
     void setEnabled(boolean enabled);
 }

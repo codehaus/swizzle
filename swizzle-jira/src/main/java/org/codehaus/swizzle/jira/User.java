@@ -27,7 +27,7 @@ public class User extends MapObject {
     public User() {
         super();
     }
-    
+
     public User(Map data) {
         super(data);
     }
@@ -73,16 +73,19 @@ public class User extends MapObject {
     public String toString() {
         String name = getName();
         String fullname = getFullname();
-        return (fullname != null)? fullname : name;
+        return (fullname != null) ? fullname : name;
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         final User user = (User) o;
 
-        if (getName() != null ? !getName().equals(user.getName()) : user.getName() != null) return false;
+        if (getName() != null ? !getName().equals(user.getName()) : user.getName() != null)
+            return false;
 
         return true;
     }

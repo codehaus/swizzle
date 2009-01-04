@@ -60,9 +60,7 @@ public class JiraRss {
         SAXParser saxParser = saxParserFactory.newSAXParser();
         ObjectBuilder objectBuilder = new ObjectBuilder();
 
-
         saxParser.parse(in, objectBuilder);
-
 
         List list = objectBuilder.getIssues();
         for (int i = 0; i < list.size(); i++) {
@@ -81,24 +79,25 @@ public class JiraRss {
     /**
      * Valid schemes are "issue", "project", "voters", and "attachments"
      * "issues" is enabled by default
+     * 
      * @param scheme
      */
-    public void autofill(String scheme){
+    public void autofill(String scheme) {
         if (!autofillProviders.containsKey(scheme)) {
-            throw new UnsupportedOperationException("Autofill Scheme not supported: "+scheme);
+            throw new UnsupportedOperationException("Autofill Scheme not supported: " + scheme);
         }
 
         try {
             ClassLoader classLoader = this.getClass().getClassLoader();
             Class clazz = classLoader.loadClass((String) autofillProviders.get(scheme));
-            Method fill = clazz.getMethod("fill", new Class[]{JiraRss.class});
-            List list = (List) fill.invoke(null, new Object[]{this});
+            Method fill = clazz.getMethod("fill", new Class[] { JiraRss.class });
+            List list = (List) fill.invoke(null, new Object[] { this });
             for (int i = 0; i < list.size(); i++) {
                 Issue issue = (Issue) list.get(i);
                 issues.put(issue.getKey(), issue);
             }
         } catch (Exception e) {
-            System.err.println("Cannot install autofill provider "+scheme);
+            System.err.println("Cannot install autofill provider " + scheme);
             e.printStackTrace();
         }
     }
@@ -106,22 +105,22 @@ public class JiraRss {
     public List fillVotes() throws Exception {
         ClassLoader classLoader = this.getClass().getClassLoader();
         Class clazz = classLoader.loadClass("org.codehaus.swizzle.jira.VotersFiller");
-        Method fill = clazz.getMethod("fill", new Class[]{JiraRss.class});
-        return (List) fill.invoke(null, new Object[]{this});
+        Method fill = clazz.getMethod("fill", new Class[] { JiraRss.class });
+        return (List) fill.invoke(null, new Object[] { this });
     }
 
     public List fillSubTasks() throws Exception {
         ClassLoader classLoader = this.getClass().getClassLoader();
         Class clazz = classLoader.loadClass("org.codehaus.swizzle.jira.SubTasksFiller");
-        Method fill = clazz.getMethod("fill", new Class[]{JiraRss.class});
-        return (List) fill.invoke(null, new Object[]{this});
+        Method fill = clazz.getMethod("fill", new Class[] { JiraRss.class });
+        return (List) fill.invoke(null, new Object[] { this });
     }
 
     public List fillAttachments() throws Exception {
         autofill("attachments");
         return getIssues();
     }
-    
+
     public List getIssues() {
         return new MapObjectList(issues.values());
     }
@@ -136,9 +135,9 @@ public class JiraRss {
         private Channel channel;
 
         public ObjectBuilder() {
-//            channelHandler = new MapObjectHandler(Channel.class);
+            // channelHandler = new MapObjectHandler(Channel.class);
             TextHandler textHandler = new TextHandler();
-//            this.registerHandler("channel", channelHandler);
+            // this.registerHandler("channel", channelHandler);
             this.registerHandler("item", new MapObjectListHandler(Issue.class, null));
             this.registerHandler("priority", new MapObjectHandler(Priority.class));
             this.registerHandler("status", new MapObjectHandler(Status.class));
@@ -164,7 +163,7 @@ public class JiraRss {
             objects.push(channel);
         }
 
-        public void registerHandler(String name, Object handler){
+        public void registerHandler(String name, Object handler) {
             handlers.put(name, handler);
         }
 
@@ -199,7 +198,7 @@ public class JiraRss {
                 }
             }
             Class handlerClass = (Class) object;
-            if (handlerClass == null){
+            if (handlerClass == null) {
                 return new DefaultHandler();
             }
 
@@ -246,7 +245,8 @@ public class JiraRss {
         }
 
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-            if (name == null) name = qName;
+            if (name == null)
+                name = qName;
         }
 
         public void characters(char[] chars, int i, int i1) throws SAXException {
@@ -291,7 +291,7 @@ public class JiraRss {
         public MapObjectHandler(Class mapObjectClass, String contentField) {
             this.mapObjectClass = mapObjectClass;
             this.contentField = contentField;
-            this.atts.put("id","id");
+            this.atts.put("id", "id");
         }
 
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -300,7 +300,7 @@ public class JiraRss {
             for (int i = 0; i < attributes.getLength(); i++) {
                 String name = attributes.getQName(i);
                 String field = (String) atts.get(name);
-                if (field != null){
+                if (field != null) {
                     mapObject.setString(field, attributes.getValue(i));
                 }
             }
@@ -309,13 +309,13 @@ public class JiraRss {
         }
 
         private MapObject createMapObject() {
-            if (this.mapObject != null){
+            if (this.mapObject != null) {
                 return this.mapObject;
             }
             MapObject mapObject;
             try {
-                Constructor constructor = mapObjectClass.getConstructor(new Class[]{Map.class});
-                mapObject = (MapObject) constructor.newInstance(new Object[]{new HashMap()});
+                Constructor constructor = mapObjectClass.getConstructor(new Class[] { Map.class });
+                mapObject = (MapObject) constructor.newInstance(new Object[] { new HashMap() });
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -336,7 +336,7 @@ public class JiraRss {
 
         public void endElement(String string, String string1, String string2) throws SAXException {
             objects.pop();
-            if (contentField != null){
+            if (contentField != null) {
                 mapObject.setString(contentField, value.toString());
             }
         }
@@ -370,7 +370,7 @@ public class JiraRss {
 
         protected void setMapObject(String qName, MapObject mapObject) {
             MapObject parent = (MapObject) objects.peek();
-            List list = parent.getMapObjects(qName+"s", mapObject.getClass());
+            List list = parent.getMapObjects(qName + "s", mapObject.getClass());
             list.add(mapObject);
         }
 

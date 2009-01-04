@@ -39,15 +39,15 @@ public class Jira {
     private static Map cacheMetadata = new HashMap();
 
     static {
-        cacheMetadata.put(IssueType.class, new String[]{"id","name"});
-        cacheMetadata.put(Component.class, new String[]{"id","name"});
-        cacheMetadata.put(Priority.class, new String[]{"id","name"});
-        cacheMetadata.put(Resolution.class, new String[]{"id","name"});
-        cacheMetadata.put(Version.class, new String[]{"id","name"});
-        cacheMetadata.put(Status.class, new String[]{"id","name"});
-        cacheMetadata.put(Filter.class, new String[]{"id","name"});
-        cacheMetadata.put(Issue.class, new String[]{"id","key"});
-        cacheMetadata.put(Project.class, new String[]{"id","key"});
+        cacheMetadata.put(IssueType.class, new String[] { "id", "name" });
+        cacheMetadata.put(Component.class, new String[] { "id", "name" });
+        cacheMetadata.put(Priority.class, new String[] { "id", "name" });
+        cacheMetadata.put(Resolution.class, new String[] { "id", "name" });
+        cacheMetadata.put(Version.class, new String[] { "id", "name" });
+        cacheMetadata.put(Status.class, new String[] { "id", "name" });
+        cacheMetadata.put(Filter.class, new String[] { "id", "name" });
+        cacheMetadata.put(Issue.class, new String[] { "id", "key" });
+        cacheMetadata.put(Project.class, new String[] { "id", "key" });
     }
 
     private final XmlRpcClient client;
@@ -62,7 +62,7 @@ public class Jira {
             endpoint = endpoint.substring(0, endpoint.length() - 1);
         }
 
-        if (! endpoint.endsWith("/rpc/xmlrpc")) {
+        if (!endpoint.endsWith("/rpc/xmlrpc")) {
             endpoint += "/rpc/xmlrpc";
         }
 
@@ -71,7 +71,7 @@ public class Jira {
 
         client = new XmlRpcClient();
         client.setConfig(clientConfig);
-        
+
         this.cache = new HashMap();
         BasicIssueFiller basicIssueFiller = new BasicIssueFiller(this);
         basicIssueFiller.setEnabled(true);
@@ -88,24 +88,25 @@ public class Jira {
     /**
      * Valid schemes are "issue", "project", "voters", and "attachments"
      * "issues" is enabled by default
+     * 
      * @param scheme
      * @param enabled
      */
-    public void autofill(String scheme, boolean enabled){
+    public void autofill(String scheme, boolean enabled) {
         if (!autofillProviders.containsKey(scheme)) {
-            throw new UnsupportedOperationException("Autofill Scheme not supported: "+scheme);
+            throw new UnsupportedOperationException("Autofill Scheme not supported: " + scheme);
         }
 
         IssueFiller filler = (IssueFiller) issueFillers.get(scheme);
-        if (filler == null){
+        if (filler == null) {
             try {
                 ClassLoader classLoader = this.getClass().getClassLoader();
                 Class clazz = classLoader.loadClass((String) autofillProviders.get(scheme));
-                Constructor constructor = clazz.getConstructor(new Class[]{Jira.class});
-                filler = (IssueFiller) constructor.newInstance(new Object[]{this});
+                Constructor constructor = clazz.getConstructor(new Class[] { Jira.class });
+                filler = (IssueFiller) constructor.newInstance(new Object[] { this });
                 issueFillers.put(scheme, filler);
             } catch (Exception e) {
-                System.err.println("Cannot install autofill provider "+scheme);
+                System.err.println("Cannot install autofill provider " + scheme);
                 e.printStackTrace();
             }
         }
@@ -129,7 +130,7 @@ public class Jira {
     }
 
     /**
-     * List<{@link Comment}>:  Returns all comments associated with the issue
+     * List<{@link Comment}>: Returns all comments associated with the issue
      */
     public List getComments(String issueKey) {
         return cachedList(new Call("getComments", issueKey), Comment.class);
@@ -138,10 +139,10 @@ public class Jira {
     public List getComments(Issue issue) {
         return getComments(issue.getKey());
     }
-    
+
     /**
-     * Adds a comment to an issue
-     * TODO: If someone adds a comment to an issue, we should account for that in our caching
+     * Adds a comment to an issue TODO: If someone adds a comment to an issue,
+     * we should account for that in our caching
      */
     public boolean addComment(String issueKey, String comment) throws Exception {
         Boolean value = (Boolean) call("getComments", issueKey, comment);
@@ -149,23 +150,22 @@ public class Jira {
     }
 
     /**
-     * Creates an issue in JIRA
-     * TODO: If someone creates an issue, we should account for that in our caching
+     * Creates an issue in JIRA TODO: If someone creates an issue, we should
+     * account for that in our caching
      */
     public Issue createIssue(Issue issue) throws Exception {
         Map data = (Map) call("createIssue", issue.toMap());
-        return (autofill)? fill(new Issue(data)):new Issue(data);
+        return (autofill) ? fill(new Issue(data)) : new Issue(data);
     }
 
     /**
-     * Updates an issue in JIRA from a HashMap object
-     * TODO: If someone updates an issue, we should account for that in our caching
+     * Updates an issue in JIRA from a HashMap object TODO: If someone updates
+     * an issue, we should account for that in our caching
      */
     public Issue updateIssue(String issueKey, Issue issue) throws Exception {
         Map data = (Map) call("updateIssue", issueKey, issue.toMap());
-        return (autofill)? fill(new Issue(data)):new Issue(data);
+        return (autofill) ? fill(new Issue(data)) : new Issue(data);
     }
-
 
     /**
      * Gets an issue from a given issue key.
@@ -175,7 +175,7 @@ public class Jira {
     }
 
     /**
-     * List<{@link Issue}>:  Executes a saved filter
+     * List<{@link Issue}>: Executes a saved filter
      */
     public List getIssuesFromFilter(Filter filter) throws Exception {
         return getIssuesFromFilter(filter.getId());
@@ -183,23 +183,23 @@ public class Jira {
 
     public List getIssuesFromFilter(String filterName) throws Exception {
         Filter filter = getSavedFilter(filterName);
-        if (filter == null){
-            return toList(new Object[]{},Issue.class);
+        if (filter == null) {
+            return toList(new Object[] {}, Issue.class);
         } else {
             return getIssuesFromFilter(filter.getId());
         }
     }
 
     /**
-     * List<{@link Issue}>:  Executes a saved filter
+     * List<{@link Issue}>: Executes a saved filter
      */
     public List getIssuesFromFilter(int filterId) throws Exception {
-        Object[] vector = (Object[]) call("getIssuesFromFilter", filterId+"");
+        Object[] vector = (Object[]) call("getIssuesFromFilter", filterId + "");
         return toList(vector, Issue.class);
     }
 
     /**
-     * List<{@link Issue}>:  Find issues using a free text search
+     * List<{@link Issue}>: Find issues using a free text search
      */
     public List getIssuesFromTextSearch(String searchTerms) throws Exception {
         Object[] vector = (Object[]) call("getIssuesFromTextSearch", searchTerms);
@@ -207,15 +207,18 @@ public class Jira {
     }
 
     /**
-     * List<{@link Issue}>:  Find issues using a free text search, limited to certain projects
+     * List<{@link Issue}>: Find issues using a free text search, limited to
+     * certain projects
      */
-    public List getIssuesFromTextSearchWithProject(List projectKeys, String searchTerms, int maxNumResults) throws Exception {
-        Object[] vector = (Object[]) call("getIssuesFromTextSearchWithProject", projectKeys.toArray(), searchTerms, new Integer(maxNumResults));
+    public List getIssuesFromTextSearchWithProject(List projectKeys, String searchTerms, int maxNumResults)
+            throws Exception {
+        Object[] vector = (Object[]) call("getIssuesFromTextSearchWithProject", projectKeys.toArray(), searchTerms,
+                new Integer(maxNumResults));
         return toList(vector, Issue.class);
     }
 
     /**
-     * List<{@link IssueType}>:  Returns all visible issue types in the system
+     * List<{@link IssueType}>: Returns all visible issue types in the system
      */
     public List getIssueTypes() {
         return cachedList(new Call("getIssueTypes"), IssueType.class);
@@ -228,12 +231,11 @@ public class Jira {
 
     public IssueType getIssueType(int id) {
         Map objects = cachedMap(new Call("getIssueTypes"), IssueType.class, "id");
-        return (IssueType) objects.get(id+"");
+        return (IssueType) objects.get(id + "");
     }
 
-
     /**
-     * List<{@link Priority}>:  Returns all priorities in the system
+     * List<{@link Priority}>: Returns all priorities in the system
      */
     public List getPriorities() {
         return cachedList(new Call("getPriorities"), Priority.class);
@@ -250,41 +252,41 @@ public class Jira {
     }
 
     /**
-     * List<{@link Project}>:  Returns a list of projects available to the user
+     * List<{@link Project}>: Returns a list of projects available to the user
      */
     public List getProjects() {
-        if ( getServerInfo().getVersion().substring( 0, 4 ).compareTo( "3.13" ) < 0 )
+        if (getServerInfo().getVersion().substring(0, 4).compareTo("3.13") < 0)
             // In Jira < 3.13
-            return cachedList( new Call( "getProjects" ), Project.class );
+            return cachedList(new Call("getProjects"), Project.class);
         else
             // Otherwise
-            return cachedList( new Call( "getProjectsNoSchemes" ), Project.class );
+            return cachedList(new Call("getProjectsNoSchemes"), Project.class);
     }
 
     public Project getProject(String key) {
         Map objects;
-        if ( getServerInfo().getVersion().substring( 0, 4 ).compareTo( "3.13" ) < 0 )
+        if (getServerInfo().getVersion().substring(0, 4).compareTo("3.13") < 0)
             // In Jira < 3.13
-            objects = cachedMap( new Call( "getProjects" ), Project.class, "key" );
+            objects = cachedMap(new Call("getProjects"), Project.class, "key");
         else
             // Otherwise
-            objects = cachedMap( new Call( "getProjectsNoSchemes" ), Project.class, "key" );
+            objects = cachedMap(new Call("getProjectsNoSchemes"), Project.class, "key");
         return (Project) objects.get(key);
     }
 
     public Project getProject(int id) {
         Map objects;
-        if ( getServerInfo().getVersion().substring( 0, 4 ).compareTo( "3.13" ) < 0 )
+        if (getServerInfo().getVersion().substring(0, 4).compareTo("3.13") < 0)
             // In Jira < 3.13
-            objects = cachedMap( new Call( "getProjects" ), Project.class, "id" );
+            objects = cachedMap(new Call("getProjects"), Project.class, "id");
         else
             // Otherwise
-            objects = cachedMap( new Call( "getProjectsNoSchemes" ), Project.class, "id" );
+            objects = cachedMap(new Call("getProjectsNoSchemes"), Project.class, "id");
         return (Project) objects.get(id + "");
     }
 
     /**
-     * List<{@link Resolution}>:  Returns all resolutions in the system
+     * List<{@link Resolution}>: Returns all resolutions in the system
      */
     public List getResolutions() {
         return cachedList(new Call("getResolutions"), Resolution.class);
@@ -301,7 +303,7 @@ public class Jira {
     }
 
     /**
-     * List<{@link Status}>:  Returns all statuses in the system
+     * List<{@link Status}>: Returns all statuses in the system
      */
     public List getStatuses() {
         return cachedList(new Call("getStatuses"), Status.class);
@@ -318,7 +320,8 @@ public class Jira {
     }
 
     /**
-     * List<{@link Filter}>:  Gets all saved filters available for the currently logged in user
+     * List<{@link Filter}>: Gets all saved filters available for the currently
+     * logged in user
      */
     public List getSavedFilters() {
         return cachedList(new Call("getSavedFilters"), Filter.class);
@@ -335,15 +338,17 @@ public class Jira {
     }
 
     /**
-     * Returns the Server information such as baseUrl, version, edition, buildDate, buildNumber.
+     * Returns the Server information such as baseUrl, version, edition,
+     * buildDate, buildNumber.
      */
     public ServerInfo getServerInfo() {
         return (ServerInfo) cachedObject(new Call("getServerInfo"), ServerInfo.class);
     }
 
     /**
-     * List<{@link IssueType}>:  Returns all visible subtask issue types in the system
-     *
+     * List<{@link IssueType}>: Returns all visible subtask issue types in the
+     * system
+     * 
      * @return list of {@link IssueType}
      */
     public List getSubTaskIssueTypes() {
@@ -360,7 +365,6 @@ public class Jira {
         return (IssueType) objects.get(id + "");
     }
 
-
     /**
      * Returns a user's information given a username
      */
@@ -368,10 +372,12 @@ public class Jira {
         return (User) cachedObject(new Call("getUser", username), User.class);
     }
 
-    // ----  PROJECT related data ---- /////////////////////////////////////////////////////
+    // ---- PROJECT related data ----
+    // /////////////////////////////////////////////////////
 
     /**
-     * List<{@link Component}>:  Returns all components available in the specified project
+     * List<{@link Component}>: Returns all components available in the
+     * specified project
      */
     public List getComponents(String projectKey) {
         return cachedList(new Call("getComponents", projectKey), Component.class);
@@ -392,7 +398,7 @@ public class Jira {
 
     public Component getComponent(String projectKey, int id) {
         Map components = cachedMap(new Call("getComponents", projectKey), Component.class, "id");
-        return (Component) components.get(id+"");
+        return (Component) components.get(id + "");
     }
 
     public Component getComponent(Project project, int id) {
@@ -400,7 +406,8 @@ public class Jira {
     }
 
     /**
-     * List<{@link Version}>:  Returns all versions available in the specified project
+     * List<{@link Version}>: Returns all versions available in the specified
+     * project
      */
     public List getVersions(String projectKey) {
         return cachedList(new Call("getVersions", projectKey), Version.class);
@@ -421,23 +428,24 @@ public class Jira {
 
     public Version getVersion(String projectKey, int id) {
         Map versions = cachedMap(new Call("getVersions", projectKey), Version.class, "id");
-        return (Version) versions.get(id+"");
+        return (Version) versions.get(id + "");
     }
 
     public Version getVersion(Project project, int id) {
         return getVersion(project.getKey(), id);
     }
 
-    // ----  PROJECT related data ---- /////////////////////////////////////////////////////
+    // ---- PROJECT related data ----
+    // /////////////////////////////////////////////////////
 
     private List toList(Object[] vector, Class type) {
         List list = new MapObjectList(vector.length);
 
         try {
-            Constructor constructor = type.getConstructor(new Class[]{Map.class});
+            Constructor constructor = type.getConstructor(new Class[] { Map.class });
             for (int i = 0; i < vector.length; i++) {
                 Map data = (Map) vector[i];
-                Object object = constructor.newInstance(new Object[]{data});
+                Object object = constructor.newInstance(new Object[] { data });
                 fill(type, object);
                 list.add(object);
             }
@@ -449,10 +457,10 @@ public class Jira {
     }
 
     private void fill(Class type, Object object) {
-        if (autofill && type == Issue.class){
-            fill((Issue)object);
+        if (autofill && type == Issue.class) {
+            fill((Issue) object);
         }
-        if (type == Filter.class){
+        if (type == Filter.class) {
             Filter filter = (Filter) object;
             User dest = filter.getAuthor();
             User source = this.getUser(dest.getName());
@@ -462,8 +470,8 @@ public class Jira {
 
     private Object toObject(Map data, Class type) {
         try {
-            Constructor constructor = type.getConstructor(new Class[]{Map.class});
-            Object object = constructor.newInstance(new Object[]{data});
+            Constructor constructor = type.getConstructor(new Class[] { Map.class });
+            Object object = constructor.newInstance(new Object[] { data });
             fill(type, object);
             return object;
         } catch (Exception e) {
@@ -477,24 +485,24 @@ public class Jira {
     }
 
     private Object call(String command, Object arg1) throws Exception {
-        Object[] args = {arg1};
+        Object[] args = { arg1 };
         return call(command, args);
     }
 
     private Object call(String command, Object arg1, Object arg2) throws Exception {
-        Object[] args = {arg1, arg2};
+        Object[] args = { arg1, arg2 };
         return call(command, args);
     }
 
     private Object call(String command, Object arg1, Object arg2, Object arg3) throws Exception {
-        Object[] args = {arg1, arg2, arg3};
+        Object[] args = { arg1, arg2, arg3 };
         return call(command, args);
     }
 
     private Object call(String command, Object[] args) throws XmlRpcException, IOException {
         Object[] vector;
         if (token != null) {
-            vector = new Object[args.length+1];
+            vector = new Object[args.length + 1];
             vector[0] = token;
             System.arraycopy(args, 0, vector, 1, args.length);
         } else {
@@ -503,8 +511,7 @@ public class Jira {
         return client.execute("jira1." + command, vector);
     }
 
-
-    public Issue fill(Issue issue){
+    public Issue fill(Issue issue) {
         Collection collection = issueFillers.values();
         for (Iterator iterator = collection.iterator(); iterator.hasNext();) {
             IssueFiller issueFiller = (IssueFiller) iterator.next();
@@ -512,30 +519,31 @@ public class Jira {
         }
         return issue;
     }
+
     public static class Call {
         public final String command;
         public final Object[] args;
 
-        public Call(String command){
+        public Call(String command) {
             Object[] args = {};
             this.command = command;
             this.args = args;
         }
 
-        public Call(String command, Object arg1){
-            Object[] args = {arg1};
+        public Call(String command, Object arg1) {
+            Object[] args = { arg1 };
             this.command = command;
             this.args = args;
         }
 
-        public Call(String command, Object arg1, Object arg2){
-            Object[] args = {arg1, arg2};
+        public Call(String command, Object arg1, Object arg2) {
+            Object[] args = { arg1, arg2 };
             this.command = command;
             this.args = args;
         }
 
-        public Call(String command, Object arg1, Object arg2, Object arg3){
-            Object[] args = {arg1, arg2, arg3};
+        public Call(String command, Object arg1, Object arg2, Object arg3) {
+            Object[] args = { arg1, arg2, arg3 };
             this.command = command;
             this.args = args;
         }
@@ -545,16 +553,19 @@ public class Jira {
             this.args = args;
         }
 
-
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
 
             final Call call = (Call) o;
 
             // Probably incorrect - comparing Object[] arrays with Arrays.equals
-            if (!Arrays.equals(args, call.args)) return false;
-            if (!command.equals(call.command)) return false;
+            if (!Arrays.equals(args, call.args))
+                return false;
+            if (!command.equals(call.command))
+                return false;
 
             return true;
         }
@@ -586,7 +597,7 @@ public class Jira {
 
     private Object cache(Call call, Class type) {
         Object object = callcache.get(call);
-        if (object != null){
+        if (object != null) {
             return object;
         }
 
@@ -605,10 +616,10 @@ public class Jira {
                 indexes.put(field, index);
             }
             indexes.put(List.class, new MapObjectList(list));
-//            indexes.put(List.class, Collections.unmodifiableList(list));
+            // indexes.put(List.class, Collections.unmodifiableList(list));
             result = indexes;
-        } else if (result instanceof Map){
-            result = toObject((Map)result, type);
+        } else if (result instanceof Map) {
+            result = toObject((Map) result, type);
         }
 
         callcache.put(call, result);
@@ -619,7 +630,7 @@ public class Jira {
         try {
             Object[] vector;
             if (token != null) {
-                vector = new Object[call.args.length+1];
+                vector = new Object[call.args.length + 1];
                 vector[0] = token;
                 System.arraycopy(call.args, 0, vector, 1, call.args.length);
             } else {

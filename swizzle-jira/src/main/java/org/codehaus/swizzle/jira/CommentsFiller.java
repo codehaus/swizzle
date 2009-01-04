@@ -33,8 +33,8 @@ public class CommentsFiller implements IssueFiller {
         this.enabled = enabled;
     }
 
-    public void fill(Issue issue){
-        if (!enabled){
+    public void fill(Issue issue) {
+        if (!enabled) {
             return;
         }
         List comments = jira.getComments(issue);

@@ -35,8 +35,8 @@ public class BasicIssueFiller implements IssueFiller {
         this.enabled = enabled;
     }
 
-    public void fill(Issue issue){
-        if (!enabled){
+    public void fill(Issue issue) {
+        if (!enabled) {
             return;
         }
         fill(issue.getAssignee());
@@ -60,10 +60,10 @@ public class BasicIssueFiller implements IssueFiller {
             Component component = (Component) components.get(i);
             fill(issue, component);
         }
-        if (issue.getLink() == null && jira != null){
+        if (issue.getLink() == null && jira != null) {
             try {
                 ServerInfo serverInfo = jira.getServerInfo();
-                URL url = new URL(serverInfo.getBaseUrl()+"/browse/"+issue.getKey());
+                URL url = new URL(serverInfo.getBaseUrl() + "/browse/" + issue.getKey());
                 issue.setLink(url.toExternalForm());
             } catch (MalformedURLException e) {
             }
@@ -72,18 +72,20 @@ public class BasicIssueFiller implements IssueFiller {
 
     public void fill(Issue issue, Version dest) {
         Version source = jira.getVersion(issue.getProject().getKey(), dest.getId());
-        if (source == null) source = jira.getVersion(issue.getProject().getKey(), dest.getName());
+        if (source == null)
+            source = jira.getVersion(issue.getProject().getKey(), dest.getName());
         dest.merge(source);
     }
 
     public void fill(Issue issue, Component dest) {
         Component source = jira.getComponent(issue.getProject().getKey(), dest.getId());
-        if (source == null) source = jira.getComponent(issue.getProject().getKey(), dest.getName());
+        if (source == null)
+            source = jira.getComponent(issue.getProject().getKey(), dest.getName());
         dest.merge(source);
     }
 
     public void fill(User dest) {
-        if (dest == null){
+        if (dest == null) {
             return;
         }
         User source = jira.getUser(dest.getName());
@@ -91,38 +93,42 @@ public class BasicIssueFiller implements IssueFiller {
     }
 
     public void fill(Priority dest) {
-        if (dest == null){
+        if (dest == null) {
             return;
         }
         Priority source = jira.getPriority(dest.getId());
-        if (source == null) source = jira.getPriority(dest.getName());
+        if (source == null)
+            source = jira.getPriority(dest.getName());
         dest.merge(source);
     }
 
     public void fill(Status dest) {
-        if (dest == null){
+        if (dest == null) {
             return;
         }
         Status source = jira.getStatus(dest.getId());
-        if (source == null) source = jira.getStatus(dest.getName());
+        if (source == null)
+            source = jira.getStatus(dest.getName());
         dest.merge(source);
     }
 
     public void fill(Resolution dest) {
-        if (dest == null){
+        if (dest == null) {
             return;
         }
         Resolution source = jira.getResolution(dest.getId());
-        if (source == null) source = jira.getResolution(dest.getName());
+        if (source == null)
+            source = jira.getResolution(dest.getName());
         dest.merge(source);
     }
 
     public void fill(IssueType dest) {
-        if (dest == null){
+        if (dest == null) {
             return;
         }
         IssueType source = jira.getIssueType(dest.getId());
-        if (source == null) source = jira.getIssueType(dest.getName());
+        if (source == null)
+            source = jira.getIssueType(dest.getName());
         dest.merge(source);
-    }    
+    }
 }

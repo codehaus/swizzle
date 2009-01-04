@@ -26,16 +26,15 @@ import java.util.Map;
  */
 public class Issue extends MapObject implements Comparable {
 
-
     public Issue() {
         this(new HashMap());
     }
 
     public Issue(Map data) {
         super(data);
-        xmlrpcRefs.put(IssueType.class,"id");
-        xmlrpcRefs.put(Status.class,"id");
-        xmlrpcRefs.put(User.class,"name");
+        xmlrpcRefs.put(IssueType.class, "id");
+        xmlrpcRefs.put(Status.class, "id");
+        xmlrpcRefs.put(User.class, "name");
         xmlrpcRefs.put(Project.class, "key");
         xmlrpcRefs.put(Priority.class, "id");
         xmlrpcRefs.put(Resolution.class, "id");
@@ -91,14 +90,14 @@ public class Issue extends MapObject implements Comparable {
     }
 
     /**
-     * This data is not available via interface except scraping
-     * the html from the web interface.  If you know of another
-     * way to get it, please let us know.
+     * This data is not available via interface except scraping the html from
+     * the web interface. If you know of another way to get it, please let us
+     * know.
      * 
      * @return List<User>
      */
     public List getVoters() {
-        if (!hasField("voters")){
+        if (!hasField("voters")) {
             List votes = new MapObjectList();
             for (int i = getInt("votes"); i > 0; i--) {
                 votes.add(new User());
@@ -108,7 +107,7 @@ public class Issue extends MapObject implements Comparable {
         return getMapObjects("voters", User.class);
     }
 
-    public void setVoters(List users){
+    public void setVoters(List users) {
         setMapObjects("voters", users);
     }
 
@@ -123,11 +122,11 @@ public class Issue extends MapObject implements Comparable {
      * List of something
      */
     public List getCustomFieldValues() {
-        return getMapObjects( "customFieldValues", CustomFieldValue.class );
+        return getMapObjects("customFieldValues", CustomFieldValue.class);
     }
 
     public void setCustomFieldValues(List customFieldValues) {
-        setMapObjects( "customFieldValues", customFieldValues );
+        setMapObjects("customFieldValues", customFieldValues);
     }
 
     /**
@@ -205,7 +204,6 @@ public class Issue extends MapObject implements Comparable {
         setMapObject("resolution", resolution);
     }
 
-
     /**
      * List
      */
@@ -225,7 +223,6 @@ public class Issue extends MapObject implements Comparable {
         getFixVersions().remove(version);
     }
 
-
     public List getSubTasks() {
         return getMapObjects("subTasks", Issue.class);
     }
@@ -233,7 +230,6 @@ public class Issue extends MapObject implements Comparable {
     public void setSubTasks(List subTasks) {
         setMapObjects("subTasks", subTasks);
     }
-
 
     public void addSubTask(Issue issue) {
         getSubTasks().add(issue);
@@ -251,7 +247,6 @@ public class Issue extends MapObject implements Comparable {
         setMapObject("parentTask", parentTask);
     }
 
-
     /**
      *
      */
@@ -262,7 +257,6 @@ public class Issue extends MapObject implements Comparable {
     public void setDescription(String description) {
         setString("description", description);
     }
-
 
     public User getReporter() {
         return (User) getMapObject("reporter", User.class);
@@ -321,7 +315,6 @@ public class Issue extends MapObject implements Comparable {
         setMapObject("priority", priority);
     }
 
-
     /**
      *
      */
@@ -334,8 +327,7 @@ public class Issue extends MapObject implements Comparable {
     }
 
     /**
-     * Only available via the RSS source
-     * Not available via XML-RPC source
+     * Only available via the RSS source Not available via XML-RPC source
      */
     public String getLink() {
         return getString("link");
@@ -353,7 +345,6 @@ public class Issue extends MapObject implements Comparable {
         setMapObjects("attachments", attachments);
     }
 
-
     public Map toMap() {
         // It's unlikely that you can even update the votes via xml-rpc
         // till we know for sure, best to make sure the tally is current
@@ -362,13 +353,17 @@ public class Issue extends MapObject implements Comparable {
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         final Issue issue = (Issue) o;
 
-        if (getId() != issue.getId()) return false;
-        if (getKey() != null ? !getKey().equals(issue.getKey()) : issue.getKey() != null) return false;
+        if (getId() != issue.getId())
+            return false;
+        if (getKey() != null ? !getKey().equals(issue.getKey()) : issue.getKey() != null)
+            return false;
 
         return true;
     }
@@ -385,9 +380,9 @@ public class Issue extends MapObject implements Comparable {
             Issue that = (Issue) object;
             int a = this.getId();
             int b = that.getId();
-            if (a > b){
+            if (a > b) {
                 return 1;
-            } else if (a < b){
+            } else if (a < b) {
                 return -1;
             }
         }

@@ -45,7 +45,7 @@ public class AttachmentsFiller implements IssueFiller {
     }
 
     public void fill(final Issue issue) {
-        if (!enabled){
+        if (!enabled) {
             return;
         }
         ServerInfo serverInfo = jira.getServerInfo();
@@ -72,7 +72,7 @@ public class AttachmentsFiller implements IssueFiller {
             final List attachments = new ArrayList();
             URL baseUrl = new URL(baseUrlString);
 
-            URL pageUrl = new URL(baseUrl, "secure/ManageAttachments.jspa?id="+issue.getId());
+            URL pageUrl = new URL(baseUrl, "secure/ManageAttachments.jspa?id=" + issue.getId());
 
             InputStream in = new BufferedInputStream(pageUrl.openStream());
             StreamLexer lexer = new StreamLexer(in);
@@ -81,8 +81,8 @@ public class AttachmentsFiller implements IssueFiller {
                 try {
                     Attachment attachment = new Attachment();
 
-                    String link = lexer.readToken("secure/attachment/","\"");
-                    URL url = new URL(pageUrl, "attachment/"+link);
+                    String link = lexer.readToken("secure/attachment/", "\"");
+                    URL url = new URL(pageUrl, "attachment/" + link);
                     attachment.setUrl(url);
                     attachments.add(attachment);
 
@@ -102,7 +102,7 @@ public class AttachmentsFiller implements IssueFiller {
                         lexer.readToken("<td");
                         String dateAttached = lexer.readToken(">", "</td>");
                         if (!containsGarbage(dateAttached)) {
-                            //12/Sep/06 02:23 PM - dd/MMM/yy hh:mm a
+                            // 12/Sep/06 02:23 PM - dd/MMM/yy hh:mm a
                             Date created = dateFormat.parse(dateAttached);
                             attachment.setCreated(created);
                         }
@@ -111,7 +111,7 @@ public class AttachmentsFiller implements IssueFiller {
 
                     lexer.readToken("<td");
                     String attachedBy = lexer.readToken(">", "</td>");
-                    if (!containsGarbage(attachedBy)){
+                    if (!containsGarbage(attachedBy)) {
                         attachment.setAuthor(attachedBy);
                     } else {
                         attachment.setAuthor("");
@@ -124,15 +124,15 @@ public class AttachmentsFiller implements IssueFiller {
 
             issue.setAttachments(attachments);
         } catch (Exception e) {
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
     }
 
     private boolean containsGarbage(String data) {
-        char[] illegal = {'<','>','=','\n','\r','\t'};
+        char[] illegal = { '<', '>', '=', '\n', '\r', '\t' };
         for (int i = 0; i < illegal.length; i++) {
             char c = illegal[i];
-            if (data.indexOf(c) != -1){
+            if (data.indexOf(c) != -1) {
                 return true;
             }
         }

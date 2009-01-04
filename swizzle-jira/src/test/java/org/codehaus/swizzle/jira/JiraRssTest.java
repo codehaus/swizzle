@@ -1,4 +1,5 @@
 package org.codehaus.swizzle.jira;
+
 /**
  * @version $Revision$ $Date$
  */
@@ -13,17 +14,16 @@ import java.util.TimeZone;
 public class JiraRssTest extends TestCase {
 
     // Date is retrieved with a timezone from rss
-    SimpleDateFormat formatter = new SimpleDateFormat( "EEE MMM dd HH:mm:ss z yyyy" );
+    SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
 
     /*
      * SET TZ to PDT for these tests
+     * 
      * @see junit.framework.TestCase#setUp()
      */
-    protected void setUp()
-        throws Exception
-    {
+    protected void setUp() throws Exception {
         super.setUp();
-        formatter.setTimeZone( TimeZone.getTimeZone( "America/Los_Angeles" ) );
+        formatter.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
     }
 
     public void testJiraRss() throws Exception {
@@ -31,16 +31,16 @@ public class JiraRssTest extends TestCase {
         URL resource = classLoader.getResource("jirarss.xml");
         JiraRss jiraRss = new JiraRss(resource);
         Issue issue = jiraRss.getIssue("SWIZZLE-1");
-        assertEquals( "Issue.getCreated()", "Fri Aug 04 20:05:13 PDT 2006", formatter.format( issue.getCreated() ) );
+        assertEquals("Issue.getCreated()", "Fri Aug 04 20:05:13 PDT 2006", formatter.format(issue.getCreated()));
         assertEquals("Issue.getSummary()", "Unit Test Summary", issue.getSummary());
         assertEquals("Issue.getType()", 2, issue.getType().getId());
         assertEquals("Issue.getEnvironment()", "Unit Test Environment", issue.getEnvironment());
         assertEquals("Issue.getStatus()", 6, issue.getStatus().getId());
-        assertEquals( "Issue.getUpdated()", "Fri Aug 04 21:33:48 PDT 2006", formatter.format( issue.getUpdated() ) );
+        assertEquals("Issue.getUpdated()", "Fri Aug 04 21:33:48 PDT 2006", formatter.format(issue.getUpdated()));
         assertEquals("Issue.getId()", 40099, issue.getId());
         assertEquals("Issue.getKey()", "SWIZZLE-1", issue.getKey());
         assertEquals("Issue.getDescription()", "Unit Test Description", issue.getDescription());
-        assertEquals( "Issue.getDuedate()", "Sun Aug 06 00:00:00 PDT 2006", formatter.format( issue.getDuedate() ) );
+        assertEquals("Issue.getDuedate()", "Sun Aug 06 00:00:00 PDT 2006", formatter.format(issue.getDuedate()));
         assertEquals("Issue.getReporter()", "dblevins", issue.getReporter().getName());
         assertEquals("Issue.getProject()", "SWIZZLE", issue.getProject().getKey());
         assertEquals("Issue.getResolution()", 1, issue.getResolution().getId());
@@ -60,7 +60,6 @@ public class JiraRssTest extends TestCase {
         assertTrue("Issue.getComponents instance of Component", issue.getComponents().get(0) instanceof Component);
         Component component = (Component) issue.getComponents().get(0);
         assertEquals("Component.getName()", "jira client", component.getName());
-
 
         Map data = issue.toMap();
 

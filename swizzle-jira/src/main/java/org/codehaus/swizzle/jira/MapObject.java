@@ -38,16 +38,14 @@ import java.util.Set;
 public class MapObject {
 
     /**
-     * When Sending data of the following type, do not
-     * send a HashMap, instead send a single value
-     * from the hashmap to act as a reference to the
-     * object.
+     * When Sending data of the following type, do not send a HashMap, instead
+     * send a single value from the hashmap to act as a reference to the object.
      */
     protected Map xmlrpcRefs = new HashMap();
 
     /**
-     * A list of fields in this hashmap which should
-     * not be sent on xml-rpc create or update calls.
+     * A list of fields in this hashmap which should not be sent on xml-rpc
+     * create or update calls.
      */
     protected List xmlrpcNoSend = new ArrayList();
 
@@ -59,14 +57,11 @@ public class MapObject {
     protected MapObject() {
         this(new HashMap());
     }
-    
+
     protected MapObject(Map data) {
         fields = new HashMap(data);
-        formats = new SimpleDateFormat[]{
-                new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy"),
-                new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z"),
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S"),
-        };
+        formats = new SimpleDateFormat[] { new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy"),
+                new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S"), };
         attributes = new Attributes();
     }
 
@@ -80,13 +75,15 @@ public class MapObject {
 
     protected boolean getBoolean(String key) {
         String value = getString(key);
-        if (value == null) return false;
+        if (value == null)
+            return false;
         return (value.equalsIgnoreCase("true") || value.equals("1") || value.equalsIgnoreCase("yes"));
     }
 
     protected int getInt(String key) {
         String value = getString(key);
-        if (value == null) return 0;
+        if (value == null)
+            return 0;
         return Integer.parseInt(value);
     }
 
@@ -109,7 +106,7 @@ public class MapObject {
     protected URL getUrl(String key) {
         try {
             String value = getString(key);
-            return (value == null)? null : new URL(value);
+            return (value == null) ? null : new URL(value);
         } catch (MalformedURLException e) {
             return null;
         }
@@ -121,7 +118,8 @@ public class MapObject {
 
     protected Date getDate(String key) {
         String value = getString(key);
-        if (value == null || value.equals("")) return new Date();
+        if (value == null || value.equals(""))
+            return new Date();
 
         ParseException notParsable = null;
         for (int i = 0; i < formats.length; i++) {
@@ -146,7 +144,7 @@ public class MapObject {
 
     protected MapObject getMapObject(String key, Class type) {
         Object object = fields.get(key);
-        if (object == null){
+        if (object == null) {
             return null;
         }
         if (object instanceof MapObject) {
@@ -166,7 +164,7 @@ public class MapObject {
         fields.put(key, mapObject);
     }
 
-    protected boolean hasField(String key){
+    protected boolean hasField(String key) {
         return fields.containsKey(key);
     }
 
@@ -182,7 +180,7 @@ public class MapObject {
             } catch (Exception e) {
                 list = new MapObjectList();
             }
-        } else if (collection == null){
+        } else if (collection == null) {
             list = new MapObjectList();
             fields.put(key, list);
         } else {
@@ -207,34 +205,35 @@ public class MapObject {
         return list;
     }
 
-    private MapObject createMapObject(Class type, Object value) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        Constructor constructor = type.getConstructor(new Class[]{Map.class});
+    private MapObject createMapObject(Class type, Object value) throws NoSuchMethodException, InstantiationException,
+            IllegalAccessException, InvocationTargetException {
+        Constructor constructor = type.getConstructor(new Class[] { Map.class });
         Map data;
 
         Object idField = xmlrpcRefs.get(type);
-        if (idField != null && !(value instanceof Map)){
+        if (idField != null && !(value instanceof Map)) {
             data = new HashMap();
             data.put(idField, value);
         } else if (value instanceof Map) {
             data = (Map) value;
         } else {
-            throw new RuntimeException("Cannot create a "+type.getName()+" from '" + value+"'");
+            throw new RuntimeException("Cannot create a " + type.getName() + " from '" + value + "'");
         }
 
-        Object object = constructor.newInstance(new Object[]{data});
+        Object object = constructor.newInstance(new Object[] { data });
         return (MapObject) object;
     }
 
     public Map toMap() {
-       // The fields table might have some key->null entries,
-       // don't want to add those to the hashmap.
+        // The fields table might have some key->null entries,
+        // don't want to add those to the hashmap.
         Map map = new HashMap(fields.size());
         for (Iterator i = fields.entrySet().iterator(); i.hasNext();) {
-                       Map.Entry entry = (Map.Entry) i.next();
-                       if( entry.getValue()!=null ) {
-                               map.put(entry.getKey(), entry.getValue());
-                       }
-               }
+            Map.Entry entry = (Map.Entry) i.next();
+            if (entry.getValue() != null) {
+                map.put(entry.getKey(), entry.getValue());
+            }
+        }
 
         // Remove anything marked as "no send"
         for (int i = 0; i < xmlrpcNoSend.size(); i++) {
@@ -274,7 +273,7 @@ public class MapObject {
         Map child = mapObject.toMap();
         Object object;
         String idField = (String) xmlrpcRefs.get(mapObject.getClass());
-        if (idField != null){
+        if (idField != null) {
             object = child.get(idField);
         } else {
             object = child;
@@ -282,8 +281,8 @@ public class MapObject {
         return object;
     }
 
-    protected void merge(MapObject source){
-        if (source != null){
+    protected void merge(MapObject source) {
+        if (source != null) {
             fields.putAll(source.fields);
         }
     }
@@ -294,7 +293,7 @@ public class MapObject {
             xmlrpcNoSend.add("#attributes");
         }
 
-        private Map map(){
+        private Map map() {
             return (Map) fields.get("#attributes");
         }
 

@@ -31,8 +31,8 @@ public class ProjectFiller implements IssueFiller {
         this.enabled = enabled;
     }
 
-    public void fill(Issue issue){
-        if (!enabled){
+    public void fill(Issue issue) {
+        if (!enabled) {
             return;
         }
         fill(issue.getProject());
@@ -40,7 +40,8 @@ public class ProjectFiller implements IssueFiller {
 
     public void fill(Project dest) {
         Project source = jira.getProject(dest.getKey());
-        if (source == null) source = jira.getProject(dest.getId());
+        if (source == null)
+            source = jira.getProject(dest.getId());
         dest.merge(source);
     }
 }

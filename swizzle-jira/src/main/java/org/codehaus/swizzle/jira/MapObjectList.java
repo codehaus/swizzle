@@ -51,30 +51,31 @@ public class MapObjectList extends ArrayList {
         return Collections.max(this, getComparator(field));
     }
 
-//    public List values(String field) {
-//        if (size() == 0) return this;
-//        Accessor accessor = new Accessor(field, this);
-//
-//        boolean mapObjectData = true;
-//        List uniqueList = new ArrayList();
-//        for (int i = 0; i < this.size(); i++) {
-//            MapObject mapObject = (MapObject) this.get(i);
-//            Object value = accessor.getValue(mapObject);
-//            if (!uniqueList.contains(value)){
-//                uniqueList.add(value);
-//                mapObjectData = mapObjectData && value instanceof MapObject;
-//            }
-//        }
-//
-//        if (mapObjectData){
-//            return new MapObjectList(uniqueList);
-//        } else {
-//            return uniqueList;
-//        }
-//    }
+    // public List values(String field) {
+    // if (size() == 0) return this;
+    // Accessor accessor = new Accessor(field, this);
+    //
+    // boolean mapObjectData = true;
+    // List uniqueList = new ArrayList();
+    // for (int i = 0; i < this.size(); i++) {
+    // MapObject mapObject = (MapObject) this.get(i);
+    // Object value = accessor.getValue(mapObject);
+    // if (!uniqueList.contains(value)){
+    // uniqueList.add(value);
+    // mapObjectData = mapObjectData && value instanceof MapObject;
+    // }
+    // }
+    //
+    // if (mapObjectData){
+    // return new MapObjectList(uniqueList);
+    // } else {
+    // return uniqueList;
+    // }
+    // }
 
     public List collect(String field) {
-        if (size() == 0) return this;
+        if (size() == 0)
+            return this;
         Accessor accessor = new Accessor(field, this);
 
         boolean mapObjectData = true;
@@ -95,23 +96,23 @@ public class MapObjectList extends ArrayList {
             }
         }
 
-        if (mapObjectData){
+        if (mapObjectData) {
             return new MapObjectList(collection);
         } else {
             return collection;
         }
     }
 
-
     public MapObjectList unique(String field) {
-        if (size() == 0) return this;
+        if (size() == 0)
+            return this;
         Accessor accessor = new Accessor(field, this);
         MapObjectList subset = new MapObjectList();
         List uniqueList = new ArrayList();
         for (int i = 0; i < this.size(); i++) {
             MapObject mapObject = (MapObject) this.get(i);
             Object value = accessor.getValue(mapObject);
-            if (!uniqueList.contains(value)){
+            if (!uniqueList.contains(value)) {
                 uniqueList.add(value);
                 subset.add(mapObject);
             }
@@ -121,11 +122,10 @@ public class MapObjectList extends ArrayList {
     }
 
     /**
-     * Returns returns a new list with both lists
-     * added together.
-     *
+     * Returns returns a new list with both lists added together.
+     * 
      * http://en.wikipedia.org/wiki/Set#Unions
-     *
+     * 
      * @param list
      * @return new list c = a + b
      */
@@ -133,7 +133,7 @@ public class MapObjectList extends ArrayList {
         MapObjectList difference = new MapObjectList(this);
         for (int i = 0; i < list.size(); i++) {
             Object object = list.get(i);
-            if (!this.contains(object)){
+            if (!this.contains(object)) {
                 difference.add(object);
             }
         }
@@ -141,13 +141,13 @@ public class MapObjectList extends ArrayList {
     }
 
     /**
-     * Returns a new list containing the common items
-     * from this list and the specified list.
-     *
+     * Returns a new list containing the common items from this list and the
+     * specified list.
+     * 
      * Put another way, returns only the items in a and b that overlap.
-     *
+     * 
      * http://en.wikipedia.org/wiki/Set#Intersections
-     *
+     * 
      * @param list
      * @return new list c = a && b
      */
@@ -155,7 +155,7 @@ public class MapObjectList extends ArrayList {
         MapObjectList common = new MapObjectList();
         for (int i = 0; i < this.size(); i++) {
             Object object = this.get(i);
-            if (list.contains(object)){
+            if (list.contains(object)) {
                 common.add(object);
             }
         }
@@ -164,7 +164,7 @@ public class MapObjectList extends ArrayList {
 
     /**
      * Synonym for intersection
-     *
+     * 
      * @param list
      * @return new list c = a && b
      */
@@ -173,10 +173,11 @@ public class MapObjectList extends ArrayList {
     }
 
     /**
-     * Returns a new list containing only the items from list a not present in list b.
-     *
+     * Returns a new list containing only the items from list a not present in
+     * list b.
+     * 
      * http://en.wikipedia.org/wiki/Set#Complements
-     *
+     * 
      * @param list
      * @return new list c = a - b
      */
@@ -190,16 +191,17 @@ public class MapObjectList extends ArrayList {
     }
 
     /**
-     * Returns a new list containing only the items from list a not present in list b.
-     *
+     * Returns a new list containing only the items from list a not present in
+     * list b.
+     * 
      * This is logically equivalent to:
-     *
+     * 
      * a.union(b).subtract(a.common(b))
-     *
+     * 
      * Though this method is more efficient.
-     *
+     * 
      * http://en.wikipedia.org/wiki/Symmetric_difference
-     *
+     * 
      * @param list
      * @return new list c = a XOR b
      */
@@ -207,7 +209,7 @@ public class MapObjectList extends ArrayList {
         MapObjectList difference = new MapObjectList(this);
         for (int i = 0; i < list.size(); i++) {
             Object object = list.get(i);
-            if (this.contains(object)){
+            if (this.contains(object)) {
                 difference.remove(object);
             } else {
                 difference.add(object);
@@ -217,7 +219,8 @@ public class MapObjectList extends ArrayList {
     }
 
     public int sum(String field) {
-        if (size() == 0) return 0;
+        if (size() == 0)
+            return 0;
         int sum = 0;
         Accessor accessor = new Accessor(field, this);
 
@@ -232,7 +235,8 @@ public class MapObjectList extends ArrayList {
     }
 
     public int average(String field) {
-        if (size() == 0) return 0;
+        if (size() == 0)
+            return 0;
         int sum = 0;
         Accessor accessor = new Accessor(field, this);
         int count = 0;
@@ -247,15 +251,15 @@ public class MapObjectList extends ArrayList {
         return (sum == 0) ? sum : sum / count;
     }
 
-
     public MapObjectList contains(String field, String string) {
-        if (size() == 0) return this;
+        if (size() == 0)
+            return this;
         Accessor accessor = new Accessor(field, this);
         MapObjectList subset = new MapObjectList();
         for (int i = 0; i < this.size(); i++) {
             MapObject mapObject = (MapObject) this.get(i);
             String value = accessor.stringValue(mapObject);
-            if (value != null && value.indexOf(string) != -1){
+            if (value != null && value.indexOf(string) != -1) {
                 subset.add(mapObject);
             }
         }
@@ -263,14 +267,15 @@ public class MapObjectList extends ArrayList {
     }
 
     public MapObjectList matches(String field, String string) {
-        if (size() == 0) return this;
+        if (size() == 0)
+            return this;
         Pattern pattern = Pattern.compile(string);
         Accessor accessor = new Accessor(field, this);
         MapObjectList subset = new MapObjectList();
         for (int i = 0; i < this.size(); i++) {
             MapObject mapObject = (MapObject) this.get(i);
             String value = accessor.stringValue(mapObject);
-            if (value != null && pattern.matcher(value).matches()){
+            if (value != null && pattern.matcher(value).matches()) {
                 subset.add(mapObject);
             }
         }
@@ -278,13 +283,14 @@ public class MapObjectList extends ArrayList {
     }
 
     public MapObjectList equals(String field, String string) {
-        if (size() == 0) return this;
+        if (size() == 0)
+            return this;
         Accessor accessor = new Accessor(field, this);
         MapObjectList subset = new MapObjectList();
         for (int i = 0; i < this.size(); i++) {
             MapObject mapObject = (MapObject) this.get(i);
             String value = accessor.stringValue(mapObject);
-            if (value != null && value.equals(string)){
+            if (value != null && value.equals(string)) {
                 subset.add(mapObject);
             }
         }
@@ -309,7 +315,7 @@ public class MapObjectList extends ArrayList {
 
     /**
      * Synonym for sort(field, false);
-     *
+     * 
      * @param field
      */
     public MapObjectList ascending(String field) {
@@ -318,7 +324,7 @@ public class MapObjectList extends ArrayList {
 
     /**
      * Synonym for sort(field, true);
-     *
+     * 
      * @param field
      */
     public MapObjectList descending(String field) {
@@ -330,7 +336,8 @@ public class MapObjectList extends ArrayList {
     }
 
     public MapObjectList sort(String field, boolean reverse) {
-        if (size() == 0) return this;
+        if (size() == 0)
+            return this;
         Comparator comparator = getComparator(field);
 
         comparator = reverse ? new ReverseComparator(comparator) : comparator;
@@ -341,19 +348,20 @@ public class MapObjectList extends ArrayList {
     }
 
     private MapObjectList compareAndCollect(String field, Object data, int condition) {
-        if (size() == 0) return this;
+        if (size() == 0)
+            return this;
         try {
             Class type = get(0).getClass();
             HashMap map = new HashMap();
             Object base;
             if (field.startsWith("@")) {
-                Constructor constructor = type.getConstructor(new Class[]{Map.class});
-                base = constructor.newInstance(new Object[]{map});
-                ((MapObject)base).getAttributes().put(field.replaceFirst("^@",""), data);
+                Constructor constructor = type.getConstructor(new Class[] { Map.class });
+                base = constructor.newInstance(new Object[] { map });
+                ((MapObject) base).getAttributes().put(field.replaceFirst("^@", ""), data);
             } else {
                 map.put(field, data);
-                Constructor constructor = type.getConstructor(new Class[]{Map.class});
-                base = constructor.newInstance(new Object[]{map});
+                Constructor constructor = type.getConstructor(new Class[] { Map.class });
+                base = constructor.newInstance(new Object[] { map });
             }
 
             Comparator comparator = getComparator(field);
@@ -372,19 +380,20 @@ public class MapObjectList extends ArrayList {
         }
     }
 
-//    private MapObjectList compareAndCollect(String field, Object base, int condition) {
-//        Comparator comparator = getComparator(field);
-//
-//        MapObjectList subset = new MapObjectList();
-//        for (int i = 0; i < this.size(); i++) {
-//            Object object = this.get(i);
-//            int value = comparator.compare(object, base);
-//            if (value / condition > 0) {
-//                subset.add(object);
-//            }
-//        }
-//        return subset;
-//    }
+    // private MapObjectList compareAndCollect(String field, Object base, int
+    // condition) {
+    // Comparator comparator = getComparator(field);
+    //
+    // MapObjectList subset = new MapObjectList();
+    // for (int i = 0; i < this.size(); i++) {
+    // Object object = this.get(i);
+    // int value = comparator.compare(object, base);
+    // if (value / condition > 0) {
+    // subset.add(object);
+    // }
+    // }
+    // return subset;
+    // }
 
     private Comparator getComparator(String field) {
         return new FieldComparator(new Accessor(field, this));
@@ -401,7 +410,6 @@ public class MapObjectList extends ArrayList {
             return -1 * comparator.compare(a, b);
         }
     }
-
 
     private static class FieldComparator implements Comparator {
         private final Accessor accessor;
@@ -430,10 +438,11 @@ public class MapObjectList extends ArrayList {
         private final String field;
         private final Method method;
         private final boolean isAttribute;
+
         public Accessor(String field, List list) {
             isAttribute = field.startsWith("@");
-            this.field = (isAttribute)?field.replaceFirst("^@","") : field;
-            this.method = (!isAttribute)? method(list, field): null;
+            this.field = (isAttribute) ? field.replaceFirst("^@", "") : field;
+            this.method = (!isAttribute) ? method(list, field) : null;
         }
 
         private Method method(List list, String field) {
@@ -442,7 +451,7 @@ public class MapObjectList extends ArrayList {
                 MapObject first = (MapObject) list.get(0);
                 StringBuffer sb = new StringBuffer(field);
                 sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-                method = first.getClass().getMethod("get" + sb, new Class[]{});
+                method = first.getClass().getMethod("get" + sb, new Class[] {});
             } catch (NoSuchMethodException e) {
             }
             return method;
@@ -451,7 +460,7 @@ public class MapObjectList extends ArrayList {
         public Object getValue(MapObject mapObject) {
             try {
                 if (method != null) {
-                    return method.invoke(mapObject, new Object[]{});
+                    return method.invoke(mapObject, new Object[] {});
                 }
             } catch (Exception e) {
             }
@@ -459,7 +468,7 @@ public class MapObjectList extends ArrayList {
         }
 
         private Map map(MapObject mapObject) {
-            return (isAttribute)? mapObject.getAttributes(): mapObject.fields;
+            return (isAttribute) ? mapObject.getAttributes() : mapObject.fields;
         }
 
         public int intValue(MapObject mapObject) throws java.lang.NumberFormatException {

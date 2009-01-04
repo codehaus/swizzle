@@ -24,15 +24,15 @@ import java.util.Map;
  */
 public class Version extends MapObject implements Comparable {
 
-    public Version(){
+    public Version() {
         super();
     }
-    
+
     public Version(Map data) {
         super(data);
     }
 
-    public Version(String name){
+    public Version(String name) {
         this();
         setName(name);
     }
@@ -100,17 +100,21 @@ public class Version extends MapObject implements Comparable {
     public String toString() {
         String name = getName();
         int id = getId();
-        return (name != null)? name : id+"";
+        return (name != null) ? name : id + "";
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         final Version version = (Version) o;
 
-        if (getId() != version.getId()) return false;
-        if (getName() != null ? !getName().equals(version.getName()) : version.getName() != null) return false;
+        if (getId() != version.getId())
+            return false;
+        if (getName() != null ? !getName().equals(version.getName()) : version.getName() != null)
+            return false;
 
         return true;
     }
@@ -127,9 +131,9 @@ public class Version extends MapObject implements Comparable {
             Version that = (Version) object;
             int a = this.getSequence();
             int b = that.getSequence();
-            if (a > b){
+            if (a > b) {
                 return 1;
-            } else if (a < b){
+            } else if (a < b) {
                 return -1;
             }
         }

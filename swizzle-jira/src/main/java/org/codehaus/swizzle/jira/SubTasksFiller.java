@@ -48,12 +48,13 @@ public class SubTasksFiller implements IssueFiller {
     }
 
     public void fill(final Issue issue) {
-        if (!enabled){
+        if (!enabled) {
             return;
         }
 
         // Subtasks can't have subtasks, so we can skip this one
-        if (issue.getParentTask() != null) return;
+        if (issue.getParentTask() != null)
+            return;
 
         List issueKeys = getSubTasks(issue);
         issueKeys.remove(issue.getKey()); // just in case of some freak accident
@@ -68,6 +69,7 @@ public class SubTasksFiller implements IssueFiller {
         JiraRss jiraRss = new JiraRss("http://jira.codehaus.org/browse/OPENEJB-90?decorator=none&view=rss");
         fill(jiraRss);
     }
+
     public static List fill(JiraRss jiraRss) throws Exception {
         SubTasksFiller filler = new SubTasksFiller(null);
         MapObjectList issues = (MapObjectList) jiraRss.getIssues();
@@ -76,13 +78,15 @@ public class SubTasksFiller implements IssueFiller {
             Issue issue = (Issue) issues.get(i);
 
             // Subtasks can't have subtasks, so we can skip this one
-            if (issue.getParentTask() != null) continue;
+            if (issue.getParentTask() != null)
+                continue;
 
             String link = issue.getLink();
             link = link.replaceFirst("/browse/.*$", "/");
             List issueKeys = filler.getSubTasks(issue);
 
-            issueKeys.remove(issue.getKey()); // just in case of some freak accident
+            issueKeys.remove(issue.getKey()); // just in case of some freak
+            // accident
 
             for (int j = 0; j < issueKeys.size(); j++) {
                 String issueKey = (String) issueKeys.get(j);
@@ -91,7 +95,7 @@ public class SubTasksFiller implements IssueFiller {
                     issue.getSubTasks().add(subTask);
                     subTask.setParentTask(issue);
                 } else {
-                    URL issueRssUrl = new URL(link +"browse/"+ issueKey + "?decorator=none&view=rss");
+                    URL issueRssUrl = new URL(link + "browse/" + issueKey + "?decorator=none&view=rss");
                     JiraRss subtaskJiraRss = new JiraRss(issueRssUrl);
                     subTask = subtaskJiraRss.getIssue(issueKey);
                     if (subTask != null) {
@@ -106,31 +110,31 @@ public class SubTasksFiller implements IssueFiller {
 
     private List getSubTasks(final Issue issue) {
         try {
-            URL url = new URL(issue.getLink()+"?subTaskView=all");
+            URL url = new URL(issue.getLink() + "?subTaskView=all");
 
             ArrayList issueIds = new ArrayList();
 
             InputStream in = new BufferedInputStream(url.openStream());
-            in = new ReplaceStringInputStream(in, " ","");
-            in = new ReplaceStringInputStream(in, "\t","");
-            in = new ReplaceStringInputStream(in, "\n","");
-            in = new ReplaceStringInputStream(in, "\r","");
-            in = new ReplaceStringInputStream(in, "<tr","\n<tr");
-            in = new ReplaceStringInputStream(in, "</tr>","</tr>\n");
+            in = new ReplaceStringInputStream(in, " ", "");
+            in = new ReplaceStringInputStream(in, "\t", "");
+            in = new ReplaceStringInputStream(in, "\n", "");
+            in = new ReplaceStringInputStream(in, "\r", "");
+            in = new ReplaceStringInputStream(in, "<tr", "\n<tr");
+            in = new ReplaceStringInputStream(in, "</tr>", "</tr>\n");
             in = new GrepStream(in, "issue_subtask.gif");
-            in = new IncludeFilterInputStream(in, "<ahref",">");
-            in = new DelimitedTokenReplacementInputStream(in, "browse/","\"", new CollectTokensHandler(issueIds));
+            in = new IncludeFilterInputStream(in, "<ahref", ">");
+            in = new DelimitedTokenReplacementInputStream(in, "browse/", "\"", new CollectTokensHandler(issueIds));
 
             int i = in.read();
-            while (i != -1){
+            while (i != -1) {
                 i = in.read();
-//                System.out.print((char)i);
+                // System.out.print((char)i);
             }
             in.close();
 
             return issueIds;
         } catch (IOException e) {
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return new ArrayList();
     }
@@ -145,7 +149,8 @@ public class SubTasksFiller implements IssueFiller {
             this(in, match, "\n");
         }
 
-        public GrepStream(InputStream in, String begin, String end, StreamTokenHandler tokenHandler, boolean caseSensitive) {
+        public GrepStream(InputStream in, String begin, String end, StreamTokenHandler tokenHandler,
+                boolean caseSensitive) {
             super(in, begin, end, tokenHandler, caseSensitive);
         }
 
@@ -159,17 +164,17 @@ public class SubTasksFiller implements IssueFiller {
             }
 
             public String handleToken(String token) throws IOException {
-                if (token.indexOf(match) == -1){
+                if (token.indexOf(match) == -1) {
                     return "";
                 }
-                return "<"+token + lineTerminator;
+                return "<" + token + lineTerminator;
             }
         }
     }
 
     public static class CollectTokensHandler extends StringTokenHandler {
         private final Collection collection;
-//        private Pattern pattern = Pattern.compile(".*");
+        // private Pattern pattern = Pattern.compile(".*");
         private Pattern pattern = Pattern.compile(".*?([A-Za-z]+-[0-9]+).*");
 
         public CollectTokensHandler(Collection collection) {
@@ -180,7 +185,7 @@ public class SubTasksFiller implements IssueFiller {
             Matcher matcher = pattern.matcher(token);
             boolean b = matcher.find();
             token = matcher.group(1);
-            if (!collection.contains(token)){
+            if (!collection.contains(token)) {
                 collection.add(token);
             }
             return token;

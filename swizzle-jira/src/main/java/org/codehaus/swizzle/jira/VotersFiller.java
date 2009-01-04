@@ -43,7 +43,7 @@ public class VotersFiller implements IssueFiller {
     }
 
     public void fill(final Issue issue) {
-        if (!enabled){
+        if (!enabled) {
             return;
         }
         ServerInfo serverInfo = jira.getServerInfo();
@@ -70,11 +70,11 @@ public class VotersFiller implements IssueFiller {
             final List votes = new ArrayList();
             URL baseUrl = new URL(baseUrlString);
 
-            URL url = new URL(baseUrl, "secure/ViewVoters!default.jspa?id="+issue.getId());
+            URL url = new URL(baseUrl, "secure/ViewVoters!default.jspa?id=" + issue.getId());
 
             InputStream in = new BufferedInputStream(url.openStream());
-            in = new IncludeFilterInputStream(in, "<a id=\"voter_link","/a>");
-            in = new DelimitedTokenReplacementInputStream(in, "name=","<", new StringTokenHandler(){
+            in = new IncludeFilterInputStream(in, "<a id=\"voter_link", "/a>");
+            in = new DelimitedTokenReplacementInputStream(in, "name=", "<", new StringTokenHandler() {
                 public String handleToken(String token) throws IOException {
                     String[] s = token.split("\">");
                     try {
@@ -86,26 +86,27 @@ public class VotersFiller implements IssueFiller {
                             votes.add(user);
                         } else {
                             user = jira.getUser(s[0]);
-                            if (user != null){
+                            if (user != null) {
                                 votes.add(user);
                             }
                         }
                     } catch (Exception e) {
-                        System.err.println("Bad voter string: "+token + ", "+e.getClass().getName()+": "+e.getMessage());
+                        System.err.println("Bad voter string: " + token + ", " + e.getClass().getName() + ": "
+                                + e.getMessage());
                     }
                     return "";
                 }
             });
 
             int i = in.read();
-            while (i != -1){
+            while (i != -1) {
                 i = in.read();
             }
             in.close();
 
             issue.setVoters(votes);
         } catch (IOException e) {
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
     }
 

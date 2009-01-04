@@ -26,7 +26,7 @@ public class Resolution extends BasicObject {
     public Resolution() {
         super();
     }
-    
+
     public Resolution(Map data) {
         super(data);
     }

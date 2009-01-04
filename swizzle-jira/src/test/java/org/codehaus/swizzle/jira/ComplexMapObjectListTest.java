@@ -33,7 +33,6 @@ public class ComplexMapObjectListTest extends TestCase {
     private IssueType feature;
     private IssueType task;
 
-
     protected void setUp() throws Exception {
 
         // Create the standard issue types
@@ -145,110 +144,108 @@ public class ComplexMapObjectListTest extends TestCase {
 
     }
 
-
     public void testSort() throws Exception {
         List list = issues.sort("type");
 
         assertEquals("size", 7, list.size());
-        assertEquals("Issue.getKey()", "SWIZZLE-12", ((Issue)list.get(0)).getKey());
-        assertEquals("Issue.getType()", bug, ((Issue)list.get(0)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-6", ((Issue)list.get(1)).getKey());
-        assertEquals("Issue.getType()", bug, ((Issue)list.get(1)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-8", ((Issue)list.get(2)).getKey());
-        assertEquals("Issue.getType()", improvement, ((Issue)list.get(2)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-10", ((Issue)list.get(3)).getKey());
-        assertEquals("Issue.getType()", feature, ((Issue)list.get(3)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-9", ((Issue)list.get(4)).getKey());
-        assertEquals("Issue.getType()", task, ((Issue)list.get(4)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-11", ((Issue)list.get(5)).getKey());
-        assertEquals("Issue.getType()", test, ((Issue)list.get(5)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-7", ((Issue)list.get(6)).getKey());
-        assertEquals("Issue.getType()", wish, ((Issue)list.get(6)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-12", ((Issue) list.get(0)).getKey());
+        assertEquals("Issue.getType()", bug, ((Issue) list.get(0)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-6", ((Issue) list.get(1)).getKey());
+        assertEquals("Issue.getType()", bug, ((Issue) list.get(1)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-8", ((Issue) list.get(2)).getKey());
+        assertEquals("Issue.getType()", improvement, ((Issue) list.get(2)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-10", ((Issue) list.get(3)).getKey());
+        assertEquals("Issue.getType()", feature, ((Issue) list.get(3)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-9", ((Issue) list.get(4)).getKey());
+        assertEquals("Issue.getType()", task, ((Issue) list.get(4)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-11", ((Issue) list.get(5)).getKey());
+        assertEquals("Issue.getType()", test, ((Issue) list.get(5)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-7", ((Issue) list.get(6)).getKey());
+        assertEquals("Issue.getType()", wish, ((Issue) list.get(6)).getType());
     }
 
     public void testReverseSort() throws Exception {
         List list = issues.sort("type", true);
 
         assertEquals("size", 7, list.size());
-        assertEquals("Issue.getKey()", "SWIZZLE-7", ((Issue)list.get(0)).getKey());
-        assertEquals("Issue.getType()", wish, ((Issue)list.get(0)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-11", ((Issue)list.get(1)).getKey());
-        assertEquals("Issue.getType()", test, ((Issue)list.get(1)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-9", ((Issue)list.get(2)).getKey());
-        assertEquals("Issue.getType()", task, ((Issue)list.get(2)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-10", ((Issue)list.get(3)).getKey());
-        assertEquals("Issue.getType()", feature, ((Issue)list.get(3)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-8", ((Issue)list.get(4)).getKey());
-        assertEquals("Issue.getType()", improvement, ((Issue)list.get(4)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-12", ((Issue)list.get(5)).getKey());
-        assertEquals("Issue.getType()", bug, ((Issue)list.get(5)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-6", ((Issue)list.get(6)).getKey());
-        assertEquals("Issue.getType()", bug, ((Issue)list.get(6)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-7", ((Issue) list.get(0)).getKey());
+        assertEquals("Issue.getType()", wish, ((Issue) list.get(0)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-11", ((Issue) list.get(1)).getKey());
+        assertEquals("Issue.getType()", test, ((Issue) list.get(1)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-9", ((Issue) list.get(2)).getKey());
+        assertEquals("Issue.getType()", task, ((Issue) list.get(2)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-10", ((Issue) list.get(3)).getKey());
+        assertEquals("Issue.getType()", feature, ((Issue) list.get(3)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-8", ((Issue) list.get(4)).getKey());
+        assertEquals("Issue.getType()", improvement, ((Issue) list.get(4)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-12", ((Issue) list.get(5)).getKey());
+        assertEquals("Issue.getType()", bug, ((Issue) list.get(5)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-6", ((Issue) list.get(6)).getKey());
+        assertEquals("Issue.getType()", bug, ((Issue) list.get(6)).getType());
     }
 
     public void testContains() throws Exception {
         List list = issues.contains("type", "t");
 
         assertEquals("size", 3, list.size());
-        assertEquals("Issue.getKey()", "SWIZZLE-11", ((Issue)list.get(0)).getKey());
-        assertEquals("Issue.getType()", test, ((Issue)list.get(0)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-8", ((Issue)list.get(1)).getKey());
-        assertEquals("Issue.getType()", improvement, ((Issue)list.get(1)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-10", ((Issue)list.get(2)).getKey());
-        assertEquals("Issue.getType()", feature, ((Issue)list.get(2)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-11", ((Issue) list.get(0)).getKey());
+        assertEquals("Issue.getType()", test, ((Issue) list.get(0)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-8", ((Issue) list.get(1)).getKey());
+        assertEquals("Issue.getType()", improvement, ((Issue) list.get(1)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-10", ((Issue) list.get(2)).getKey());
+        assertEquals("Issue.getType()", feature, ((Issue) list.get(2)).getType());
     }
 
     public void testEquals() throws Exception {
         List list = issues.equals("type", "Bug");
 
         assertEquals("size", 2, list.size());
-        assertEquals("Issue.getKey()", "SWIZZLE-12", ((Issue)list.get(0)).getKey());
-        assertEquals("Issue.getType()", bug, ((Issue)list.get(0)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-6", ((Issue)list.get(1)).getKey());
-        assertEquals("Issue.getType()", bug, ((Issue)list.get(1)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-12", ((Issue) list.get(0)).getKey());
+        assertEquals("Issue.getType()", bug, ((Issue) list.get(0)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-6", ((Issue) list.get(1)).getKey());
+        assertEquals("Issue.getType()", bug, ((Issue) list.get(1)).getType());
     }
 
     public void testMatches() throws Exception {
         List list = issues.matches("type", "New Feature|Improvement");
 
         assertEquals("size", 2, list.size());
-        assertEquals("Issue.getKey()", "SWIZZLE-8", ((Issue)list.get(0)).getKey());
-        assertEquals("Issue.getType()", improvement, ((Issue)list.get(0)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-10", ((Issue)list.get(1)).getKey());
-        assertEquals("Issue.getType()", feature, ((Issue)list.get(1)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-8", ((Issue) list.get(0)).getKey());
+        assertEquals("Issue.getType()", improvement, ((Issue) list.get(0)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-10", ((Issue) list.get(1)).getKey());
+        assertEquals("Issue.getType()", feature, ((Issue) list.get(1)).getType());
     }
-
 
     public void testGreater() throws Exception {
         List list = issues.greater("type", bug);
 
         assertEquals("size", 5, list.size());
-        assertEquals("Issue.getKey()", "SWIZZLE-7", ((Issue)list.get(0)).getKey());
-        assertEquals("Issue.getType()", wish, ((Issue)list.get(0)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-11", ((Issue)list.get(1)).getKey());
-        assertEquals("Issue.getType()", test, ((Issue)list.get(1)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-8", ((Issue)list.get(2)).getKey());
-        assertEquals("Issue.getType()", improvement, ((Issue)list.get(2)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-10", ((Issue)list.get(3)).getKey());
-        assertEquals("Issue.getType()", feature, ((Issue)list.get(3)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-9", ((Issue)list.get(4)).getKey());
-        assertEquals("Issue.getType()", task, ((Issue)list.get(4)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-7", ((Issue) list.get(0)).getKey());
+        assertEquals("Issue.getType()", wish, ((Issue) list.get(0)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-11", ((Issue) list.get(1)).getKey());
+        assertEquals("Issue.getType()", test, ((Issue) list.get(1)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-8", ((Issue) list.get(2)).getKey());
+        assertEquals("Issue.getType()", improvement, ((Issue) list.get(2)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-10", ((Issue) list.get(3)).getKey());
+        assertEquals("Issue.getType()", feature, ((Issue) list.get(3)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-9", ((Issue) list.get(4)).getKey());
+        assertEquals("Issue.getType()", task, ((Issue) list.get(4)).getType());
     }
 
     public void testLess() throws Exception {
         List list = issues.less("type", test);
 
         assertEquals("size", 5, list.size());
-        assertEquals("Issue.getKey()", "SWIZZLE-12", ((Issue)list.get(0)).getKey());
-        assertEquals("Issue.getType()", bug, ((Issue)list.get(0)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-8", ((Issue)list.get(1)).getKey());
-        assertEquals("Issue.getType()", improvement, ((Issue)list.get(1)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-10", ((Issue)list.get(2)).getKey());
-        assertEquals("Issue.getType()", feature, ((Issue)list.get(2)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-9", ((Issue)list.get(3)).getKey());
-        assertEquals("Issue.getType()", task, ((Issue)list.get(3)).getType());
-        assertEquals("Issue.getKey()", "SWIZZLE-6", ((Issue)list.get(4)).getKey());
-        assertEquals("Issue.getType()", bug, ((Issue)list.get(4)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-12", ((Issue) list.get(0)).getKey());
+        assertEquals("Issue.getType()", bug, ((Issue) list.get(0)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-8", ((Issue) list.get(1)).getKey());
+        assertEquals("Issue.getType()", improvement, ((Issue) list.get(1)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-10", ((Issue) list.get(2)).getKey());
+        assertEquals("Issue.getType()", feature, ((Issue) list.get(2)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-9", ((Issue) list.get(3)).getKey());
+        assertEquals("Issue.getType()", task, ((Issue) list.get(3)).getType());
+        assertEquals("Issue.getKey()", "SWIZZLE-6", ((Issue) list.get(4)).getKey());
+        assertEquals("Issue.getType()", bug, ((Issue) list.get(4)).getType());
     }
 
     public void testSum() throws Exception {
@@ -260,7 +257,6 @@ public class ComplexMapObjectListTest extends TestCase {
         int average = issues.average("type");
         assertEquals("average", 0, average);
     }
-
 
     public void testMin() throws Exception {
         Issue issue = (Issue) issues.min("type");
@@ -275,6 +271,5 @@ public class ComplexMapObjectListTest extends TestCase {
         assertEquals("Issue.getKey()", "SWIZZLE-7", issue.getKey());
         assertEquals("Issue.getType()", wish, issue.getType());
     }
-
 
 }

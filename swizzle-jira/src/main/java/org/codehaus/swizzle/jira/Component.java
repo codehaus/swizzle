@@ -22,11 +22,11 @@ import java.util.Map;
  * @version $Revision$ $Date$
  */
 public class Component extends MapObject {
-    
+
     public Component() {
         super();
     }
-    
+
     public Component(Map data) {
         super(data);
     }
@@ -61,17 +61,21 @@ public class Component extends MapObject {
     public String toString() {
         String name = getName();
         int id = getId();
-        return (name != null)? name : id+"";
+        return (name != null) ? name : id + "";
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         final Component component = (Component) o;
 
-        if (getId() != component.getId()) return false;
-        if (getName() != null ? !getName().equals(component.getName()) : component.getName() != null) return false;
+        if (getId() != component.getId())
+            return false;
+        if (getName() != null ? !getName().equals(component.getName()) : component.getName() != null)
+            return false;
 
         return true;
     }

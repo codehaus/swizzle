@@ -22,56 +22,55 @@ package org.codehaus.swizzle.jira;
  * @version $Revision$ $Date$
  */
 public class Scraps {
-//        public void testFoo() throws Exception {
-//            List list = issues.sort("foo");
-//            for (int i = 0; i < list.size(); i++) {
-//                Issue issue = (Issue) list.get(i);
-//                String key = issue.getKey();
-//                System.out.println("assertEquals(\"Issue.getKey()\", \""+issue.getKey()+"\", ((Issue)list.get("+i+")).getKey());");
-//                System.out.println("assertEquals(\"Issue.getType()\", "+getName(issue.getType())+", ((Issue)list.get("+i+")).getType());");
-//            }
-//
-//            fail("");
-//        }
+    // public void testFoo() throws Exception {
+    // List list = issues.sort("foo");
+    // for (int i = 0; i < list.size(); i++) {
+    // Issue issue = (Issue) list.get(i);
+    // String key = issue.getKey();
+    // System.out.println("assertEquals(\"Issue.getKey()\", \""+issue.getKey()+"\", ((Issue)list.get("+i+")).getKey());");
+    // System.out.println("assertEquals(\"Issue.getType()\", "+getName(issue.getType())+", ((Issue)list.get("+i+")).getType());");
+    // }
+    //
+    // fail("");
+    // }
 
-//        public String getName(IssueType type){
-//            String name = (String) last(type.getName().split(" "));
-//            StringBuffer sb = new StringBuffer(name);
-//            for (int i = 0; i < sb.length(); i++) {
-//                  sb.setCharAt(i, Character.toLowerCase(sb.charAt(i)));
-//            }
-//            return sb.toString();
-//        }
-//        public Object last(Object[] objects) {
-//            return objects.length > 0 ? objects[objects.length-1]: null;
-//        }
+    // public String getName(IssueType type){
+    // String name = (String) last(type.getName().split(" "));
+    // StringBuffer sb = new StringBuffer(name);
+    // for (int i = 0; i < sb.length(); i++) {
+    // sb.setCharAt(i, Character.toLowerCase(sb.charAt(i)));
+    // }
+    // return sb.toString();
+    // }
+    // public Object last(Object[] objects) {
+    // return objects.length > 0 ? objects[objects.length-1]: null;
+    // }
 
-//    public void testSetUp() throws Exception {
-//        Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
-//        jira.login("swizzletester", "swizzle");
-//
-//        List issues = jira.getIssuesFromFilter("swizzle test issues");
-//        for (int i = 0; i < issues.size(); i++) {
-//            Issue issue = (Issue) list.get(i);
-//            System.out.println("issue = new Issue();");
-//            System.out.println("issue.setId(" + issue.getId() + ");");
-//            System.out.println("issue.setKey(\"" + issue.getKey() + "\");");
-//            System.out.println("issue.setSummary(\"" + issue.getSummary() + "\");");
-//            System.out.println("issues.add(issue);\n");
-//
-//            IssueType type = issue.getType();
-//            String typeName = type.getName();
-//
-//            System.out.println("IssueType " + typeName + " = new IssueType();");
-//            System.out.println(typeName + ".setId(" + type.getId() + ");");
-//            System.out.println(typeName + ".setName(\"" + type.getName() + "\");");
-//            System.out.println("issue.setType(" + typeName + ");");
-//            System.out.println("");
-//
-//        }
-//
-//        fail("");
-//    }
-
+    // public void testSetUp() throws Exception {
+    // Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
+    // jira.login("swizzletester", "swizzle");
+    //
+    // List issues = jira.getIssuesFromFilter("swizzle test issues");
+    // for (int i = 0; i < issues.size(); i++) {
+    // Issue issue = (Issue) list.get(i);
+    // System.out.println("issue = new Issue();");
+    // System.out.println("issue.setId(" + issue.getId() + ");");
+    // System.out.println("issue.setKey(\"" + issue.getKey() + "\");");
+    // System.out.println("issue.setSummary(\"" + issue.getSummary() + "\");");
+    // System.out.println("issues.add(issue);\n");
+    //
+    // IssueType type = issue.getType();
+    // String typeName = type.getName();
+    //
+    // System.out.println("IssueType " + typeName + " = new IssueType();");
+    // System.out.println(typeName + ".setId(" + type.getId() + ");");
+    // System.out.println(typeName + ".setName(\"" + type.getName() + "\");");
+    // System.out.println("issue.setType(" + typeName + ");");
+    // System.out.println("");
+    //
+    // }
+    //
+    // fail("");
+    // }
 
 }

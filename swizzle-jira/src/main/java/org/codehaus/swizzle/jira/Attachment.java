@@ -28,7 +28,7 @@ public class Attachment extends MapObject {
     public Attachment() {
         super();
     }
-    
+
     public Attachment(Map data) {
         super(data);
     }
@@ -48,12 +48,12 @@ public class Attachment extends MapObject {
     public void setFileName(String fileName) {
         setString("fileName", fileName);
     }
-    
+
     public URL getUrl() {
         return getUrl("file");
     }
 
-    public void setUrl(URL url){
+    public void setUrl(URL url) {
         setUrl("file", url);
     }
 

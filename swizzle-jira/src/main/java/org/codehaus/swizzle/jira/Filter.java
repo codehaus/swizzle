@@ -25,12 +25,12 @@ public class Filter extends MapObject {
 
     public Filter() {
         super();
-        xmlrpcRefs.put(User.class,"name");
+        xmlrpcRefs.put(User.class, "name");
     }
-    
+
     public Filter(Map data) {
         super(data);
-        xmlrpcRefs.put(User.class,"name");
+        xmlrpcRefs.put(User.class, "name");
     }
 
     /**
@@ -82,19 +82,20 @@ public class Filter extends MapObject {
     }
 
     /**
-     * the id of the project this search relates to (null if the search is across projects)
+     * the id of the project this search relates to (null if the search is
+     * across projects)
      */
-//    DMB: Taking this away for now
-//    public String getProject() {
-//        return getString("project");
-//    }
-//
-//    public void setProject(String project) {
-//        setString("project", project);
-//    }
-
+    // DMB: Taking this away for now
+    // public String getProject() {
+    // return getString("project");
+    // }
+    //
+    // public void setProject(String project) {
+    // setString("project", project);
+    // }
     /**
-     * a complete XML representation of this search request - I don't recommend you use this for now, it's complex :)
+     * a complete XML representation of this search request - I don't recommend
+     * you use this for now, it's complex :)
      */
     public String getXml() {
         return getString("xml");
@@ -105,13 +106,17 @@ public class Filter extends MapObject {
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         final Filter filter = (Filter) o;
 
-        if (getId() != filter.getId()) return false;
-        if (getName() != null ? !getName().equals(filter.getName()) : filter.getName() != null) return false;
+        if (getId() != filter.getId())
+            return false;
+        if (getName() != null ? !getName().equals(filter.getName()) : filter.getName() != null)
+            return false;
 
         return true;
     }

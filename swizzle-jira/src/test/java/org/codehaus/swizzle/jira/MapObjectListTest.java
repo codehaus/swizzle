@@ -76,83 +76,83 @@ public class MapObjectListTest extends TestCase {
         List sorted = list.sort("sequence");
 
         assertEquals("size", 4, sorted.size());
-        assertEquals(1, ((Version) sorted.get(0)).getSequence() );
-        assertEquals(5, ((Version) sorted.get(1)).getSequence() );
-        assertEquals(15, ((Version) sorted.get(2)).getSequence() );
-        assertEquals(20, ((Version) sorted.get(3)).getSequence() );
+        assertEquals(1, ((Version) sorted.get(0)).getSequence());
+        assertEquals(5, ((Version) sorted.get(1)).getSequence());
+        assertEquals(15, ((Version) sorted.get(2)).getSequence());
+        assertEquals(20, ((Version) sorted.get(3)).getSequence());
 
         sorted = list.sort("name");
-        assertEquals("four", ((Version) sorted.get(0)).getName() );
-        assertEquals("one", ((Version) sorted.get(1)).getName() );
-        assertEquals("three", ((Version) sorted.get(2)).getName() );
-        assertEquals("two", ((Version) sorted.get(3)).getName() );
+        assertEquals("four", ((Version) sorted.get(0)).getName());
+        assertEquals("one", ((Version) sorted.get(1)).getName());
+        assertEquals("three", ((Version) sorted.get(2)).getName());
+        assertEquals("two", ((Version) sorted.get(3)).getName());
     }
 
     public void testSortReverse() throws Exception {
         List sorted = list.sort("sequence", true);
 
         assertEquals("size", 4, sorted.size());
-        assertEquals(20, ((Version) sorted.get(0)).getSequence() );
-        assertEquals(15, ((Version) sorted.get(1)).getSequence() );
-        assertEquals(5, ((Version) sorted.get(2)).getSequence() );
-        assertEquals(1, ((Version) sorted.get(3)).getSequence() );
+        assertEquals(20, ((Version) sorted.get(0)).getSequence());
+        assertEquals(15, ((Version) sorted.get(1)).getSequence());
+        assertEquals(5, ((Version) sorted.get(2)).getSequence());
+        assertEquals(1, ((Version) sorted.get(3)).getSequence());
 
         sorted = list.sort("name", true);
-        assertEquals("two", ((Version) sorted.get(0)).getName() );
-        assertEquals("three", ((Version) sorted.get(1)).getName() );
-        assertEquals("one", ((Version) sorted.get(2)).getName() );
-        assertEquals("four", ((Version) sorted.get(3)).getName() );
+        assertEquals("two", ((Version) sorted.get(0)).getName());
+        assertEquals("three", ((Version) sorted.get(1)).getName());
+        assertEquals("one", ((Version) sorted.get(2)).getName());
+        assertEquals("four", ((Version) sorted.get(3)).getName());
     }
 
     public void testContains() throws Exception {
-        List sorted = list.contains("name","e");
+        List sorted = list.contains("name", "e");
 
         assertEquals("size", 2, sorted.size());
-        assertEquals("one", ((Version) sorted.get(0)).getName() );
-        assertEquals("three", ((Version) sorted.get(1)).getName() );
+        assertEquals("one", ((Version) sorted.get(0)).getName());
+        assertEquals("three", ((Version) sorted.get(1)).getName());
     }
 
     public void testEquals() throws Exception {
-        List sorted = list.equals("archived","true");
+        List sorted = list.equals("archived", "true");
 
         assertEquals("size", 2, sorted.size());
-        assertEquals("two", ((Version) sorted.get(0)).getName() );
-        assertEquals("one", ((Version) sorted.get(1)).getName() );
+        assertEquals("two", ((Version) sorted.get(0)).getName());
+        assertEquals("one", ((Version) sorted.get(1)).getName());
 
-        sorted = list.equals("archived","false");
+        sorted = list.equals("archived", "false");
 
         assertEquals("size", 2, sorted.size());
-        assertEquals("four", ((Version) sorted.get(0)).getName() );
-        assertEquals("three", ((Version) sorted.get(1)).getName() );
+        assertEquals("four", ((Version) sorted.get(0)).getName());
+        assertEquals("three", ((Version) sorted.get(1)).getName());
     }
 
     public void testMatches() throws Exception {
-        List sorted = list.matches("name",".o.*");
+        List sorted = list.matches("name", ".o.*");
 
         assertEquals("size", 1, sorted.size());
-        assertEquals("four", ((Version) sorted.get(0)).getName() );
+        assertEquals("four", ((Version) sorted.get(0)).getName());
 
-        sorted = list.matches("name","t.*");
+        sorted = list.matches("name", "t.*");
 
         assertEquals("size", 2, sorted.size());
-        assertEquals("two", ((Version) sorted.get(0)).getName() );
-        assertEquals("three", ((Version) sorted.get(1)).getName() );
+        assertEquals("two", ((Version) sorted.get(0)).getName());
+        assertEquals("three", ((Version) sorted.get(1)).getName());
     }
 
     public void testGreater() throws Exception {
-        List sorted = list.greater("sequence","5");
+        List sorted = list.greater("sequence", "5");
 
         assertEquals("size", 2, sorted.size());
-        assertEquals(20, ((Version) sorted.get(0)).getSequence() );
-        assertEquals(15, ((Version) sorted.get(1)).getSequence() );
+        assertEquals(20, ((Version) sorted.get(0)).getSequence());
+        assertEquals(15, ((Version) sorted.get(1)).getSequence());
     }
 
     public void testLess() throws Exception {
-        List sorted = list.less("sequence","10");
+        List sorted = list.less("sequence", "10");
 
         assertEquals("size", 2, sorted.size());
-        assertEquals(5, ((Version) sorted.get(0)).getSequence() );
-        assertEquals(1, ((Version) sorted.get(1)).getSequence() );
+        assertEquals(5, ((Version) sorted.get(0)).getSequence());
+        assertEquals(1, ((Version) sorted.get(1)).getSequence());
     }
 
     public void testSum() throws Exception {
@@ -185,46 +185,46 @@ public class MapObjectListTest extends TestCase {
         MapObjectList sublist = list.unique("archived");
 
         assertEquals("size", 2, sublist.size());
-        assertEquals("two", ((Version) sublist.get(0)).getName() );
-        assertEquals("four", ((Version) sublist.get(1)).getName() );
+        assertEquals("two", ((Version) sublist.get(0)).getName());
+        assertEquals("four", ((Version) sublist.get(1)).getName());
     }
 
     public void testUnion() throws Exception {
         MapObjectList result = list.union(listb);
 
         assertEquals("size", 6, result.size());
-        assertEquals("two", ((Version) result.get(0)).getName() );
-        assertEquals("one", ((Version) result.get(1)).getName() );
-        assertEquals("four", ((Version) result.get(2)).getName() );
-        assertEquals("three", ((Version) result.get(3)).getName() );
-        assertEquals("six", ((Version) result.get(4)).getName() );
-        assertEquals("five", ((Version) result.get(5)).getName() );
+        assertEquals("two", ((Version) result.get(0)).getName());
+        assertEquals("one", ((Version) result.get(1)).getName());
+        assertEquals("four", ((Version) result.get(2)).getName());
+        assertEquals("three", ((Version) result.get(3)).getName());
+        assertEquals("six", ((Version) result.get(4)).getName());
+        assertEquals("five", ((Version) result.get(5)).getName());
     }
 
     public void testIntersection() throws Exception {
         MapObjectList result = list.intersection(listb);
 
         assertEquals("size", 2, result.size());
-        assertEquals("four", ((Version) result.get(0)).getName() );
-        assertEquals("three", ((Version) result.get(1)).getName() );
+        assertEquals("four", ((Version) result.get(0)).getName());
+        assertEquals("three", ((Version) result.get(1)).getName());
     }
 
     public void testSubtract() throws Exception {
         MapObjectList result = list.subtract(listb);
 
         assertEquals("size", 2, result.size());
-        assertEquals("two", ((Version) result.get(0)).getName() );
-        assertEquals("one", ((Version) result.get(1)).getName() );
+        assertEquals("two", ((Version) result.get(0)).getName());
+        assertEquals("one", ((Version) result.get(1)).getName());
     }
 
     public void testDifference() throws Exception {
         MapObjectList result = list.difference(listb);
 
         assertEquals("size", 4, result.size());
-        assertEquals("two", ((Version) result.get(0)).getName() );
-        assertEquals("one", ((Version) result.get(1)).getName() );
-        assertEquals("six", ((Version) result.get(2)).getName() );
-        assertEquals("five", ((Version) result.get(3)).getName() );
+        assertEquals("two", ((Version) result.get(0)).getName());
+        assertEquals("one", ((Version) result.get(1)).getName());
+        assertEquals("six", ((Version) result.get(2)).getName());
+        assertEquals("five", ((Version) result.get(3)).getName());
     }
 
 }

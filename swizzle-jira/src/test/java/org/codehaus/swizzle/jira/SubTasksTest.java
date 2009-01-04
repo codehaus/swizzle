@@ -25,22 +25,22 @@ import java.util.List;
  * @version $Revision$ $Date$
  */
 public class SubTasksTest extends TestCase {
-    
+
     // Date is retrieved without timezone from xmlrpc (@codehaus?)
-    SimpleDateFormat formatter = new SimpleDateFormat( "EEE MMM dd HH:mm:ss yyyy" );
-    
+    SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+
     public void testJira() throws Exception {
         Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
         jira.login("swizzletester", "swizzle");
         jira.autofill("subtasks", true);
 
         Issue issue = jira.getIssue("SWIZZLE-2");
-        assertEquals( "Issue.getCreated()", "Sun Aug 27 18:23:40 2006", formatter.format( issue.getCreated() ) );
+        assertEquals("Issue.getCreated()", "Sun Aug 27 18:23:40 2006", formatter.format(issue.getCreated()));
         assertEquals("Issue.getSummary()", "Need Wilhemina to get some things from the store", issue.getSummary());
         assertEquals("Issue.getType()", 3, issue.getType().getId());
         assertEquals("Issue.getEnvironment()", null, issue.getEnvironment());
         assertEquals("Issue.getStatus()", 6, issue.getStatus().getId());
-        assertEquals( "Issue.getUpdated()", "Sun Aug 27 18:27:49 2006", formatter.format( issue.getUpdated() ) );
+        assertEquals("Issue.getUpdated()", "Sun Aug 27 18:27:49 2006", formatter.format(issue.getUpdated()));
         assertEquals("Issue.getId()", 40911, issue.getId());
         assertEquals("Issue.getKey()", "SWIZZLE-2", issue.getKey());
         assertEquals("Issue.getDescription()", null, issue.getDescription());
@@ -53,7 +53,7 @@ public class SubTasksTest extends TestCase {
         assertEquals("Issue.getLink()", "http://jira.codehaus.org/browse/SWIZZLE-2", issue.getLink());
 
         List subTasks = issue.getSubTasks();
-        assertNotNull("subtasks",subTasks);
+        assertNotNull("subtasks", subTasks);
         assertTrue("three subtasks", subTasks.size() == 3);
 
         issue = (Issue) subTasks.get(0);
@@ -93,12 +93,14 @@ public class SubTasksTest extends TestCase {
         jira.fillSubTasks();
 
         Issue issue = jira.getIssue("SWIZZLE-2");
-//        assertEquals("Issue.getCreated()", "Sun Aug 27 18:23:40 PDT 2006", issue.getCreated().toString());
+        // assertEquals("Issue.getCreated()", "Sun Aug 27 18:23:40 PDT 2006",
+        // issue.getCreated().toString());
         assertEquals("Issue.getSummary()", "Need Wilhemina to get some things from the store", issue.getSummary());
         assertEquals("Issue.getType()", 3, issue.getType().getId());
         assertEquals("Issue.getEnvironment()", "", issue.getEnvironment());
         assertEquals("Issue.getStatus()", 6, issue.getStatus().getId());
-//        assertEquals("Issue.getUpdated()", "Sun Aug 27 18:27:49 PDT 2006", issue.getUpdated().toString());
+        // assertEquals("Issue.getUpdated()", "Sun Aug 27 18:27:49 PDT 2006",
+        // issue.getUpdated().toString());
         assertEquals("Issue.getId()", 40911, issue.getId());
         assertEquals("Issue.getKey()", "SWIZZLE-2", issue.getKey());
         assertEquals("Issue.getDescription()", "", issue.getDescription());
@@ -110,7 +112,7 @@ public class SubTasksTest extends TestCase {
         assertEquals("Issue.getPriority()", 3, issue.getPriority().getId());
 
         List subTasks = issue.getSubTasks();
-        assertNotNull("subtasks",subTasks);
+        assertNotNull("subtasks", subTasks);
         assertTrue("three subtasks", subTasks.size() == 3);
 
         issue = (Issue) subTasks.get(0);

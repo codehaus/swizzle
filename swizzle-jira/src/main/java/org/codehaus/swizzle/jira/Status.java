@@ -25,7 +25,7 @@ public class Status extends BasicObject {
     public Status() {
         super();
     }
-    
+
     public Status(Map data) {
         super(data);
     }

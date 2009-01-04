@@ -30,9 +30,10 @@ import java.util.List;
  */
 public class PrintObjectModelScrap extends TestCase {
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         new PrintObjectModelScrap().testGo();
     }
+
     public void testGo() throws Exception {
         skip.add("toHashtable");
         skip.add("toString");
@@ -46,18 +47,21 @@ public class PrintObjectModelScrap extends TestCase {
     }
 
     public void print(Class clazz) throws Exception {
-        if (seen.contains(clazz)) return;
+        if (seen.contains(clazz))
+            return;
 
         seen.add(clazz);
 
         String shortName = name(clazz);
-//        System.out.println(" * ["+shortName+"|Jira Object Model#"+shortName+"]");
+        // System.out.println(" * ["+shortName+"|Jira Object Model#"+shortName+"]");
         System.out.println("\nh2. " + shortName);
         System.out.println("");
-        System.out.println("[Source|http://fisheye.codehaus.org/browse/swizzle/trunk/swizzle-jira/src/main/java/org/codehaus/swizzle/jira/"+shortName+".java?r=trunk]");
-        System.out.println("{anchor:"+shortName+"}");
+        System.out
+                .println("[Source|http://fisheye.codehaus.org/browse/swizzle/trunk/swizzle-jira/src/main/java/org/codehaus/swizzle/jira/"
+                        + shortName + ".java?r=trunk]");
+        System.out.println("{anchor:" + shortName + "}");
         Method[] methods = clazz.getMethods();
-        Arrays.sort(methods, new Comparator(){
+        Arrays.sort(methods, new Comparator() {
             public int compare(Object object, Object object1) {
                 Method a = (Method) object;
                 Method b = (Method) object1;
@@ -65,9 +69,9 @@ public class PrintObjectModelScrap extends TestCase {
                 return name(a).compareTo(name(b));
             }
 
-            private String name(Method method){
+            private String name(Method method) {
                 String name = method.getName();
-                return name.replaceFirst("^(get|set|add|remove|delete|create|update)","");
+                return name.replaceFirst("^(get|set|add|remove|delete|create|update)", "");
             }
         });
         for (int i = 0; i < methods.length; i++) {
@@ -87,13 +91,15 @@ public class PrintObjectModelScrap extends TestCase {
     private List skip = new ArrayList();
 
     private void print(Method method) throws Exception {
-        if (skip.contains(method.getName())) return;
+        if (skip.contains(method.getName()))
+            return;
         boolean isPublic = Modifier.isPublic(method.getModifiers());
         boolean isNotStatic = !Modifier.isStatic(method.getModifiers());
         if (!isPublic || !isNotStatic) {
             return;
         }
-        if (!method.getDeclaringClass().getName().startsWith("org.codehaus.swizzle")) return;
+        if (!method.getDeclaringClass().getName().startsWith("org.codehaus.swizzle"))
+            return;
 
         List types = new ArrayList();
         types.addAll(Arrays.asList(method.getParameterTypes()));
@@ -114,17 +120,17 @@ public class PrintObjectModelScrap extends TestCase {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < params.length; i++) {
             Class param = params[i];
-            sb.append(" _"+name(param)+"_,");
+            sb.append(" _" + name(param) + "_,");
         }
-        if (sb.length() > 0){
-            sb.deleteCharAt(sb.length()-1);
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
         }
-        System.out.print(sb.toString()+" |");
+        System.out.print(sb.toString() + " |");
         System.out.println(" |");
 
     }
 
     private String name(Class type) {
-        return type.getName().replaceFirst("^.*\\.","");
+        return type.getName().replaceFirst("^.*\\.", "");
     }
 }

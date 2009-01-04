@@ -33,36 +33,36 @@ public class MapObjectWithAttributesListTest extends TestCase {
         version.setName("two");
         version.setSequence(5);
         version.setArchived(true);
-        version.getAttributes().put("name","dos");
-        version.getAttributes().put("seq","50");
-        version.getAttributes().put("arc","true");
+        version.getAttributes().put("name", "dos");
+        version.getAttributes().put("seq", "50");
+        version.getAttributes().put("arc", "true");
         list.add(version);
 
         version = new Version();
         version.setName("one");
         version.setSequence(1);
         version.setArchived(true);
-        version.getAttributes().put("name","uno");
-        version.getAttributes().put("seq","10");
-        version.getAttributes().put("arc","true");
+        version.getAttributes().put("name", "uno");
+        version.getAttributes().put("seq", "10");
+        version.getAttributes().put("arc", "true");
         list.add(version);
 
         version = new Version();
         version.setName("four");
         version.setSequence(20);
         version.setArchived(false);
-        version.getAttributes().put("name","cuatro");
-        version.getAttributes().put("seq","200");
-        version.getAttributes().put("arc","false");
+        version.getAttributes().put("name", "cuatro");
+        version.getAttributes().put("seq", "200");
+        version.getAttributes().put("arc", "false");
         list.add(version);
 
         version = new Version();
         version.setName("three");
         version.setSequence(15);
         version.setArchived(false);
-        version.getAttributes().put("name","tres");
-        version.getAttributes().put("seq","150");
-        version.getAttributes().put("arc","false");
+        version.getAttributes().put("name", "tres");
+        version.getAttributes().put("seq", "150");
+        version.getAttributes().put("arc", "false");
         list.add(version);
 
     }
@@ -71,81 +71,81 @@ public class MapObjectWithAttributesListTest extends TestCase {
         List sorted = list.sort("@seq");
 
         assertEquals("size", 4, sorted.size());
-        assertEquals("10", ((Version) sorted.get(0)).getAttributes().get("seq") );
-        assertEquals("150", ((Version) sorted.get(1)).getAttributes().get("seq") );
-        assertEquals("200", ((Version) sorted.get(2)).getAttributes().get("seq") );
-        assertEquals("50", ((Version) sorted.get(3)).getAttributes().get("seq") );
+        assertEquals("10", ((Version) sorted.get(0)).getAttributes().get("seq"));
+        assertEquals("150", ((Version) sorted.get(1)).getAttributes().get("seq"));
+        assertEquals("200", ((Version) sorted.get(2)).getAttributes().get("seq"));
+        assertEquals("50", ((Version) sorted.get(3)).getAttributes().get("seq"));
 
         sorted = list.sort("@name");
-        assertEquals("cuatro", ((Version) sorted.get(0)).getAttributes().get("name") );
-        assertEquals("dos", ((Version) sorted.get(1)).getAttributes().get("name") );
-        assertEquals("tres", ((Version) sorted.get(2)).getAttributes().get("name") );
-        assertEquals("uno", ((Version) sorted.get(3)).getAttributes().get("name") );
+        assertEquals("cuatro", ((Version) sorted.get(0)).getAttributes().get("name"));
+        assertEquals("dos", ((Version) sorted.get(1)).getAttributes().get("name"));
+        assertEquals("tres", ((Version) sorted.get(2)).getAttributes().get("name"));
+        assertEquals("uno", ((Version) sorted.get(3)).getAttributes().get("name"));
     }
 
     public void testSortReverse() throws Exception {
         List sorted = list.sort("@seq", true);
 
         assertEquals("size", 4, sorted.size());
-        assertEquals("50", ((Version) sorted.get(0)).getAttributes().get("seq") );
-        assertEquals("200", ((Version) sorted.get(1)).getAttributes().get("seq") );
-        assertEquals("150", ((Version) sorted.get(2)).getAttributes().get("seq") );
-        assertEquals("10", ((Version) sorted.get(3)).getAttributes().get("seq") );
+        assertEquals("50", ((Version) sorted.get(0)).getAttributes().get("seq"));
+        assertEquals("200", ((Version) sorted.get(1)).getAttributes().get("seq"));
+        assertEquals("150", ((Version) sorted.get(2)).getAttributes().get("seq"));
+        assertEquals("10", ((Version) sorted.get(3)).getAttributes().get("seq"));
 
         sorted = list.sort("@name", true);
-        assertEquals("uno", ((Version) sorted.get(0)).getAttributes().get("name") );
-        assertEquals("tres", ((Version) sorted.get(1)).getAttributes().get("name") );
-        assertEquals("dos", ((Version) sorted.get(2)).getAttributes().get("name") );
-        assertEquals("cuatro", ((Version) sorted.get(3)).getAttributes().get("name") );
+        assertEquals("uno", ((Version) sorted.get(0)).getAttributes().get("name"));
+        assertEquals("tres", ((Version) sorted.get(1)).getAttributes().get("name"));
+        assertEquals("dos", ((Version) sorted.get(2)).getAttributes().get("name"));
+        assertEquals("cuatro", ((Version) sorted.get(3)).getAttributes().get("name"));
     }
 
     public void testContains() throws Exception {
-        List sorted = list.contains("@name","e");
+        List sorted = list.contains("@name", "e");
 
         assertEquals("size", 1, sorted.size());
         assertEquals("tres", ((Version) sorted.get(0)).getAttributes().get("name"));
     }
 
     public void testEquals() throws Exception {
-        List sorted = list.equals("@arc","true");
+        List sorted = list.equals("@arc", "true");
 
         assertEquals("size", 2, sorted.size());
-        assertEquals("two", ((Version) sorted.get(0)).getName() );
-        assertEquals("one", ((Version) sorted.get(1)).getName() );
+        assertEquals("two", ((Version) sorted.get(0)).getName());
+        assertEquals("one", ((Version) sorted.get(1)).getName());
 
-        sorted = list.equals("archived","false");
+        sorted = list.equals("archived", "false");
 
         assertEquals("size", 2, sorted.size());
-        assertEquals("four", ((Version) sorted.get(0)).getName() );
-        assertEquals("three", ((Version) sorted.get(1)).getName() );
+        assertEquals("four", ((Version) sorted.get(0)).getName());
+        assertEquals("three", ((Version) sorted.get(1)).getName());
     }
 
     public void testMatches() throws Exception {
-        List sorted = list.matches("@name",".o.*");
+        List sorted = list.matches("@name", ".o.*");
 
         assertEquals("size", 1, sorted.size());
-        assertEquals("dos", ((Version) sorted.get(0)).getAttributes().get("name") );
+        assertEquals("dos", ((Version) sorted.get(0)).getAttributes().get("name"));
 
-        sorted = list.matches("@name","t.*");
+        sorted = list.matches("@name", "t.*");
 
         assertEquals("size", 1, sorted.size());
-        assertEquals("tres", ((Version) sorted.get(0)).getAttributes().get("name") );
+        assertEquals("tres", ((Version) sorted.get(0)).getAttributes().get("name"));
     }
 
     public void testGreater() throws Exception {
-        List sorted = list.greater("@seq","19");
+        List sorted = list.greater("@seq", "19");
 
         assertEquals("size", 2, sorted.size());
-        assertEquals("50", ((Version) sorted.get(0)).getAttributes().get("seq") );
-        assertEquals("200", ((Version) sorted.get(1)).getAttributes().get("seq") );
+        assertEquals("50", ((Version) sorted.get(0)).getAttributes().get("seq"));
+        assertEquals("200", ((Version) sorted.get(1)).getAttributes().get("seq"));
     }
 
     public void testLess() throws Exception {
-        List sorted = list.less("@seq","2");
+        List sorted = list.less("@seq", "2");
 
         assertEquals("size", 2, sorted.size());
-        assertEquals("10", ((Version) sorted.get(0)).getAttributes().get("seq") );
-        assertEquals("150", ((Version) sorted.get(1)).getAttributes().get("seq") );
+        assertEquals("10", ((Version) sorted.get(0)).getAttributes().get("seq"));
+        assertEquals("150", ((Version) sorted.get(1)).getAttributes().get("seq"));
     }
 
     public void testSum() throws Exception {

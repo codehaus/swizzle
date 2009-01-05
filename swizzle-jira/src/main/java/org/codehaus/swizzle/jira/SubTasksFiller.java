@@ -53,8 +53,7 @@ public class SubTasksFiller implements IssueFiller {
         }
 
         // Subtasks can't have subtasks, so we can skip this one
-        if (issue.getParentTask() != null)
-            return;
+        if (issue.getParentTask() != null) return;
 
         List issueKeys = getSubTasks(issue);
         issueKeys.remove(issue.getKey()); // just in case of some freak accident
@@ -78,8 +77,7 @@ public class SubTasksFiller implements IssueFiller {
             Issue issue = (Issue) issues.get(i);
 
             // Subtasks can't have subtasks, so we can skip this one
-            if (issue.getParentTask() != null)
-                continue;
+            if (issue.getParentTask() != null) continue;
 
             String link = issue.getLink();
             link = link.replaceFirst("/browse/.*$", "/");

@@ -245,8 +245,7 @@ public class JiraRss {
         }
 
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-            if (name == null)
-                name = qName;
+            if (name == null) name = qName;
         }
 
         public void characters(char[] chars, int i, int i1) throws SAXException {

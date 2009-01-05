@@ -554,18 +554,14 @@ public class Jira {
         }
 
         public boolean equals(Object o) {
-            if (this == o)
-                return true;
-            if (o == null || getClass() != o.getClass())
-                return false;
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
 
             final Call call = (Call) o;
 
             // Probably incorrect - comparing Object[] arrays with Arrays.equals
-            if (!Arrays.equals(args, call.args))
-                return false;
-            if (!command.equals(call.command))
-                return false;
+            if (!Arrays.equals(args, call.args)) return false;
+            if (!command.equals(call.command)) return false;
 
             return true;
         }

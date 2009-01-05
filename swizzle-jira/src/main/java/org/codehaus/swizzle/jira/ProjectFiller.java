@@ -40,8 +40,7 @@ public class ProjectFiller implements IssueFiller {
 
     public void fill(Project dest) {
         Project source = jira.getProject(dest.getKey());
-        if (source == null)
-            source = jira.getProject(dest.getId());
+        if (source == null) source = jira.getProject(dest.getId());
         dest.merge(source);
     }
 }

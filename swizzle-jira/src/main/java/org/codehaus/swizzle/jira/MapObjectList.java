@@ -74,8 +74,7 @@ public class MapObjectList extends ArrayList {
     // }
 
     public List collect(String field) {
-        if (size() == 0)
-            return this;
+        if (size() == 0) return this;
         Accessor accessor = new Accessor(field, this);
 
         boolean mapObjectData = true;
@@ -104,8 +103,7 @@ public class MapObjectList extends ArrayList {
     }
 
     public MapObjectList unique(String field) {
-        if (size() == 0)
-            return this;
+        if (size() == 0) return this;
         Accessor accessor = new Accessor(field, this);
         MapObjectList subset = new MapObjectList();
         List uniqueList = new ArrayList();
@@ -219,8 +217,7 @@ public class MapObjectList extends ArrayList {
     }
 
     public int sum(String field) {
-        if (size() == 0)
-            return 0;
+        if (size() == 0) return 0;
         int sum = 0;
         Accessor accessor = new Accessor(field, this);
 
@@ -235,8 +232,7 @@ public class MapObjectList extends ArrayList {
     }
 
     public int average(String field) {
-        if (size() == 0)
-            return 0;
+        if (size() == 0) return 0;
         int sum = 0;
         Accessor accessor = new Accessor(field, this);
         int count = 0;
@@ -252,8 +248,7 @@ public class MapObjectList extends ArrayList {
     }
 
     public MapObjectList contains(String field, String string) {
-        if (size() == 0)
-            return this;
+        if (size() == 0) return this;
         Accessor accessor = new Accessor(field, this);
         MapObjectList subset = new MapObjectList();
         for (int i = 0; i < this.size(); i++) {
@@ -267,8 +262,7 @@ public class MapObjectList extends ArrayList {
     }
 
     public MapObjectList matches(String field, String string) {
-        if (size() == 0)
-            return this;
+        if (size() == 0) return this;
         Pattern pattern = Pattern.compile(string);
         Accessor accessor = new Accessor(field, this);
         MapObjectList subset = new MapObjectList();
@@ -283,8 +277,7 @@ public class MapObjectList extends ArrayList {
     }
 
     public MapObjectList equals(String field, String string) {
-        if (size() == 0)
-            return this;
+        if (size() == 0) return this;
         Accessor accessor = new Accessor(field, this);
         MapObjectList subset = new MapObjectList();
         for (int i = 0; i < this.size(); i++) {
@@ -336,8 +329,7 @@ public class MapObjectList extends ArrayList {
     }
 
     public MapObjectList sort(String field, boolean reverse) {
-        if (size() == 0)
-            return this;
+        if (size() == 0) return this;
         Comparator comparator = getComparator(field);
 
         comparator = reverse ? new ReverseComparator(comparator) : comparator;
@@ -348,8 +340,7 @@ public class MapObjectList extends ArrayList {
     }
 
     private MapObjectList compareAndCollect(String field, Object data, int condition) {
-        if (size() == 0)
-            return this;
+        if (size() == 0) return this;
         try {
             Class type = get(0).getClass();
             HashMap map = new HashMap();

@@ -82,17 +82,13 @@ public class BasicObject extends MapObject {
     }
 
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
         final BasicObject that = (BasicObject) o;
 
-        if (getId() != that.getId())
-            return false;
-        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null)
-            return false;
+        if (getId() != that.getId()) return false;
+        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
 
         return true;
     }

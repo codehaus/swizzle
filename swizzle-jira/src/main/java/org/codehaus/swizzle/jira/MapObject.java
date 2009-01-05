@@ -75,15 +75,13 @@ public class MapObject {
 
     protected boolean getBoolean(String key) {
         String value = getString(key);
-        if (value == null)
-            return false;
+        if (value == null) return false;
         return (value.equalsIgnoreCase("true") || value.equals("1") || value.equalsIgnoreCase("yes"));
     }
 
     protected int getInt(String key) {
         String value = getString(key);
-        if (value == null)
-            return 0;
+        if (value == null) return 0;
         return Integer.parseInt(value);
     }
 
@@ -118,8 +116,7 @@ public class MapObject {
 
     protected Date getDate(String key) {
         String value = getString(key);
-        if (value == null || value.equals(""))
-            return new Date();
+        if (value == null || value.equals("")) return new Date();
 
         ParseException notParsable = null;
         for (int i = 0; i < formats.length; i++) {

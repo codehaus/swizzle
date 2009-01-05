@@ -26,8 +26,7 @@ public class StringsUtil {
     }
 
     public String lc(String string) {
-        if (string == null)
-            return null;
+        if (string == null) return null;
 
         StringBuffer sb = new StringBuffer(string);
         for (int i = 0; i < sb.length(); i++) {
@@ -37,8 +36,7 @@ public class StringsUtil {
     }
 
     public String uc(String string) {
-        if (string == null)
-            return null;
+        if (string == null) return null;
 
         StringBuffer sb = new StringBuffer(string);
         for (int i = 0; i < sb.length(); i++) {
@@ -48,8 +46,7 @@ public class StringsUtil {
     }
 
     public String ucfirst(String string) {
-        if (string == null)
-            return null;
+        if (string == null) return null;
 
         StringBuffer sb = new StringBuffer(string);
         if (sb.length() > 0) {
@@ -59,8 +56,7 @@ public class StringsUtil {
     }
 
     public String lcfirst(String string) {
-        if (string == null)
-            return null;
+        if (string == null) return null;
 
         StringBuffer sb = new StringBuffer(string);
         if (sb.length() > 0) {

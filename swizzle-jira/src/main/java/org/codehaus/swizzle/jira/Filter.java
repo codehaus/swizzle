@@ -106,17 +106,13 @@ public class Filter extends MapObject {
     }
 
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
         final Filter filter = (Filter) o;
 
-        if (getId() != filter.getId())
-            return false;
-        if (getName() != null ? !getName().equals(filter.getName()) : filter.getName() != null)
-            return false;
+        if (getId() != filter.getId()) return false;
+        if (getName() != null ? !getName().equals(filter.getName()) : filter.getName() != null) return false;
 
         return true;
     }

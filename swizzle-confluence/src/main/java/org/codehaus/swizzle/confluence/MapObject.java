@@ -71,8 +71,7 @@ public class MapObject {
             return (String) o;
         }
 
-        if (o == null)
-            return null;
+        if (o == null) return null;
 
         if (o instanceof Date) {
             return fromDate((Date) o);
@@ -105,8 +104,7 @@ public class MapObject {
             return getInt(key);
         }
 
-        if (o == null)
-            return 0;
+        if (o == null) return 0;
 
         throw new IllegalStateException("Field '" + key + "' is of unknown type: " + o.getClass().getName());
     }
@@ -132,8 +130,7 @@ public class MapObject {
             return getBoolean(key);
         }
 
-        if (o == null)
-            return false;
+        if (o == null) return false;
 
         throw new IllegalStateException("Field '" + key + "' is of unknown type: " + o.getClass().getName());
     }
@@ -158,8 +155,7 @@ public class MapObject {
             return getDate(key);
         }
 
-        if (o == null)
-            return null;
+        if (o == null) return null;
 
         throw new IllegalStateException("Field '" + key + "' is of unknown type: " + o.getClass().getName());
     }
@@ -169,8 +165,7 @@ public class MapObject {
     }
 
     private Date toDate(String value) {
-        if (value == null || value.equals(""))
-            return new Date();
+        if (value == null || value.equals("")) return new Date();
 
         ParseException notParsable = null;
         for (int i = 0; i < formats.length; i++) {
@@ -241,11 +236,9 @@ public class MapObject {
     protected List getList(String key) {
         Object objects = fields.get(key);
 
-        if (objects == null)
-            return null;
+        if (objects == null) return null;
 
-        if (objects instanceof List)
-            return (List) objects;
+        if (objects instanceof List) return (List) objects;
 
         if (objects.getClass().isArray()) {
             ArrayList result = new ArrayList();
@@ -267,11 +260,9 @@ public class MapObject {
     protected Map getMap(String key) {
         Object object = fields.get(key);
 
-        if (object == null)
-            return null;
+        if (object == null) return null;
 
-        if (object instanceof Map)
-            return (Map) object;
+        if (object instanceof Map) return (Map) object;
 
         throw new IllegalStateException("Field '" + key + "' is of unknown type: " + object.getClass().getName());
     }

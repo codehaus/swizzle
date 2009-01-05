@@ -72,15 +72,13 @@ public class BasicIssueFiller implements IssueFiller {
 
     public void fill(Issue issue, Version dest) {
         Version source = jira.getVersion(issue.getProject().getKey(), dest.getId());
-        if (source == null)
-            source = jira.getVersion(issue.getProject().getKey(), dest.getName());
+        if (source == null) source = jira.getVersion(issue.getProject().getKey(), dest.getName());
         dest.merge(source);
     }
 
     public void fill(Issue issue, Component dest) {
         Component source = jira.getComponent(issue.getProject().getKey(), dest.getId());
-        if (source == null)
-            source = jira.getComponent(issue.getProject().getKey(), dest.getName());
+        if (source == null) source = jira.getComponent(issue.getProject().getKey(), dest.getName());
         dest.merge(source);
     }
 
@@ -97,8 +95,7 @@ public class BasicIssueFiller implements IssueFiller {
             return;
         }
         Priority source = jira.getPriority(dest.getId());
-        if (source == null)
-            source = jira.getPriority(dest.getName());
+        if (source == null) source = jira.getPriority(dest.getName());
         dest.merge(source);
     }
 
@@ -107,8 +104,7 @@ public class BasicIssueFiller implements IssueFiller {
             return;
         }
         Status source = jira.getStatus(dest.getId());
-        if (source == null)
-            source = jira.getStatus(dest.getName());
+        if (source == null) source = jira.getStatus(dest.getName());
         dest.merge(source);
     }
 
@@ -117,8 +113,7 @@ public class BasicIssueFiller implements IssueFiller {
             return;
         }
         Resolution source = jira.getResolution(dest.getId());
-        if (source == null)
-            source = jira.getResolution(dest.getName());
+        if (source == null) source = jira.getResolution(dest.getName());
         dest.merge(source);
     }
 
@@ -127,8 +122,7 @@ public class BasicIssueFiller implements IssueFiller {
             return;
         }
         IssueType source = jira.getIssueType(dest.getId());
-        if (source == null)
-            source = jira.getIssueType(dest.getName());
+        if (source == null) source = jira.getIssueType(dest.getName());
         dest.merge(source);
     }
 }

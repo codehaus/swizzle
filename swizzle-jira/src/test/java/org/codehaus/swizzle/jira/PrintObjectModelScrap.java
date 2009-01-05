@@ -47,8 +47,7 @@ public class PrintObjectModelScrap extends TestCase {
     }
 
     public void print(Class clazz) throws Exception {
-        if (seen.contains(clazz))
-            return;
+        if (seen.contains(clazz)) return;
 
         seen.add(clazz);
 
@@ -91,15 +90,13 @@ public class PrintObjectModelScrap extends TestCase {
     private List skip = new ArrayList();
 
     private void print(Method method) throws Exception {
-        if (skip.contains(method.getName()))
-            return;
+        if (skip.contains(method.getName())) return;
         boolean isPublic = Modifier.isPublic(method.getModifiers());
         boolean isNotStatic = !Modifier.isStatic(method.getModifiers());
         if (!isPublic || !isNotStatic) {
             return;
         }
-        if (!method.getDeclaringClass().getName().startsWith("org.codehaus.swizzle"))
-            return;
+        if (!method.getDeclaringClass().getName().startsWith("org.codehaus.swizzle")) return;
 
         List types = new ArrayList();
         types.addAll(Arrays.asList(method.getParameterTypes()));

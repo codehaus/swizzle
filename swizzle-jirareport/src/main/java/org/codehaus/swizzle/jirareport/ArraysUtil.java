@@ -21,15 +21,11 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * I wish we could subclass java.util.Arrays and simply add two methods, but
- * that class has only one constructor and it's private and cannot be
- * subclassed.
+ * I wish we could subclass java.util.Arrays and simply add two methods, but that class has only one constructor and it's private and cannot be subclassed.
  * 
- * We're forced to use delegation. The downside is that any methods added after
- * java 1.4 won't automatically be available here.
+ * We're forced to use delegation. The downside is that any methods added after java 1.4 won't automatically be available here.
  * 
- * This class adds two methods not available in Arrays. - <type> first(<type>[]
- * array) - <type> last(<type>[] array)
+ * This class adds two methods not available in Arrays. - <type> first(<type>[] array) - <type> last(<type>[] array)
  * 
  * Both are overloaded to accommodate the possible array types
  * 

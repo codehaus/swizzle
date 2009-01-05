@@ -86,8 +86,7 @@ public class Jira {
     }
 
     /**
-     * Valid schemes are "issue", "project", "voters", and "attachments"
-     * "issues" is enabled by default
+     * Valid schemes are "issue", "project", "voters", and "attachments" "issues" is enabled by default
      * 
      * @param scheme
      * @param enabled
@@ -141,8 +140,7 @@ public class Jira {
     }
 
     /**
-     * Adds a comment to an issue TODO: If someone adds a comment to an issue,
-     * we should account for that in our caching
+     * Adds a comment to an issue TODO: If someone adds a comment to an issue, we should account for that in our caching
      */
     public boolean addComment(String issueKey, String comment) throws Exception {
         Boolean value = (Boolean) call("getComments", issueKey, comment);
@@ -150,8 +148,7 @@ public class Jira {
     }
 
     /**
-     * Creates an issue in JIRA TODO: If someone creates an issue, we should
-     * account for that in our caching
+     * Creates an issue in JIRA TODO: If someone creates an issue, we should account for that in our caching
      */
     public Issue createIssue(Issue issue) throws Exception {
         Map data = (Map) call("createIssue", issue.toMap());
@@ -159,8 +156,7 @@ public class Jira {
     }
 
     /**
-     * Updates an issue in JIRA from a HashMap object TODO: If someone updates
-     * an issue, we should account for that in our caching
+     * Updates an issue in JIRA from a HashMap object TODO: If someone updates an issue, we should account for that in our caching
      */
     public Issue updateIssue(String issueKey, Issue issue) throws Exception {
         Map data = (Map) call("updateIssue", issueKey, issue.toMap());
@@ -207,13 +203,10 @@ public class Jira {
     }
 
     /**
-     * List<{@link Issue}>: Find issues using a free text search, limited to
-     * certain projects
+     * List<{@link Issue}>: Find issues using a free text search, limited to certain projects
      */
-    public List getIssuesFromTextSearchWithProject(List projectKeys, String searchTerms, int maxNumResults)
-            throws Exception {
-        Object[] vector = (Object[]) call("getIssuesFromTextSearchWithProject", projectKeys.toArray(), searchTerms,
-                new Integer(maxNumResults));
+    public List getIssuesFromTextSearchWithProject(List projectKeys, String searchTerms, int maxNumResults) throws Exception {
+        Object[] vector = (Object[]) call("getIssuesFromTextSearchWithProject", projectKeys.toArray(), searchTerms, new Integer(maxNumResults));
         return toList(vector, Issue.class);
     }
 
@@ -320,8 +313,7 @@ public class Jira {
     }
 
     /**
-     * List<{@link Filter}>: Gets all saved filters available for the currently
-     * logged in user
+     * List<{@link Filter}>: Gets all saved filters available for the currently logged in user
      */
     public List getSavedFilters() {
         return cachedList(new Call("getSavedFilters"), Filter.class);
@@ -338,16 +330,14 @@ public class Jira {
     }
 
     /**
-     * Returns the Server information such as baseUrl, version, edition,
-     * buildDate, buildNumber.
+     * Returns the Server information such as baseUrl, version, edition, buildDate, buildNumber.
      */
     public ServerInfo getServerInfo() {
         return (ServerInfo) cachedObject(new Call("getServerInfo"), ServerInfo.class);
     }
 
     /**
-     * List<{@link IssueType}>: Returns all visible subtask issue types in the
-     * system
+     * List<{@link IssueType}>: Returns all visible subtask issue types in the system
      * 
      * @return list of {@link IssueType}
      */
@@ -376,8 +366,7 @@ public class Jira {
     // /////////////////////////////////////////////////////
 
     /**
-     * List<{@link Component}>: Returns all components available in the
-     * specified project
+     * List<{@link Component}>: Returns all components available in the specified project
      */
     public List getComponents(String projectKey) {
         return cachedList(new Call("getComponents", projectKey), Component.class);
@@ -406,8 +395,7 @@ public class Jira {
     }
 
     /**
-     * List<{@link Version}>: Returns all versions available in the specified
-     * project
+     * List<{@link Version}>: Returns all versions available in the specified project
      */
     public List getVersions(String projectKey) {
         return cachedList(new Call("getVersions", projectKey), Version.class);

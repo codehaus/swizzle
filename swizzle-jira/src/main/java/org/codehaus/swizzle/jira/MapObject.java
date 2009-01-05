@@ -38,14 +38,12 @@ import java.util.Set;
 public class MapObject {
 
     /**
-     * When Sending data of the following type, do not send a HashMap, instead
-     * send a single value from the hashmap to act as a reference to the object.
+     * When Sending data of the following type, do not send a HashMap, instead send a single value from the hashmap to act as a reference to the object.
      */
     protected Map xmlrpcRefs = new HashMap();
 
     /**
-     * A list of fields in this hashmap which should not be sent on xml-rpc
-     * create or update calls.
+     * A list of fields in this hashmap which should not be sent on xml-rpc create or update calls.
      */
     protected List xmlrpcNoSend = new ArrayList();
 
@@ -60,8 +58,7 @@ public class MapObject {
 
     protected MapObject(Map data) {
         fields = new HashMap(data);
-        formats = new SimpleDateFormat[] { new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy"),
-                new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S"), };
+        formats = new SimpleDateFormat[] { new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy"), new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S"), };
         attributes = new Attributes();
     }
 
@@ -202,8 +199,7 @@ public class MapObject {
         return list;
     }
 
-    private MapObject createMapObject(Class type, Object value) throws NoSuchMethodException, InstantiationException,
-            IllegalAccessException, InvocationTargetException {
+    private MapObject createMapObject(Class type, Object value) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         Constructor constructor = type.getConstructor(new Class[] { Map.class });
         Map data;
 

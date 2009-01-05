@@ -82,8 +82,7 @@ public class Filter extends MapObject {
     }
 
     /**
-     * the id of the project this search relates to (null if the search is
-     * across projects)
+     * the id of the project this search relates to (null if the search is across projects)
      */
     // DMB: Taking this away for now
     // public String getProject() {
@@ -94,8 +93,7 @@ public class Filter extends MapObject {
     // setString("project", project);
     // }
     /**
-     * a complete XML representation of this search request - I don't recommend
-     * you use this for now, it's complex :)
+     * a complete XML representation of this search request - I don't recommend you use this for now, it's complex :)
      */
     public String getXml() {
         return getString("xml");

@@ -77,8 +77,7 @@ public class JiraRss {
     }
 
     /**
-     * Valid schemes are "issue", "project", "voters", and "attachments"
-     * "issues" is enabled by default
+     * Valid schemes are "issue", "project", "voters", and "attachments" "issues" is enabled by default
      * 
      * @param scheme
      */

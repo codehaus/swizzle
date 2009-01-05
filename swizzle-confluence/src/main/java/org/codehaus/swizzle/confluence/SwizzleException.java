@@ -1,9 +1,7 @@
 package org.codehaus.swizzle.confluence;
 
 /**
- * This is the exception thrown by the Swizzle to signal errors. Errors that
- * occurred on the server are indicated by throwing a
- * {@link org.codehaus.swizzle.confluence.ConfluenceException}, which is a
+ * This is the exception thrown by the Swizzle to signal errors. Errors that occurred on the server are indicated by throwing a {@link org.codehaus.swizzle.confluence.ConfluenceException}, which is a
  * subclass of SwizzleException.
  */
 public class SwizzleException extends Exception {

@@ -147,8 +147,7 @@ public class SubTasksFiller implements IssueFiller {
             this(in, match, "\n");
         }
 
-        public GrepStream(InputStream in, String begin, String end, StreamTokenHandler tokenHandler,
-                boolean caseSensitive) {
+        public GrepStream(InputStream in, String begin, String end, StreamTokenHandler tokenHandler, boolean caseSensitive) {
             super(in, begin, end, tokenHandler, caseSensitive);
         }
 

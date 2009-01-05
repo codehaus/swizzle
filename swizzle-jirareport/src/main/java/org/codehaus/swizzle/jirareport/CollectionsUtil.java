@@ -29,15 +29,11 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 
 /**
- * I wish we could subclass java.util.Collections and simply add two methods,
- * but that class has only one constructor and it's private and cannot be
- * subclassed.
+ * I wish we could subclass java.util.Collections and simply add two methods, but that class has only one constructor and it's private and cannot be subclassed.
  * 
- * We're forced to use delegation. The downside is that any methods added after
- * java 1.4 won't automatically be available here.
+ * We're forced to use delegation. The downside is that any methods added after java 1.4 won't automatically be available here.
  * 
- * This class adds two methods not available in Collections. - Object first(List
- * list) - Object last(List list)
+ * This class adds two methods not available in Collections. - Object first(List list) - Object last(List list)
  * 
  * @version $Revision$ $Date$
  */

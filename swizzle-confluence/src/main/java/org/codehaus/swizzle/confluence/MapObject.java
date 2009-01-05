@@ -34,24 +34,15 @@ public class MapObject {
     private static final SimpleDateFormat[] formats;
 
     static {
-        formats = new SimpleDateFormat[] {
-                new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy", Locale.US),
-                new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US),
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S", Locale.US),
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SZ", Locale.US),
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S", Locale.US),
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ", Locale.US),
-                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US),
+        formats = new SimpleDateFormat[] { new SimpleDateFormat("EEE MMM d HH:mm:ss z yyyy", Locale.US), new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S", Locale.US), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SZ", Locale.US), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ", Locale.US), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US),
                 new SimpleDateFormat("yyyy-MM-dd HH:mmZ", Locale.US),
                 new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US),
                 // XML-RPC spec compliant iso8601 formats
-                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SZ", Locale.US),
-                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S", Locale.US),
-                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US),
-                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US),
-                new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ", Locale.US),
-                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US), new SimpleDateFormat("yyyy-MM-dd", Locale.US),
-                new SimpleDateFormat("yyyyMMdd", Locale.US) };
+                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SZ", Locale.US), new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S", Locale.US), new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US), new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ", Locale.US), new SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.US),
+                new SimpleDateFormat("yyyy-MM-dd", Locale.US), new SimpleDateFormat("yyyyMMdd", Locale.US) };
     }
 
     protected final Map fields;
@@ -181,9 +172,7 @@ public class MapObject {
     }
 
     /*
-     * Defensive programming. Since we are allowing users to insert arrays and
-     * maps in MapObjects, we check that those structured types don't contain
-     * any not supported types.
+     * Defensive programming. Since we are allowing users to insert arrays and maps in MapObjects, we check that those structured types don't contain any not supported types.
      */
     private void checkXmlRpcTypes(Object object) {
         boolean checkPassed = false;
@@ -223,8 +212,7 @@ public class MapObject {
         }
 
         if (!checkPassed) {
-            throw new IllegalStateException("Object '" + object.toString() + "' has a not supported type "
-                    + object.getClass().getName());
+            throw new IllegalStateException("Object '" + object.toString() + "' has a not supported type " + object.getClass().getName());
         }
     }
 

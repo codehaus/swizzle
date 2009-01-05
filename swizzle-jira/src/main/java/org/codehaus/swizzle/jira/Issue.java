@@ -90,9 +90,7 @@ public class Issue extends MapObject implements Comparable {
     }
 
     /**
-     * This data is not available via interface except scraping the html from
-     * the web interface. If you know of another way to get it, please let us
-     * know.
+     * This data is not available via interface except scraping the html from the web interface. If you know of another way to get it, please let us know.
      * 
      * @return List<User>
      */

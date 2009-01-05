@@ -91,8 +91,7 @@ public class VotersFiller implements IssueFiller {
                             }
                         }
                     } catch (Exception e) {
-                        System.err.println("Bad voter string: " + token + ", " + e.getClass().getName() + ": "
-                                + e.getMessage());
+                        System.err.println("Bad voter string: " + token + ", " + e.getClass().getName() + ": " + e.getMessage());
                     }
                     return "";
                 }

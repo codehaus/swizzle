@@ -55,9 +55,7 @@ public class PrintObjectModelScrap extends TestCase {
         // System.out.println(" * ["+shortName+"|Jira Object Model#"+shortName+"]");
         System.out.println("\nh2. " + shortName);
         System.out.println("");
-        System.out
-                .println("[Source|http://fisheye.codehaus.org/browse/swizzle/trunk/swizzle-jira/src/main/java/org/codehaus/swizzle/jira/"
-                        + shortName + ".java?r=trunk]");
+        System.out.println("[Source|http://fisheye.codehaus.org/browse/swizzle/trunk/swizzle-jira/src/main/java/org/codehaus/swizzle/jira/" + shortName + ".java?r=trunk]");
         System.out.println("{anchor:" + shortName + "}");
         Method[] methods = clazz.getMethods();
         Arrays.sort(methods, new Comparator() {

@@ -139,8 +139,7 @@ public class MapObjectList extends ArrayList {
     }
 
     /**
-     * Returns a new list containing the common items from this list and the
-     * specified list.
+     * Returns a new list containing the common items from this list and the specified list.
      * 
      * Put another way, returns only the items in a and b that overlap.
      * 
@@ -171,8 +170,7 @@ public class MapObjectList extends ArrayList {
     }
 
     /**
-     * Returns a new list containing only the items from list a not present in
-     * list b.
+     * Returns a new list containing only the items from list a not present in list b.
      * 
      * http://en.wikipedia.org/wiki/Set#Complements
      * 
@@ -189,8 +187,7 @@ public class MapObjectList extends ArrayList {
     }
 
     /**
-     * Returns a new list containing only the items from list a not present in
-     * list b.
+     * Returns a new list containing only the items from list a not present in list b.
      * 
      * This is logically equivalent to:
      * 

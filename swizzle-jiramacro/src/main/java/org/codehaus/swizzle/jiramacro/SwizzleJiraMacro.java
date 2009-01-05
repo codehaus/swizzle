@@ -143,8 +143,7 @@ public class SwizzleJiraMacro extends AbstractPanelMacro {
         return pageCache.getCache();
     }
 
-    public String execute(Map params, String body, com.atlassian.renderer.RenderContext renderContext)
-            throws MacroException {
+    public String execute(Map params, String body, com.atlassian.renderer.RenderContext renderContext) throws MacroException {
         PageContext pageContext = (PageContext) renderContext;
         ContentEntityObject entity = pageContext.getEntity();
 
@@ -170,8 +169,7 @@ public class SwizzleJiraMacro extends AbstractPanelMacro {
         }
     }
 
-    private String generateContent(Map params, String body, com.atlassian.renderer.RenderContext renderContext)
-            throws MacroException {
+    private String generateContent(Map params, String body, com.atlassian.renderer.RenderContext renderContext) throws MacroException {
         URL templateUrl = null;
         try {
             String url = (String) params.get("template");

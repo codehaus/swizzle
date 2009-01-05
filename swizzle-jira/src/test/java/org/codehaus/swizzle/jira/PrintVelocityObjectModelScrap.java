@@ -54,9 +54,7 @@ public class PrintVelocityObjectModelScrap extends TestCase {
         // System.out.println(" * ["+shortName+"|Jira Object Model#"+shortName+"]");
         System.out.println("\nh2. " + shortName);
         System.out.println("");
-        System.out
-                .println("[Source|http://fisheye.codehaus.org/browse/swizzle/trunk/swizzle-jira/src/main/java/org/codehaus/swizzle/jira/"
-                        + shortName + ".java?r=trunk]");
+        System.out.println("[Source|http://fisheye.codehaus.org/browse/swizzle/trunk/swizzle-jira/src/main/java/org/codehaus/swizzle/jira/" + shortName + ".java?r=trunk]");
         System.out.println("{anchor:" + shortName + "}");
         System.out.println("|| Type || Name || Description || xml-rpc || rss || requires filler ||");
         Method[] methods = clazz.getMethods();

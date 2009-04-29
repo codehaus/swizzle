@@ -5,8 +5,8 @@
 
         <DIV class="blogSurtitle">
           <IMG src="http://cwiki.apache.org/confluence/images/icons/blogentry_16.gif" height="16" width="16" border="0" align="absmiddle">
-          #if($baseUrl)
-            <A class="blogDate" href="$baseUrl/date/$linkDate.format( $entry.publishedDate )">
+          #if($blogUrl)
+            <A class="blogDate" href="$blogUrl/date/$linkDate.format( $entry.publishedDate )">
           #end
 
           $longDate.format( $entry.publishedDate )

@@ -103,6 +103,10 @@ public class BlogRssMacro extends BaseHttpRetrievalMacro {
             }
         }
 
+        if (blogUrl == null && feed.getLink().endsWith("/feed/entries/atom")){
+            blogUrl = feed.getLink().replaceAll("/feed/entries/atom$","");
+        }
+
         List entries = feed.getEntries();
 
         for (Iterator iterator = entries.iterator(); iterator.hasNext();) {

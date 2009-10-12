@@ -248,7 +248,8 @@ public class Jira {
      * List<{@link Project}>: Returns a list of projects available to the user
      */
     public List getProjects() {
-        if (getServerInfo().getVersion().substring(0, 4).compareTo("3.13") < 0)
+        String versionPrefix = getVersionPrefix( 4 );
+        if (versionPrefix.compareTo("3.13") < 0)
             // In Jira < 3.13
             return cachedList(new Call("getProjects"), Project.class);
         else
@@ -258,7 +259,8 @@ public class Jira {
 
     public Project getProject(String key) {
         Map objects;
-        if (getServerInfo().getVersion().substring(0, 4).compareTo("3.13") < 0)
+        String versionPrefix = getVersionPrefix( 4 );
+        if (versionPrefix.compareTo("3.13") < 0)
             // In Jira < 3.13
             objects = cachedMap(new Call("getProjects"), Project.class, "key");
         else
@@ -269,7 +271,8 @@ public class Jira {
 
     public Project getProject(int id) {
         Map objects;
-        if (getServerInfo().getVersion().substring(0, 4).compareTo("3.13") < 0)
+        String versionPrefix = getVersionPrefix( 4 );
+        if (versionPrefix.compareTo("3.13") < 0)
             // In Jira < 3.13
             objects = cachedMap(new Call("getProjects"), Project.class, "id");
         else
@@ -623,6 +626,19 @@ public class Jira {
             return client.execute("jira1." + call.command, vector);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private String getVersionPrefix( int maxLength )
+    {
+        String fullVersion = getServerInfo().getVersion();
+        if ( fullVersion.length() > maxLength )
+        {
+            return fullVersion.substring( 0, maxLength );
+        }
+        else
+        {
+            return fullVersion;
         }
     }
 

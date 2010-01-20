@@ -20,7 +20,6 @@ import org.codehaus.swizzle.jira.Issue;
 
 import com.atlassian.confluence.renderer.radeox.macros.AbstractHtmlGeneratingMacro;
 import com.atlassian.confluence.renderer.radeox.macros.MacroUtils;
-import com.atlassian.confluence.util.JiraIconMappingManager;
 import com.atlassian.confluence.util.velocity.VelocityUtils;
 import org.radeox.macro.parameter.MacroParameter;
 
@@ -37,7 +36,33 @@ import java.util.Map;
  */
 public class SwizzleJiraIssuesMacro extends AbstractHtmlGeneratingMacro {
 
-    private JiraIconMappingManager jiraIconMappingManager;
+    private static final Map<String, String> iconMapping;
+
+    static {
+        iconMapping = new HashMap<String, String>();
+
+        iconMapping.put("Bug", "bug.gif");
+        iconMapping.put("New Feature", "newfeature.gif");
+        iconMapping.put("Task", "task.gif");
+        iconMapping.put("Sub-task", "issue_subtask.gif");
+        iconMapping.put("Improvement", "improvement.gif");
+
+        iconMapping.put("Blocker", "priority_blocker.gif");
+        iconMapping.put("Critical", "priority_critical.gif");
+        iconMapping.put("Major", "priority_major.gif");
+        iconMapping.put("Minor", "priority_minor.gif");
+        iconMapping.put("Trivial", "priority_trivial.gif");
+
+        iconMapping.put("Assigned", "status_assigned.gif");
+        iconMapping.put("Closed", "status_closed.gif");
+        iconMapping.put("In Progress", "status_inprogress.gif");
+        iconMapping.put("Need Info", "status_needinfo.gif");
+        iconMapping.put("Open", "status_open.gif");
+        iconMapping.put("Reopened", "status_reopened.gif");
+        iconMapping.put("Resolved", "status_resolved.gif");
+        iconMapping.put("Unassigned", "status_unassigned.gif");
+    }
+
     private final Map columnsMap;
 
     public SwizzleJiraIssuesMacro() {
@@ -54,10 +79,6 @@ public class SwizzleJiraIssuesMacro extends AbstractHtmlGeneratingMacro {
         columnsMap.put("updated", "Updated");
         columnsMap.put("due", "Due");
         columnsMap.put("votes", "Votes");
-    }
-
-    public void setJiraIconMappingManager(JiraIconMappingManager jiraIconMappingManager) {
-        this.jiraIconMappingManager = jiraIconMappingManager;
     }
 
     public String getHtml(MacroParameter macroParameter) throws IllegalArgumentException, IOException {
@@ -126,12 +147,11 @@ public class SwizzleJiraIssuesMacro extends AbstractHtmlGeneratingMacro {
     private Map prepareIconMap(String iconsUrl) {
         Map map = new HashMap();
 
-        Map iconMappings = jiraIconMappingManager.getIconMappings();
-        for (Iterator iterator = iconMappings.entrySet().iterator(); iterator.hasNext();) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            Object key = entry.getKey();
-            String icon = (String) entry.getValue();
-            icon = (icon.matches("^https?://")) ? icon : iconsUrl + icon;
+        Map<String,String> iconMappings = new HashMap<String, String>(iconMapping);
+        for (Map.Entry<String, String> entry : iconMappings.entrySet()) {
+            String key = entry.getKey();
+            String icon = entry.getValue();
+            icon = (icon.matches("https?://.*")) ? icon : iconsUrl + icon;
             map.put(key, icon);
         }
 

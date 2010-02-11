@@ -72,7 +72,7 @@
 
   <scm>
     <connection>scm:svn:http://svn.codehaus.org/swizzle/trunk/swizzle-parent/</connection>
-    <developerConnection>scm:svn:https://${maven.username}@svn.codehaus.org/swizzle/trunk/swizzle-parent/</developerConnection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/swizzle/trunk/swizzle-parent/</developerConnection>
   </scm>
   
   <distributionManagement>

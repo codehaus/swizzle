@@ -48,27 +48,4 @@
     <connection>scm:svn:http://svn.codehaus.org/swizzle/trunk/swizzle-confluence/</connection>
     <developerConnection>scm:svn:https://${maven.username}@svn.codehaus.org/swizzle/trunk/swizzle-confluence/</developerConnection>
   </scm>
-  <profiles>
-    <profile>
-      <id>release</id>
-      <build>
-        <plugins>
-          <plugin>
-            <!-- Check compatibility with latest release -->
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>clirr-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>clirr-check</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>check</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>

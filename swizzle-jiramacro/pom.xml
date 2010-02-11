@@ -106,26 +106,30 @@
       <version>2.10.4</version>
       <scope>provided</scope>
       <exclusions>
-	<exclusion>
-	  <groupId>org.codehaus.xfire</groupId>
-	  <artifactId>xfire-all</artifactId>
-	</exclusion>
-	<exclusion>
-	  <groupId>net.java.dev.urlrewrite</groupId>
-	  <artifactId>urlrewrite</artifactId>
-	</exclusion>
-	<exclusion>
-	  <groupId>slide</groupId>
-	  <artifactId>slide</artifactId>
-	</exclusion>
-	<exclusion>
-	  <groupId>glue</groupId>
-	  <artifactId>glue</artifactId>
-	</exclusion>
-	<exclusion>
-	  <groupId>javax.activation</groupId>
-	  <artifactId>activation</artifactId>
-	</exclusion>
+	    <exclusion>
+	     <groupId>org.codehaus.xfire</groupId>
+	     <artifactId>xfire-all</artifactId>
+	    </exclusion>
+	    <exclusion>
+	      <groupId>net.java.dev.urlrewrite</groupId>
+	      <artifactId>urlrewrite</artifactId>
+	    </exclusion>
+	    <exclusion>
+	      <groupId>slide</groupId>
+	      <artifactId>slide</artifactId>
+	    </exclusion>
+	    <exclusion>
+	      <groupId>glue</groupId>
+	      <artifactId>glue</artifactId>
+	    </exclusion>
+	    <exclusion>
+	      <groupId>javax.activation</groupId>
+	      <artifactId>activation</artifactId>
+	    </exclusion>
+	   	<exclusion>
+	      <groupId>javax.transaction</groupId>
+	      <artifactId>jta</artifactId>
+	    </exclusion> 
       </exclusions>
     </dependency>
     <dependency>

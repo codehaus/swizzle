@@ -59,7 +59,7 @@ public class JiraTest extends TestCase {
         assertEquals("Version.getReleased()", false, version.getReleased());
         assertEquals("Version.getArchived()", false, version.getArchived());
         assertEquals("Version.getReleaseDate()", "Sun Aug 06 00:00:00 2006", formatter.format(version.getReleaseDate()));
-        assertEquals("Version.getSequence()", 4, version.getSequence());
+        assertEquals("Version.getSequence()", 5, version.getSequence());
         assertEquals("Version.getId()", 12831, version.getId());
 
         assertEquals("Issue.getAffectsVersions().size()", 1, issue.getAffectsVersions().size());
@@ -69,7 +69,7 @@ public class JiraTest extends TestCase {
         assertEquals("Version.getReleased()", false, version.getReleased());
         assertEquals("Version.getArchived()", false, version.getArchived());
         assertEquals("Version.getReleaseDate()", "Sun Aug 06 00:00:00 2006", formatter.format(version.getReleaseDate()));
-        assertEquals("Version.getSequence()", 4, version.getSequence());
+        assertEquals("Version.getSequence()", 5, version.getSequence());
         assertEquals("Version.getId()", 12831, version.getId());
 
         assertEquals("Issue.getComponents().size()", 1, issue.getComponents().size());

@@ -48,8 +48,11 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/swizzle/trunk/swizzle-jira/</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/swizzle/trunk/swizzle-jira/</developerConnection>
-  </scm>
+    <connection>scm:svn:http://svn.codehaus.org/swizzle/trunk/swizzle-jira</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/swizzle/trunk/swizzle-jira</developerConnection>
+    <url>http://svn.codehaus.org/swizzle/trunk/swizzle-jira</url>
+  </scm>  
+  
 </project>

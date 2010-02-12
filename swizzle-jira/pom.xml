@@ -21,7 +21,7 @@
   <parent>
     <artifactId>swizzle-parent</artifactId>
     <groupId>org.codehaus.swizzle</groupId>
-    <version>1-SNAPSHOT</version>
+    <version>1</version>
     <relativePath>../swizzle-parent/pom.xml</relativePath>
   </parent>
   <groupId>org.codehaus.swizzle</groupId>
@@ -48,8 +48,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <scm>
-    <connection>scm:svn:http://svn.codehaus.org/swizzle/trunk/swizzle-jira/</connection>
-    <developerConnection>scm:svn:https://${maven.username}@svn.codehaus.org/swizzle/trunk/swizzle-jira/</developerConnection>
-  </scm>
 </project>

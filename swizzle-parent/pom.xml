@@ -13,14 +13,13 @@
     limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.codehaus.swizzle</groupId>
   <artifactId>swizzle-parent</artifactId>
   <packaging>pom</packaging>
   <name>Swizzle :: Parent</name>
-  <version>1-SNAPSHOT</version>
+  <version>1</version>
   <description>
     Parent POM to share settings between swizzle modules
   </description>
@@ -98,9 +97,9 @@
   </build>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/swizzle/trunk/swizzle-parent/</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/swizzle/trunk/swizzle-parent/</developerConnection>
-    <url>http://svn.codehaus.org/swizzle</url>
+    <connection>scm:svn:http://svn.codehaus.org/swizzle/tags/swizzle-parent-1</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/swizzle/tags/swizzle-parent-1</developerConnection>
+    <url>scm:svn:https://svn.codehaus.org/swizzle/tags/swizzle-parent-1</url>
   </scm>
   
   <distributionManagement>

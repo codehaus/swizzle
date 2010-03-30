@@ -18,7 +18,13 @@ package org.codehaus.swizzle.confluence;
 
 import junit.framework.TestCase;
 
+import java.net.URL;
 import java.util.List;
+
+import org.apache.commons.httpclient.ConnectTimeoutException;
+import org.apache.xmlrpc.client.XmlRpcClient;
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.apache.xmlrpc.client.XmlRpcCommonsTransportFactory;
 
 /**
  * @version $Revision$ $Date$
@@ -40,6 +46,26 @@ public class ConfluenceTest extends TestCase {
         assertTrue("html", actual.indexOf("<b>hello</b> <em>world</em>") != -1);
 
     }
+    
+    public void testTimeoutWithProvidedConfig() throws Exception {
+        XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
+        clientConfig.setServerURL(new URL("http://docs.codehaus.org/rpc/xmlrpc") );
+
+        // 1 millisecond should timeout almost certainly
+        clientConfig.setConnectionTimeout(1);
+        XmlRpcClient client = new XmlRpcClient();
+        client.setTransportFactory(new XmlRpcCommonsTransportFactory(client));
+        client.setConfig(clientConfig);
+        Confluence confluence = new Confluence(client);
+        try {
+            confluence.login("swizzletester", "swizzle");
+        } catch (ConfluenceException e) {
+            assertTrue(e.getCause() instanceof ConnectTimeoutException);
+            return;
+        }
+        fail(ConnectTimeoutException.class.getSimpleName() + " wasn't thrown");
+    }
+    
 
     public void _testGetActiveUsers() throws Exception {
         Confluence confluence = new Confluence("http://docs.codehaus.org/rpc/xmlrpc");

@@ -32,6 +32,12 @@
   <url>http://swizzle.codehaus.org</url>
   <dependencies>
     <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>xmlrpc</groupId>
       <artifactId>xmlrpc-client</artifactId>
       <version>3.0</version>

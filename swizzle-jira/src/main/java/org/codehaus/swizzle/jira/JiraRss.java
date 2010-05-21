@@ -25,6 +25,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.EmptyStackException;
 import java.util.HashMap;
@@ -90,7 +91,7 @@ public class JiraRss {
             ClassLoader classLoader = this.getClass().getClassLoader();
             Class clazz = classLoader.loadClass((String) autofillProviders.get(scheme));
             Method fill = clazz.getMethod("fill", new Class[] { JiraRss.class });
-            List list = (List) fill.invoke(null, new Object[] { this });
+            List list = invoke(fill);
             for (int i = 0; i < list.size(); i++) {
                 Issue issue = (Issue) list.get(i);
                 issues.put(issue.getKey(), issue);
@@ -105,14 +106,27 @@ public class JiraRss {
         ClassLoader classLoader = this.getClass().getClassLoader();
         Class clazz = classLoader.loadClass("org.codehaus.swizzle.jira.VotersFiller");
         Method fill = clazz.getMethod("fill", new Class[] { JiraRss.class });
-        return (List) fill.invoke(null, new Object[] { this });
+        return invoke(fill);
     }
 
     public List fillSubTasks() throws Exception {
         ClassLoader classLoader = this.getClass().getClassLoader();
         Class clazz = classLoader.loadClass("org.codehaus.swizzle.jira.SubTasksFiller");
         Method fill = clazz.getMethod("fill", new Class[] { JiraRss.class });
-        return (List) fill.invoke(null, new Object[] { this });
+        return invoke(fill);
+    }
+
+    private List invoke(Method method) throws Exception {
+        try {
+            return (List) method.invoke(null, new Object[] { this });
+        } catch (Exception e) {
+            if (e instanceof InvocationTargetException) {
+                Throwable cause = e.getCause();
+                if (cause instanceof Exception) throw (Exception) cause;
+                if (cause instanceof Error) throw (Error) cause;
+            }
+            throw e;
+        }
     }
 
     public List fillAttachments() throws Exception {

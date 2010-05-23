@@ -23,9 +23,7 @@ import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +48,6 @@ public class Jira {
 
     private final XmlRpcClient client;
     private String token;
-    private HashMap cache;
     private boolean autofill = true;
     private final Map<String, IssueFiller> issueFillers = new LinkedHashMap<String, IssueFiller>();
     private final Map<String, String> autofillProviders = new HashMap<String, String>();
@@ -70,7 +67,6 @@ public class Jira {
         client = new XmlRpcClient();
         client.setConfig(clientConfig);
 
-        this.cache = new HashMap();
         BasicIssueFiller basicIssueFiller = new BasicIssueFiller(this);
         basicIssueFiller.setEnabled(true);
         issueFillers.put("issue", basicIssueFiller);
@@ -121,7 +117,6 @@ public class Jira {
      * remove this token from the list of logged in tokens.
      */
     public boolean logout() throws Exception {
-        cache.clear();
         Boolean value = (Boolean) call("logout");
         return value.booleanValue();
     }
@@ -493,7 +488,7 @@ public class Jira {
         }
     }
 
-    private Map callcache = new HashMap();
+    private Map<Call, Object> callcache = new HashMap<Call, Object>();
 
     private List cachedList(Call call, Class type) {
         Object result = cache(call, type);

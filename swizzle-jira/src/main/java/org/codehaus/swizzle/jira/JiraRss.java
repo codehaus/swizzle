@@ -44,7 +44,7 @@ public class JiraRss {
         autofillProviders.put("attachments", "org.codehaus.swizzle.jira.AttachmentsFiller");
     }
 
-    private Map issues = new HashMap();
+    private Map<String, Issue> issues = new HashMap<String, Issue>();
     private URL url;
 
     public JiraRss(String query) throws Exception {
@@ -88,12 +88,9 @@ public class JiraRss {
         }
 
         try {
-            ClassLoader classLoader = this.getClass().getClassLoader();
-            Class clazz = classLoader.loadClass((String) autofillProviders.get(scheme));
-            Method fill = clazz.getMethod("fill", new Class[] { JiraRss.class });
-            List list = invoke(fill);
-            for (int i = 0; i < list.size(); i++) {
-                Issue issue = (Issue) list.get(i);
+            String className = (String) autofillProviders.get(scheme);
+            List<Issue> list = fill(className);
+            for (Issue issue : list) {
                 issues.put(issue.getKey(), issue);
             }
         } catch (Exception e) {
@@ -102,23 +99,20 @@ public class JiraRss {
         }
     }
 
-    public List fillVotes() throws Exception {
-        ClassLoader classLoader = this.getClass().getClassLoader();
-        Class clazz = classLoader.loadClass("org.codehaus.swizzle.jira.VotersFiller");
-        Method fill = clazz.getMethod("fill", new Class[] { JiraRss.class });
-        return invoke(fill);
+    public List<Issue> fillVotes() throws Exception {
+        return fill("org.codehaus.swizzle.jira.VotersFiller");
     }
 
-    public List fillSubTasks() throws Exception {
-        ClassLoader classLoader = this.getClass().getClassLoader();
-        Class clazz = classLoader.loadClass("org.codehaus.swizzle.jira.SubTasksFiller");
-        Method fill = clazz.getMethod("fill", new Class[] { JiraRss.class });
-        return invoke(fill);
+    public List<Issue> fillSubTasks() throws Exception {
+        return fill("org.codehaus.swizzle.jira.SubTasksFiller");
     }
 
-    private List invoke(Method method) throws Exception {
+    private List<Issue> fill(String className) throws Exception {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        Class clazz = classLoader.loadClass(className);
+        Method fill = clazz.getMethod("fill", JiraRss.class);
         try {
-            return (List) method.invoke(null, new Object[] { this });
+            return (List) fill.invoke(null, new Object[] {this});
         } catch (Exception e) {
             if (e instanceof InvocationTargetException) {
                 Throwable cause = e.getCause();
@@ -129,13 +123,13 @@ public class JiraRss {
         }
     }
 
-    public List fillAttachments() throws Exception {
+    public List<Issue> fillAttachments() throws Exception {
         autofill("attachments");
         return getIssues();
     }
 
-    public List getIssues() {
-        return new MapObjectList(issues.values());
+    public List<Issue> getIssues() {
+        return new MapObjectList<Issue>(issues.values());
     }
 
     public Issue getIssue(String key) {
@@ -180,7 +174,7 @@ public class JiraRss {
             handlers.put(name, handler);
         }
 
-        public List getIssues() {
+        public List<Issue> getIssues() {
             return channel.getIssues();
         }
 
@@ -232,7 +226,7 @@ public class JiraRss {
             super(data);
         }
 
-        public List getIssues() {
+        public List<Issue> getIssues() {
             return getMapObjects("items", Issue.class);
         }
     }

@@ -94,7 +94,7 @@ public class Issue extends MapObject implements Comparable {
      * 
      * @return List<User>
      */
-    public List getVoters() {
+    public List<User> getVoters() {
         if (!hasField("voters")) {
             List votes = new MapObjectList();
             for (int i = getInt("votes"); i > 0; i--) {
@@ -119,7 +119,7 @@ public class Issue extends MapObject implements Comparable {
     /**
      * List of something
      */
-    public List getCustomFieldValues() {
+    public List<CustomFieldValue> getCustomFieldValues() {
         return getMapObjects("customFieldValues", CustomFieldValue.class);
     }
 
@@ -130,14 +130,14 @@ public class Issue extends MapObject implements Comparable {
     /**
      * List of Comments
      */
-    public List getComments() {
+    public List<Comment> getComments() {
         return getMapObjects("comments", Comment.class);
     }
 
     /**
      * List of Components
      */
-    public List getComponents() {
+    public List<Component> getComponents() {
         return getMapObjects("components", Component.class);
     }
 
@@ -156,7 +156,7 @@ public class Issue extends MapObject implements Comparable {
     /**
      * List of Versions
      */
-    public List getAffectsVersions() {
+    public List<Version> getAffectsVersions() {
         return getMapObjects("affectsVersions", Version.class);
     }
 
@@ -205,7 +205,7 @@ public class Issue extends MapObject implements Comparable {
     /**
      * List
      */
-    public List getFixVersions() {
+    public List<Version> getFixVersions() {
         return getMapObjects("fixVersions", Version.class);
     }
 
@@ -221,7 +221,7 @@ public class Issue extends MapObject implements Comparable {
         getFixVersions().remove(version);
     }
 
-    public List getSubTasks() {
+    public List<Issue> getSubTasks() {
         return getMapObjects("subTasks", Issue.class);
     }
 
@@ -335,7 +335,7 @@ public class Issue extends MapObject implements Comparable {
         setString("link", link);
     }
 
-    public List getAttachments() {
+    public List<Attachment> getAttachments() {
         return getMapObjects("attachments", Attachment.class);
     }
 

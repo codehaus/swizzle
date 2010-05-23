@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 /**
  * @version $Revision$ $Date$
  */
-public class MapObjectList extends ArrayList {
+public class MapObjectList<E> extends ArrayList<E> {
 
     public MapObjectList() {
     }

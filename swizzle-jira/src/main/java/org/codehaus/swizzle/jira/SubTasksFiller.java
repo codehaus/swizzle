@@ -65,10 +65,10 @@ public class SubTasksFiller implements IssueFiller {
     }
 
     public static void main(String[] args) throws Exception {
-        JiraRss jiraRss = new JiraRss("http://jira.codehaus.org/browse/OPENEJB-90?decorator=none&view=rss");
+        JiraRss jiraRss = new JiraRss("https://jira.codehaus.org/si/jira.issueviews:issue-xml/OPENEJB-90/OPENEJB-90.xml");
         fill(jiraRss);
     }
-
+    //http://issues.apache.org/jira/si/jira.issueviews:issue-xml/OPENEJB-114/OPENEJB-114.xml
     public static List fill(JiraRss jiraRss) throws Exception {
         SubTasksFiller filler = new SubTasksFiller(null);
         MapObjectList issues = (MapObjectList) jiraRss.getIssues();

@@ -162,8 +162,8 @@ public class MapObject {
         return fields.containsKey(key);
     }
 
-    protected List getMapObjects(String key, Class type) {
-        List list;
+    protected <T> List<T> getMapObjects(String key, Class<T> type) {
+        List<T> list;
         Object collection = fields.get(key);
         if (collection instanceof Object[]) {
             Object[] vector = (Object[]) collection;
@@ -175,7 +175,7 @@ public class MapObject {
                 list = new MapObjectList();
             }
         } else if (collection == null) {
-            list = new MapObjectList();
+            list = new MapObjectList<T>();
             fields.put(key, list);
         } else {
             list = (List) collection;

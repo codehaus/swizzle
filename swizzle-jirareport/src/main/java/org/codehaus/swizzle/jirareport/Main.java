@@ -139,9 +139,16 @@ public class Main {
 
         Template template = velocity.getTemplate(templateName);
 
-        PrintWriter writer = new PrintWriter(result);
-        template.merge(context, writer);
-        writer.flush();
+        try {
+            PrintWriter writer = new PrintWriter(result);
+            template.merge(context, writer);
+            writer.flush();
+        } catch (MethodInvocationException e) {
+            Throwable cause = e.getWrappedThrowable();
+            if (cause instanceof Exception) throw (Exception) cause;
+            if (cause instanceof Error) throw (Error) cause;
+            throw e;
+        }
     }
 
     public static class UtilsUtil {

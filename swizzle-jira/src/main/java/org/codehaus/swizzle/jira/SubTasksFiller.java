@@ -16,21 +16,10 @@
  */
 package org.codehaus.swizzle.jira;
 
-import org.codehaus.swizzle.stream.DelimitedTokenReplacementInputStream;
-import org.codehaus.swizzle.stream.IncludeFilterInputStream;
-import org.codehaus.swizzle.stream.ReplaceStringInputStream;
-import org.codehaus.swizzle.stream.StreamTokenHandler;
-import org.codehaus.swizzle.stream.StringTokenHandler;
-
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @version $Revision$ $Date$
@@ -55,137 +44,98 @@ public class SubTasksFiller implements IssueFiller {
         // Subtasks can't have subtasks, so we can skip this one
         if (issue.getParentTask() != null) return;
 
-        List issueKeys = getSubTasks(issue);
-        issueKeys.remove(issue.getKey()); // just in case of some freak accident
-        for (int i = 0; i < issueKeys.size(); i++) {
-            String issueKey = (String) issueKeys.get(i);
-            Issue subTask = jira.getIssue(issueKey);
-            issue.getSubTasks().add(subTask);
-        }
+        fillSubtasks(issue, new JiraResolver(jira));
     }
 
     public static void main(String[] args) throws Exception {
-        JiraRss jiraRss = new JiraRss("https://jira.codehaus.org/si/jira.issueviews:issue-xml/OPENEJB-90/OPENEJB-90.xml");
+//        JiraRss jiraRss = new JiraRss("https://jira.codehaus.org/si/jira.issueviews:issue-xml/OPENEJB-90/OPENEJB-90.xml");
+        JiraRss jiraRss = new JiraRss("https://issues.apache.org/jira/si/jira.issueviews:issue-xml/OPENEJB-1133/OPENEJB-1133.xml");
+//        JiraRss jiraRss = new JiraRss("https://issues.apache.org/jira/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?&pid=12310530&component=12313252");
         fill(jiraRss);
     }
-    //http://issues.apache.org/jira/si/jira.issueviews:issue-xml/OPENEJB-114/OPENEJB-114.xml
+
     public static List fill(JiraRss jiraRss) throws Exception {
-        SubTasksFiller filler = new SubTasksFiller(null);
-        MapObjectList issues = (MapObjectList) jiraRss.getIssues();
+        MapObjectList<Issue> issues = (MapObjectList<Issue>) jiraRss.getIssues();
         issues = issues.ascending("id");
+
+        RssResolver rssResolver = new RssResolver();
+
         for (int i = 0; i < issues.size(); i++) {
             Issue issue = (Issue) issues.get(i);
-
-            // Subtasks can't have subtasks, so we can skip this one
-            if (issue.getParentTask() != null) continue;
-
-            String link = issue.getLink();
-            link = link.replaceFirst("/browse/.*$", "/");
-            List issueKeys = filler.getSubTasks(issue);
-
-            issueKeys.remove(issue.getKey()); // just in case of some freak
-            // accident
-
-            for (int j = 0; j < issueKeys.size(); j++) {
-                String issueKey = (String) issueKeys.get(j);
-                Issue subTask = jiraRss.getIssue(issueKey);
-                if (subTask != null) {
-                    issue.getSubTasks().add(subTask);
-                    subTask.setParentTask(issue);
-                } else {
-                    URL issueRssUrl = new URL(link + "browse/" + issueKey + "?decorator=none&view=rss");
-                    JiraRss subtaskJiraRss = new JiraRss(issueRssUrl);
-                    subTask = subtaskJiraRss.getIssue(issueKey);
-                    if (subTask != null) {
-                        issue.getSubTasks().add(subTask);
-                        subTask.setParentTask(issue);
-                    }
-                }
-            }
+            fillSubtasks(issue, rssResolver);
         }
+
         return issues;
     }
 
-    private List getSubTasks(final Issue issue) {
-        try {
-            URL url = new URL(issue.getLink() + "?subTaskView=all");
+    public static void fillSubtasks(Issue parent, Resolver resolver) {
+        // Subtasks can't have subtasks, so we can skip this one
+        if (parent.getParentTask() != null) return;
 
-            ArrayList issueIds = new ArrayList();
+        List subtasks = parent.getSubTasks();
+        List<Issue> replacements = new ArrayList<Issue>();
 
-            InputStream in = new BufferedInputStream(url.openStream());
-            in = new ReplaceStringInputStream(in, " ", "");
-            in = new ReplaceStringInputStream(in, "\t", "");
-            in = new ReplaceStringInputStream(in, "\n", "");
-            in = new ReplaceStringInputStream(in, "\r", "");
-            in = new ReplaceStringInputStream(in, "<tr", "\n<tr");
-            in = new ReplaceStringInputStream(in, "</tr>", "</tr>\n");
-            in = new GrepStream(in, "issue_subtask.gif");
-            in = new IncludeFilterInputStream(in, "<ahref", ">");
-            in = new DelimitedTokenReplacementInputStream(in, "browse/", "\"", new CollectTokensHandler(issueIds));
-
-            int i = in.read();
-            while (i != -1) {
-                i = in.read();
-                // System.out.print((char)i);
-            }
-            in.close();
-
-            return issueIds;
-        } catch (IOException e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-        }
-        return new ArrayList();
-    }
-
-    public static class GrepStream extends DelimitedTokenReplacementInputStream {
-        public GrepStream(InputStream in, String match, String lineTerminator) {
-            super(in, "<", lineTerminator, new LineMatcher(match, lineTerminator));
-
-        }
-
-        public GrepStream(InputStream in, String match) {
-            this(in, match, "\n");
-        }
-
-        public GrepStream(InputStream in, String begin, String end, StreamTokenHandler tokenHandler, boolean caseSensitive) {
-            super(in, begin, end, tokenHandler, caseSensitive);
-        }
-
-        public static class LineMatcher extends StringTokenHandler {
-            private final String match;
-            private final String lineTerminator;
-
-            public LineMatcher(String match, String lineTerminator) {
-                this.match = match;
-                this.lineTerminator = lineTerminator;
-            }
-
-            public String handleToken(String token) throws IOException {
-                if (token.indexOf(match) == -1) {
-                    return "";
+        Iterator<Issue> it = subtasks.iterator();
+        while (it.hasNext()) {
+            Issue subtask = it.next();
+            if (subtask instanceof IssueRef) {
+                Issue full = resolver.getIssue(parent, subtask.getKey());
+                if (full != null) {
+                    it.remove();
+                    full.setParentTask(parent);
+                    replacements.add(full);
                 }
-                return "<" + token + lineTerminator;
             }
+        }
+
+        subtasks.addAll(replacements);
+    }
+
+    public static interface Resolver {
+        Issue getIssue(Issue parent, String key);
+    }
+
+    public static class JiraRssResolver implements Resolver {
+        private final JiraRss jiraRss;
+
+        public JiraRssResolver(JiraRss jiraRss) {
+            this.jiraRss = jiraRss;
+        }
+
+        public Issue getIssue(Issue parent, String key) {
+            return jiraRss.getIssue(key);
         }
     }
 
-    public static class CollectTokensHandler extends StringTokenHandler {
-        private final Collection collection;
-        // private Pattern pattern = Pattern.compile(".*");
-        private Pattern pattern = Pattern.compile(".*?([A-Za-z]+-[0-9]+).*");
+    public static class JiraResolver implements Resolver {
+        private final Jira jira;
 
-        public CollectTokensHandler(Collection collection) {
-            this.collection = collection;
+        public JiraResolver(Jira jira) {
+            this.jira = jira;
         }
 
-        public String handleToken(String token) throws IOException {
-            Matcher matcher = pattern.matcher(token);
-            boolean b = matcher.find();
-            token = matcher.group(1);
-            if (!collection.contains(token)) {
-                collection.add(token);
+        public Issue getIssue(Issue parent, String key) {
+            return jira.getIssue(key);
+        }
+    }
+
+    public static class RssResolver implements Resolver {
+
+        public Issue getIssue(Issue parent, String key) {
+            try {
+                // turn a into b
+                // a = https://issues.apache.org/jira/browse/OPENEJB-112
+                // b = https://issues.apache.org/jira/si/jira.issueviews:issue-xml/OPENEJB-114/OPENEJB-114.xml
+
+                String link = parent.getLink();
+                URL base = new URL(link.replaceAll("/browse/.*", "/"));
+
+                URL rssURL = new URL(base, "si/jira.issueviews:issue-xml/" + key + "/" + key + ".xml");
+                JiraRss jiraRss = new JiraRss(rssURL);
+                return jiraRss.getIssue(key);
+            } catch (Exception e) {
+                throw new RuntimeException("Unable to get issue " + key + " via rss", e);
             }
-            return token;
         }
     }
 }

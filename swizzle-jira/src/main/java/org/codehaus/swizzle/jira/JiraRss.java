@@ -23,15 +23,20 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import java.io.InputStream;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.HttpURLConnection;
 import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 /**
  * @version $Revision$ $Date$
@@ -52,7 +57,7 @@ public class JiraRss {
     }
 
     public JiraRss(URL url) throws Exception {
-        this(url.openStream());
+        this(openStream(url));
         this.url = url;
     }
 
@@ -63,9 +68,8 @@ public class JiraRss {
 
         saxParser.parse(in, objectBuilder);
 
-        List list = objectBuilder.getIssues();
-        for (int i = 0; i < list.size(); i++) {
-            Issue issue = (Issue) list.get(i);
+        List<Issue> list = objectBuilder.getIssues();
+        for (Issue issue : list) {
             issues.put(issue.getKey(), issue);
 
             try {
@@ -75,7 +79,29 @@ public class JiraRss {
             } catch (Exception dontCare) {
             }
         }
+
+        SubTasksFiller.JiraRssResolver existingIssues = new SubTasksFiller.JiraRssResolver(this);
+        for (Issue issue : list) {
+            SubTasksFiller.fillSubtasks(issue, existingIssues);
+        }
     }
+
+    private static InputStream openStream(URL url) throws IOException {
+        URLConnection urlConnection = url.openConnection();
+        if (urlConnection instanceof HttpURLConnection) {
+            HttpURLConnection httpConnection = (HttpURLConnection) urlConnection;
+            int code = httpConnection.getResponseCode();
+            if (code == 301 || code == 302) {
+                String location = httpConnection.getHeaderField("Location");
+                if (location != null) {
+                    URL redirect = new URL(url, location);
+                    return openStream(redirect);
+                }
+            }
+        }
+        return urlConnection.getInputStream();
+    }
+
 
     /**
      * Valid schemes are "issue", "project", "voters", and "attachments" "issues" is enabled by default
@@ -138,7 +164,7 @@ public class JiraRss {
 
     private class ObjectBuilder extends DefaultHandler {
         private Map handlers = new HashMap();
-        private Stack handlerStack = new Stack();
+        private Stack<DefaultHandler> handlerStack = new Stack<DefaultHandler>();
         private Channel channel;
 
         public ObjectBuilder() {
@@ -152,6 +178,7 @@ public class JiraRss {
             this.registerHandler("resolution", new MapObjectHandler(Resolution.class));
             this.registerHandler("fixVersion", new MapObjectListHandler(Version.class));
             this.registerHandler("affectsVersion", new MapObjectListHandler(Version.class));
+            this.registerHandler("subtask", new SubtaskHanlder());
             this.registerHandler("assignee", new UserHandler());
             this.registerHandler("reporter", new UserHandler());
             this.registerHandler("component", new MapObjectListHandler(Component.class));
@@ -185,17 +212,20 @@ public class JiraRss {
         }
 
         public void characters(char[] chars, int i, int i1) throws SAXException {
-            DefaultHandler handler = (DefaultHandler) handlerStack.peek();
+            DefaultHandler handler = handlerStack.peek();
             handler.characters(chars, i, i1);
         }
 
         public void endElement(String string, String string1, String string2) throws SAXException {
-            DefaultHandler handler = (DefaultHandler) handlerStack.pop();
+            DefaultHandler handler = handlerStack.pop();
             handler.endElement(string, string1, string2);
         }
 
         private DefaultHandler createHandler(String qName) {
             Object object = handlers.get(qName);
+
+            if (object == null) return new DefaultHandler();
+
             if (object instanceof DefaultHandler) {
                 try {
                     DefaultHandler handler = (DefaultHandler) object;
@@ -204,16 +234,17 @@ public class JiraRss {
                     throw new RuntimeException(e);
                 }
             }
-            Class handlerClass = (Class) object;
-            if (handlerClass == null) {
-                return new DefaultHandler();
+
+            if (object instanceof Class) {
+                Class handlerClass = (Class) object;
+                try {
+                    return (DefaultHandler) handlerClass.newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
 
-            try {
-                return (DefaultHandler) handlerClass.newInstance();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            throw new IllegalStateException("Unknown handler type " + object.getClass().getName());
         }
     }
 
@@ -231,7 +262,7 @@ public class JiraRss {
         }
     }
 
-    private Stack objects = new Stack();
+    private Stack<MapObject> objects = new Stack<MapObject>();
 
     public class DefaultHandler extends org.xml.sax.helpers.DefaultHandler implements Cloneable {
         protected Object clone() throws CloneNotSupportedException {
@@ -260,44 +291,49 @@ public class JiraRss {
         }
 
         public void endElement(String string, String string1, String string2) throws SAXException {
-            MapObject status = (MapObject) objects.peek();
+            MapObject status = objects.peek();
             String text = value.toString();
             text = text.replaceAll("^<p>|</p>$", "");
             status.setString(name, text);
         }
 
-        protected Object clone() throws CloneNotSupportedException {
+        protected Object clone() {
             return new TextHandler(name);
         }
     }
 
     public class KeyHandler extends TextHandler {
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-            MapObject status = (MapObject) objects.peek();
+            MapObject status = objects.peek();
             status.setString("id", attributes.getValue("id"));
             super.startElement(uri, localName, qName, attributes);
         }
 
-        protected Object clone() throws CloneNotSupportedException {
+        protected Object clone() {
             return new KeyHandler();
         }
     }
 
-    public class MapObjectHandler extends DefaultHandler {
-        protected Map atts = new HashMap();
-        protected MapObject mapObject;
+    public class MapObjectHandler<T extends MapObject> extends DefaultHandler {
+        protected Map<String, String> atts = new HashMap<String, String>();
+        protected T mapObject;
         protected StringBuffer value = new StringBuffer();
         protected String contentField;
-        protected Class mapObjectClass;
+        protected Class<T> mapObjectClass;
 
-        public MapObjectHandler(Class mapObjectClass) {
+        public MapObjectHandler(Class<T> mapObjectClass) {
             this(mapObjectClass, "name");
         }
 
-        public MapObjectHandler(Class mapObjectClass, String contentField) {
+        public MapObjectHandler(Class<T> mapObjectClass, String contentField) {
             this.mapObjectClass = mapObjectClass;
             this.contentField = contentField;
             this.atts.put("id", "id");
+        }
+
+        public MapObjectHandler setContentField(String contentField) {
+            this.contentField = contentField;
+            return this;
         }
 
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -305,32 +341,30 @@ public class JiraRss {
 
             for (int i = 0; i < attributes.getLength(); i++) {
                 String name = attributes.getQName(i);
-                String field = (String) atts.get(name);
+                String value = attributes.getValue(i);
+
+                String field = atts.get(name);
                 if (field != null) {
-                    mapObject.setString(field, attributes.getValue(i));
+                    mapObject.setString(field, value);
                 }
             }
             setMapObject(qName, mapObject);
             objects.push(mapObject);
         }
 
-        private MapObject createMapObject() {
-            if (this.mapObject != null) {
-                return this.mapObject;
-            }
-            MapObject mapObject;
+        private T createMapObject() {
+            if (this.mapObject != null) return this.mapObject;
             try {
-                Constructor constructor = mapObjectClass.getConstructor(new Class[] { Map.class });
-                mapObject = (MapObject) constructor.newInstance(new Object[] { new HashMap() });
+                Constructor constructor = mapObjectClass.getConstructor(Map.class);
+                return (T) constructor.newInstance(new HashMap());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            return mapObject;
         }
 
         protected void setMapObject(String qName, MapObject mapObject) {
             try {
-                MapObject parent = (MapObject) objects.peek();
+                MapObject parent = objects.peek();
                 parent.setMapObject(qName, mapObject);
             } catch (EmptyStackException e) {
             }
@@ -347,7 +381,7 @@ public class JiraRss {
             }
         }
 
-        protected Object clone() throws CloneNotSupportedException {
+        protected Object clone() {
             return new MapObjectHandler(mapObjectClass, contentField);
         }
     }
@@ -360,28 +394,60 @@ public class JiraRss {
             contentField = "fullname";
         }
 
-        protected Object clone() throws CloneNotSupportedException {
+        protected Object clone() {
             return new UserHandler();
         }
     }
 
     public class MapObjectListHandler extends MapObjectHandler {
+        private String fieldName;
+
+        public MapObjectListHandler(Class mapObjectClass, String contentField, String fieldName) {
+            super(mapObjectClass, contentField);
+            this.fieldName = fieldName;
+        }
+
         public MapObjectListHandler(Class mapObjectClass) {
             super(mapObjectClass);
+            this.fieldName = null;
         }
 
         public MapObjectListHandler(Class mapObjectClass, String contentField) {
             super(mapObjectClass, contentField);
+            this.fieldName = null;
+        }
+
+        public MapObjectListHandler setFieldName(String fieldName) {
+            this.fieldName = fieldName;
+            return this;
         }
 
         protected void setMapObject(String qName, MapObject mapObject) {
-            MapObject parent = (MapObject) objects.peek();
-            List list = parent.getMapObjects(qName + "s", mapObject.getClass());
+            MapObject parent = objects.peek();
+            List list = parent.getMapObjects(getFieldName(qName), mapObject.getClass());
             list.add(mapObject);
         }
 
-        protected Object clone() throws CloneNotSupportedException {
-            return new MapObjectListHandler(mapObjectClass, contentField);
+        protected String getFieldName(String qName) {
+            return (fieldName != null) ? fieldName : qName + "s";
+        }
+
+        protected Object clone() {
+            return new MapObjectListHandler(mapObjectClass, contentField, fieldName);
+        }
+    }
+
+    public class SubtaskHanlder extends MapObjectListHandler {
+        public SubtaskHanlder() {
+            super(IssueRef.class, "key", "subTasks");
+        }
+
+        @Override
+        protected void setMapObject(String qName, MapObject mapObject) {
+            Issue parent = (Issue) objects.peek();
+            Issue child = (Issue) mapObject;
+            parent.getSubTasks().add(child);
+            child.setParentTask(parent);
         }
     }
 
@@ -394,7 +460,7 @@ public class JiraRss {
             contentField = "body";
         }
 
-        protected Object clone() throws CloneNotSupportedException {
+        protected Object clone() {
             return new CommentHandler();
         }
 

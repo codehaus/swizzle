@@ -52,6 +52,17 @@ public class BlogEntry extends MapObject {
     public void setSpace(String space) {
         setString("space", space);
     }
+    
+    /**
+     * username of the author
+     */
+    public String getAuthor() {
+        return getString("author");
+    }
+
+    public void setAuthor(String author) {
+        setString("author", author);
+    }
 
     /**
      * the title of the page

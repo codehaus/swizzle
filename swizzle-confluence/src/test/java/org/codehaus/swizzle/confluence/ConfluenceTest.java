@@ -49,9 +49,10 @@ public class ConfluenceTest extends TestCase {
     
     public void testTimeoutWithProvidedConfig() throws Exception {
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
-        clientConfig.setServerURL(new URL("http://docs.codehaus.org/rpc/xmlrpc") );
-
+//        clientConfig.setServerURL(new URL("http://docs.codehaus.org/rpc/xmlrpc") );
         // 1 millisecond should timeout almost certainly
+        // but funny, if you run this test on Codehaus' bamboo and 1 milliseconds is too long so try connecting somewhere else
+        clientConfig.setServerURL(new URL("http://sandbox.onconfluence.com/rpc/xmlrpc"));
         clientConfig.setConnectionTimeout(1);
         XmlRpcClient client = new XmlRpcClient();
         client.setTransportFactory(new XmlRpcCommonsTransportFactory(client));

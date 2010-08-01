@@ -16,27 +16,30 @@
     limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>swizzle-parent</artifactId>
     <groupId>org.codehaus.swizzle</groupId>
     <version>1</version>
-    <relativePath>swizzle-parent/pom.xml</relativePath>
-  </parent>  
+  </parent>
   <groupId>org.codehaus.swizzle</groupId>
-  <artifactId>swizzle-reactor</artifactId>
-  <packaging>pom</packaging>
-  <version>1.0</version>
-  <name>Swizzle</name>
+  <artifactId>swizzle-stream</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0.3</version>
+  <name>Swizzle :: Stream</name>
   <url>http://swizzle.codehaus.org</url>
-  <modules>
-    <module>swizzle-parent</module>
-    <module>swizzle-stream</module>
-    <module>swizzle-confluence</module>
-    <module>swizzle-jira</module>
-    <module>swizzle-jirareport</module>
-    <module>swizzle-jiramacro</module>
-  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <scm>
+    <connection>scm:svn:https://svn.codehaus.org/swizzle/tags/swizzle-stream-1.0.3</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/swizzle/tags/swizzle-stream-1.0.3</developerConnection>
+    <url>scm:svn:https://svn.codehaus.org/swizzle/tags/swizzle-stream-1.0.3</url>
+  </scm>
 </project>

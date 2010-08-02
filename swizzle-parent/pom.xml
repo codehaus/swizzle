@@ -19,7 +19,7 @@
   <artifactId>swizzle-parent</artifactId>
   <packaging>pom</packaging>
   <name>Swizzle :: Parent</name>
-  <version>2</version>
+  <version>3-SNAPSHOT</version>
   <url>http://swizzle.codehaus.org</url>
   <description>
     Parent POM to share settings between swizzle modules
@@ -96,9 +96,9 @@
   </build>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/swizzle/tags/swizzle-parent-2</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/swizzle/tags/swizzle-parent-2</developerConnection>
-    <url>http://svn.codehaus.org/swizzle/tags/swizzle-parent-2</url>
+    <connection>scm:svn:http://svn.codehaus.org/swizzle/trunk/swizzle-parent/</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/swizzle/trunk/swizzle-parent/</developerConnection>
+    <url>http://svn.codehaus.org/swizzle</url>
   </scm>
   
   <distributionManagement>

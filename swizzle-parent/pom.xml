@@ -24,6 +24,11 @@
   <description>
     Parent POM to share settings between swizzle modules
   </description>
+  <parent>
+    <groupId>org.codehaus</groupId>
+    <artifactId>codehaus-parent</artifactId>
+    <version>1</version>
+  </parent>
 
   <licenses>
     <license>
@@ -45,6 +50,12 @@
       <roles>
         <role>Lead Developer</role>
       </roles>
+    </developer>
+    <developer>
+      <id>kaosko</id>
+      <name>Kalle Korhonen</name>
+			<url>http://docs.codehaus.org/display/~kaosko</url>
+			<timezone>-8</timezone>
     </developer>
   </developers>
 
@@ -104,17 +115,6 @@
   </scm>
   
   <distributionManagement>
-    <repository>
-      <id>ossrh</id>
-      <name>Nexus OSS</name>
-      <url>http://oss.sonatype.org/service/local/staging/deploy/maven2
-      </url>
-    </repository>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <name>Nexus OSS</name>
-      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
     <site>
       <id>codehaus.org</id>
       <url>dav:https://dav.codehaus.org/swizzle/</url>

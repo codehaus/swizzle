@@ -145,7 +145,14 @@ public class Issue extends MapObject implements Comparable {
         setMapObjects("components", components);
     }
 
+    // I think this is a type as it's plural but only adding one component.
+    // I'll leave it for backward compat.
+    @Deprecated
     public void addComponents(Component component) {
+        getComponents().add(component);
+    }
+    
+    public void addComponent(Component component) {
         getComponents().add(component);
     }
 

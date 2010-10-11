@@ -202,6 +202,18 @@ public class Jira {
         return (IssueType) objects.get(id + "");
     }
 
+    // New for JIRA 4.0
+    public List getIssueTypesForProject(int projectId) {
+        return cachedList(new Call("getIssueTypesForProject", projectId+""), IssueType.class);    	
+    }  
+
+    public List getIssueTypesForProject(String projectKey) {
+        return cachedList(new Call("getIssueTypesForProject", getProject( projectKey ).getId()+""), IssueType.class);    	
+    }      
+    
+    /**
+     * List<{@link Priority}>: Returns all priorities in the system
+     */
     public List<Priority> getPriorities() {
         return cachedList(new Call("getPriorities"), Priority.class);
     }
@@ -398,6 +410,10 @@ public class Jira {
         return getVersion(project.getKey(), id);
     }
 
+    public List getFavoriteFilters() {
+        return cachedList(new Call("getFavouriteFilters"), Filter.class);
+    }
+    
     // ---- PROJECT related data ----
     // /////////////////////////////////////////////////////
 
@@ -451,6 +467,7 @@ public class Jira {
         } else {
             vector = args;
         }
+                
         return client.execute("jira1." + command, vector);
     }
 
@@ -566,6 +583,5 @@ public class Jira {
         {
             return fullVersion;
         }
-    }
-
+    }    
 }

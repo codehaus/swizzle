@@ -48,6 +48,15 @@ public class CustomFieldValue extends MapObject {
         setString("key", key);
     }
 
+    //
+    // I'm not sure where the assumption is that custom fields contain a list of values, but I'm finding that in Greenhopper in
+    // JIRA the Rank and Points custom fields have scalar String values. So if you use the getValues() method below you get a
+    // ClassCastException. So I've added this method to grab a simple string value.
+    //
+    public String getValue() {
+    	return getString("values");
+    }
+    
     /**
      * @return the values
      */

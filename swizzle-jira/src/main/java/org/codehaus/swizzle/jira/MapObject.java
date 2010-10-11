@@ -62,6 +62,10 @@ public class MapObject {
         attributes = new Attributes();
     }
 
+    public Map getFields() {
+    	return fields;
+    }
+    
     public Map getAttributes() {
         return attributes;
     }

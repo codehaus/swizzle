@@ -22,7 +22,7 @@
   <parent>
     <artifactId>swizzle-parent</artifactId>
     <groupId>org.codehaus.swizzle</groupId>
-    <version>2</version>
+    <version>3</version>
   </parent>
   <groupId>org.codehaus.swizzle</groupId>
   <artifactId>swizzle-confluence</artifactId>

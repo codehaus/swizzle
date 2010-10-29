@@ -63,7 +63,6 @@
   </properties>
 
   <modules>
-    <module>dependency-report-plugin</module>
     <module>swizzle-blogrss-macro</module>
     <module>swizzle-confluence</module>
     <module>swizzle-jira</module>

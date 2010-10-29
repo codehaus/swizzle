@@ -1,4 +1,4 @@
-#set( $jira = $xmlrpc.connect("swizzletester:swizzle","http://jira.codehaus.org/rpc/xmlrpc") )
+#set( $jira = $xmlrpc.connect("swizzle:swizzle","http://jira.codehaus.org/rpc/xmlrpc") )
 #set( $projects = $jira.getProjects().matches("name", "Maven 2.*Plugin") )
 
         

@@ -28,12 +28,11 @@ import java.util.List;
 /**
  * @version $Revision$ $Date$
  */
-public class AttachmentsUtilTest extends TestCase {
+public class AttachmentsUtilTest extends SwizzleJiraTestCase {
     public void testSaveAttachment() throws Exception {
         AttachmentsUtil attachmentsUtil = new AttachmentsUtil();
 
-        Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
-        jira.login("swizzletester", "swizzle");
+        Jira jira = getJira();
         jira.autofill("attachments", true);
 
         Issue issue = jira.getIssue("SWIZZLE-13");

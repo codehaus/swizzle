@@ -16,22 +16,19 @@
  */
 package org.codehaus.swizzle.jira;
 
-import junit.framework.TestCase;
-
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
  * @version $Revision$ $Date$
  */
-public class AttachmentsTest extends TestCase {
+public class AttachmentsTest extends SwizzleJiraTestCase {
 
     // Date is retrieved without timezone from xmlrpc (@codehaus?)
     SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
 
     public void testJira() throws Exception {
-        Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
-        jira.login("swizzletester", "swizzle");
+        Jira jira = getJira();
         jira.autofill("attachments", true);
 
         Issue issue = jira.getIssue("SWIZZLE-13");

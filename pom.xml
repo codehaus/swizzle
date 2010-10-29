@@ -63,7 +63,9 @@
   </properties>
 
   <modules>
+    <!--
     <module>swizzle-blogrss-macro</module>
+    -->
     <module>swizzle-confluence</module>
     <module>swizzle-jira</module>
     <module>swizzle-jirareport</module>

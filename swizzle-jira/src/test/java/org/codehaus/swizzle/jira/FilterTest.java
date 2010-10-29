@@ -16,31 +16,27 @@
  */
 package org.codehaus.swizzle.jira;
 
-import junit.framework.TestCase;
-
 import java.util.List;
 
 /**
  * @version $Revision$ $Date$
  */
-public class FilterTest extends TestCase {
+public class FilterTest extends SwizzleJiraTestCase {
 
     public void testGetSavedFilter() throws Exception {
-        Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
-        jira.login("swizzletester", "swizzle");
+        Jira jira = getJira();
 
         Filter filter = jira.getSavedFilter("swizzle test issues");
         assertNotNull("filter", filter);
-        assertEquals("Filter.getId()", 11892, filter.getId());
+        assertEquals("Filter.getId()", 13956, filter.getId());
         assertEquals("Filter.getName()", "swizzle test issues", filter.getName());
         assertEquals("Filter.getDescription()", "The swizzle test filter description", filter.getDescription());
-        assertEquals("Filter.getAuthor().getName()", "swizzletester", filter.getAuthor().getName());
+        assertEquals("Filter.getAuthor().getName()", "swizzle", filter.getAuthor().getName());
 
     }
 
     public void _testGetIssuesFromFilter() throws Exception {
-        Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
-        jira.login("swizzletester", "swizzle");
+        Jira jira = getJira();
 
         List issues = jira.getIssuesFromFilter("swizzle test issues");
         for (int i = 0; i < issues.size(); i++) {

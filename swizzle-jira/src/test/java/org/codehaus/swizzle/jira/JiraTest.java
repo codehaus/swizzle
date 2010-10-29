@@ -16,22 +16,19 @@
  */
 package org.codehaus.swizzle.jira;
 
-import junit.framework.TestCase;
-
 import java.text.SimpleDateFormat;
 import java.util.Map;
 
 /**
  * @version $Revision$ $Date$
  */
-public class JiraTest extends TestCase {
+public class JiraTest extends SwizzleJiraTestCase {
 
     // Date is retrieved without timezone from xmlrpc (@codehaus?)
     SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
 
     public void testJira() throws Exception {
-        Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
-        jira.login("swizzletester", "swizzle");
+        Jira jira = getJira();
 
         Issue issue = jira.getIssue("SWIZZLE-1");
         assertEquals("Issue.getCreated()", "Fri Aug 04 20:05:13 2006", formatter.format(issue.getCreated()));
@@ -101,8 +98,7 @@ public class JiraTest extends TestCase {
     }
 
     public void testFill() throws Exception {
-        Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
-        jira.login("swizzletester", "swizzle");
+        Jira jira = getJira();
 
         Issue issue = jira.getIssue("SWIZZLE-1");
         issue = jira.fill(issue);
@@ -148,9 +144,8 @@ public class JiraTest extends TestCase {
     }
 
     public void testAutofillProject() throws Exception {
-        Jira jira = new Jira("http://jira.codehaus.org/rpc/xmlrpc");
+        Jira jira = getJira();
         jira.autofill("project", true);
-        jira.login("swizzletester", "swizzle");
 
         Issue issue = jira.getIssue("SWIZZLE-1");
         Project project = issue.getProject();

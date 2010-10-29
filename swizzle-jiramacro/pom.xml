@@ -21,7 +21,7 @@
   <parent>
     <artifactId>swizzle</artifactId>
     <groupId>org.codehaus.swizzle</groupId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4</version>
   </parent>
   <artifactId>swizzle-jiramacro</artifactId>
   <name>Swizzle :: Jira Macro for Confluence</name>

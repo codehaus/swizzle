@@ -16,6 +16,7 @@
  */
 package org.codehaus.swizzle.jira;
 
+import org.apache.xmlrpc.client.XmlRpcAhcTransportFactory;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
@@ -53,6 +54,7 @@ public class Jira {
     private final Map<String, String> autofillProviders = new HashMap<String, String>();
 
     public Jira(String endpoint) throws MalformedURLException {
+        
         if (endpoint.endsWith("/")) {
             endpoint = endpoint.substring(0, endpoint.length() - 1);
         }
@@ -63,8 +65,8 @@ public class Jira {
 
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
         clientConfig.setServerURL(new URL(endpoint));
-
         client = new XmlRpcClient();
+        client.setTransportFactory( new XmlRpcAhcTransportFactory(client) );
         client.setConfig(clientConfig);
 
         BasicIssueFiller basicIssueFiller = new BasicIssueFiller(this);

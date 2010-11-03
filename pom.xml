@@ -1,25 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-  <!--
-    Copyright 2009 David Blevins Licensed under the Apache License,
-    Version 2.0 (the "License"); you may not use this file except in
-    compliance with the License. You may obtain a copy of the License at
+<!-- Copyright 2009 David Blevins Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance 
+  with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed 
+  to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+  express or implied. See the License for the specific language governing permissions and limitations under the License. -->
 
-    http://www.apache.org/licenses/LICENSE-2.0 Unless required by
-    applicable law or agreed to in writing, software distributed under
-    the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
-    OR CONDITIONS OF ANY KIND, either express or implied. See the
-    License for the specific language governing permissions and
-    limitations under the License.
-  -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
     <version>5</version>
-  </parent>  
+  </parent>
   <groupId>org.codehaus.swizzle</groupId>
   <artifactId>swizzle</artifactId>
   <packaging>pom</packaging>
@@ -36,12 +29,12 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-  
+
   <organization>
     <name>The Codehaus Foundation</name>
     <url>http://www.codehaus.org/</url>
   </organization>
-  
+
   <developers>
     <developer>
       <id>dblevins</id>
@@ -53,8 +46,8 @@
     <developer>
       <id>kaosko</id>
       <name>Kalle Korhonen</name>
-			<url>http://docs.codehaus.org/display/~kaosko</url>
-			<timezone>-8</timezone>
+      <url>http://docs.codehaus.org/display/~kaosko</url>
+      <timezone>-8</timezone>
     </developer>
   </developers>
 
@@ -63,15 +56,22 @@
   </properties>
 
   <modules>
-    <!--
-    <module>swizzle-blogrss-macro</module>
-    -->
+    <!-- <module>swizzle-blogrss-macro</module> -->
     <module>swizzle-confluence</module>
     <module>swizzle-jira</module>
     <module>swizzle-jirareport</module>
     <module>swizzle-jiramacro</module>
     <module>swizzle-stream</module>
   </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
     
   <build>
     <pluginManagement>
@@ -108,5 +108,5 @@
     <developerConnection>scm:svn:https://svn.codehaus.org/swizzle/trunk</developerConnection>
     <url>http://svn.codehaus.org/swizzle</url>
   </scm>
-    
+
 </project>

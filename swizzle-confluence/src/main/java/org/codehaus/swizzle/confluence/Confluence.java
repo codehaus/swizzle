@@ -1,10 +1,5 @@
 package org.codehaus.swizzle.confluence;
 
-import org.apache.xmlrpc.XmlRpcException;
-import org.apache.xmlrpc.client.XmlRpcClient;
-import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.apache.xmlrpc.client.XmlRpcClientException;
-
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,6 +7,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import javax.naming.directory.SearchResult;
+
+import org.apache.xmlrpc.XmlRpcException;
+import org.apache.xmlrpc.client.XmlRpcAhcTransportFactory;
+import org.apache.xmlrpc.client.XmlRpcClient;
+import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.apache.xmlrpc.client.XmlRpcClientException;
 
 /**
  * @version $Revision$ $Date$
@@ -22,8 +25,8 @@ public class Confluence {
     protected boolean sendRawData;
 
     public Confluence(String endpoint) throws MalformedURLException {
-        this(new XmlRpcClient());
-	if (endpoint.endsWith("/")) {
+	
+        if (endpoint.endsWith("/")) {
             endpoint = endpoint.substring(0, endpoint.length() - 1);
         }
 
@@ -33,16 +36,10 @@ public class Confluence {
 
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
         clientConfig.setServerURL(new URL(endpoint));
-
-        client.setConfig(clientConfig);
-    }
-    
-    // Would have been nicer to have a constructor with clientConfig and optionally a transport
-    // but there's a circular dependency between an XmlRpcClient and TransportFactory 
-    public Confluence(XmlRpcClient client) {
-        this.client = client;
-        token = ""; // empty token allows anonymous access
-    }
+        client = new XmlRpcClient();
+        client.setTransportFactory( new XmlRpcAhcTransportFactory(client) );
+        client.setConfig(clientConfig);                
+    }    
     
     public boolean willSendRawData() {
         return sendRawData;

@@ -16,7 +16,7 @@
   <artifactId>swizzle</artifactId>
   <packaging>pom</packaging>
   <name>Swizzle</name>
-  <version>1.7-SNAPSHOT</version>
+  <version>1.6-SNAPSHOT</version>
   <url>http://swizzle.codehaus.org</url>
   <description>
     Parent POM to share settings between swizzle modules

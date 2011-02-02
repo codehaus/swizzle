@@ -17,14 +17,23 @@ package org.codehaus.swizzle.depreport;
  */
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.resolver.filter.AndArtifactFilter;
+import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
+import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.resolver.filter.*;
+import org.apache.maven.artifact.resolver.ArtifactCollector;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.dependency.tree.DefaultDependencyTreeBuilder;
+import org.apache.maven.shared.dependency.tree.DependencyNode;
+import org.apache.maven.shared.dependency.tree.DependencyTreeBuilderException;
 import org.codehaus.swizzle.depreport.Dependency;
 import org.codehaus.swizzle.depreport.ExcludesArtifactFilter;
 import org.codehaus.swizzle.depreport.IncludesArtifactFilter;
+import org.codehaus.plexus.logging.Logger;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -48,6 +57,51 @@ import java.util.Set;
  */
 public class ReportMojo
         extends AbstractMojo {
+
+    /**
+     * The Maven project.
+     *
+     * @parameter expression="${project}"
+     * @required
+     * @readonly
+     */
+    private MavenProject project;
+
+    /**
+     * The artifact repository to use.
+     *
+     * @parameter expression="${localRepository}"
+     * @required
+     * @readonly
+     */
+    private ArtifactRepository localRepository;
+
+    /**
+     * The artifact factory to use.
+     *
+     * @component
+     * @required
+     * @readonly
+     */
+    private ArtifactFactory artifactFactory;
+
+    /**
+     * The artifact metadata source to use.
+     *
+     * @component
+     * @required
+     * @readonly
+     */
+    private ArtifactMetadataSource artifactMetadataSource;
+
+    /**
+     * The artifact collector to use.
+     *
+     * @component
+     * @required
+     * @readonly
+     */
+    private ArtifactCollector artifactCollector;
 
     /**
      * @parameter
@@ -95,15 +149,6 @@ public class ReportMojo
      */
     protected String name;
 
-    /**
-     * The Maven Project.
-     *
-     * @parameter expression="${project}"
-     * @required
-     * @readonly
-     */
-    protected MavenProject project;
-
     protected MavenProject getExecutedProject()
     {
         return project;
@@ -118,8 +163,6 @@ public class ReportMojo
     public void execute()
             throws MojoExecutionException, MojoFailureException {
 
-        Map deps = new HashMap();
-
         AndArtifactFilter filter = new AndArtifactFilter();
         filter.add(new ScopeArtifactFilter(getScope()));
 
@@ -130,23 +173,40 @@ public class ReportMojo
             filter.add(new ExcludesArtifactFilter(getExcludes()));
         }
 
-        for (Iterator j = getDependencies().iterator(); j.hasNext();) {
-            Artifact artifact = (Artifact) j.next();
+        Set<Artifact> artifacts = getDependencies();
 
-            if (filter.include(artifact)) {
-                Dependency dep = new Dependency(artifact);
-                deps.put(dep.getId(), dep);
-            } else {
-                getLog().debug("artifact: " + artifact + " not included");
-            }
+        Map<String, Dependency> deps = new HashMap();
+
+        for (Artifact artifact : artifacts) {
+            Dependency dep = new Dependency(artifact);
+            deps.put(dep.getId(), dep);
         }
 
-        RootDep rootDep = asDependencyTree(deps);
+        TreeToGraphConverter converter = new TreeToGraphConverter(filter);
+
+        DefaultDependencyTreeBuilder dependencyTreeBuilder = new DefaultDependencyTreeBuilder();
+
+        dependencyTreeBuilder.enableLogging(new LogWrapper(getLog()));
+
+
+        Dependency rootDep;
+
+        try {
+            DependencyNode node = dependencyTreeBuilder.buildDependencyTree(project, localRepository, artifactFactory, artifactMetadataSource, filter, artifactCollector);
+
+            rootDep = converter.link(node, deps);
+        } catch (DependencyTreeBuilderException e) {
+            getLog().error(e);
+            return;
+        }
 
         if (rootDep.getChildren().size() == 0){
             getLog().info("No dependencies to report");
             return;
         }
+
+//        rootDep.accept(new AbbreviationGraphVisitior());
+//        rootDep.accept(new RollupVisitior());
 
         List formats = getFormats();
         for (int i = 0; i < formats.size(); i++) {
@@ -280,7 +340,7 @@ public class ReportMojo
 
         Set dependenciesSet = new HashSet();
 
-        if (project.getArtifact() != null && project.getArtifact().getFile() != null) {
+        if (project.getArtifact() != null) {
             dependenciesSet.add(project.getArtifact());
         }
 
@@ -308,4 +368,99 @@ public class ReportMojo
     public String getScope() {
         return scope;
     }
+
+    private static class LogWrapper implements Logger {
+        private final Log log;
+
+        public LogWrapper(Log log) {
+            this.log = log;
+        }
+
+        public boolean isDebugEnabled() {
+            return log.isDebugEnabled();
+        }
+
+        public void debug(String content) {
+            log.debug(content);
+        }
+
+        public void debug(String content, Throwable error) {
+            log.debug(content, error);
+        }
+
+        public void debug(Throwable error) {
+            log.debug(error);
+        }
+
+        public boolean isInfoEnabled() {
+            return log.isInfoEnabled();
+        }
+
+        public void info(String content) {
+            log.info(content);
+        }
+
+        public void info(String content, Throwable error) {
+            log.info(content, error);
+        }
+
+        public void info(Throwable error) {
+            log.info(error);
+        }
+
+        public boolean isWarnEnabled() {
+            return log.isWarnEnabled();
+        }
+
+        public void warn(String content) {
+            log.warn(content);
+        }
+
+        public void warn(String content, Throwable error) {
+            log.warn(content, error);
+        }
+
+        public void warn(Throwable error) {
+            log.warn(error);
+        }
+
+        public boolean isErrorEnabled() {
+            return log.isErrorEnabled();
+        }
+
+        public void error(String content) {
+            log.error(content);
+        }
+
+        public void error(String content, Throwable error) {
+            log.error(content, error);
+        }
+
+        public void error(Throwable error) {
+            log.error(error);
+        }
+
+        public void fatalError(String message) {
+        }
+
+        public void fatalError(String message, Throwable throwable) {
+        }
+
+        public boolean isFatalErrorEnabled() {
+            return false;
+        }
+
+        public Logger getChildLogger(String name) {
+            return null;
+        }
+
+        public int getThreshold() {
+            return 0;
+        }
+
+        public String getName() {
+            return null;
+        }
+    }
+
 }

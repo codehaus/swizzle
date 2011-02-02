@@ -232,7 +232,6 @@ public class UsageMojo
         for (Iterator j = getDependencies().iterator(); j.hasNext();) {
             Artifact artifact = (Artifact) j.next();
 
-            artifact.getDependencyFilter()
             if (filter.include(artifact)) {
                 Dependency dep = new Dependency(artifact);
                 deps.put(dep.getId(), dep);

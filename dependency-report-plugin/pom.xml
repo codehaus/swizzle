@@ -1,11 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>swizzle</artifactId>
-    <groupId>org.codehaus.swizzle</groupId>
-    <version>1.4-SNAPSHOT</version>
-  </parent>  
+  <groupId>org.codehaus.swizzle</groupId>
   <artifactId>dependency-report-plugin</artifactId>
+  <packaging>maven-plugin</packaging>
+  <version>1.0.3-SNAPSHOT</version>
   <name>Dependency Report Plugin</name>
   <prerequisites>
     <maven>2.0.4</maven>
@@ -26,6 +24,14 @@
           <target>1.5</target>
         </configuration>
       </plugin>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-idea-plugin</artifactId>
+	<configuration>
+	  <downloadSources>true</downloadSources>
+	  <downloadJavadocs>true</downloadJavadocs>
+	</configuration>
+      </plugin>
     </plugins>    
   </build>
   <dependencies>
@@ -37,17 +43,27 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>2.0.4</version>
+      <version>2.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-dependency-tree</artifactId>
+      <version>1.1</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-project</artifactId>
-      <version>2.0.4</version>
+      <version>2.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+      <version>2.0.7</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
-      <version>2.0.4</version>
+      <version>2.0.7</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -55,9 +71,14 @@
       <version>1.1</version>
     </dependency>
     <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-container-default</artifactId>
+      <version>1.0-alpha-9-stable-1</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact</artifactId>
-      <version>2.0.4</version>
+      <version>2.0.7</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
@@ -66,4 +87,25 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <distributionManagement>
+    <repository>
+      <id>codehaus.org</id>
+      <name>Swizzle Central Repository</name>
+      <url>dav:https://dav.codehaus.org/repository/swizzle/</url>
+    </repository>
+    <snapshotRepository>
+      <id>codehaus.org</id>
+      <name>Swizzle Central Development Repository</name>
+      <url>dav:https://dav.codehaus.org/snapshots.repository/swizzle/</url>
+    </snapshotRepository>
+    <site>
+      <id>codehaus.org</id>
+      <url>dav:https://dav.codehaus.org/swizzle/</url>
+    </site>
+  </distributionManagement>
+  <scm>
+    <connection>scm:svn:http://svn.codehaus.org/swizzle/trunk/dependency-report-plugin/</connection>
+    <developerConnection>scm:svn:https://dblevins@svn.codehaus.org/swizzle/trunk/dependency-report-plugin/</developerConnection>
+  </scm>
 </project>

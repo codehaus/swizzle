@@ -36,6 +36,7 @@ public class Confluence {
 
         XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
         clientConfig.setServerURL(new URL(endpoint));
+        clientConfig.setEnabledForExtensions(true);
         client = new XmlRpcClient();
         client.setTransportFactory( new XmlRpcAhcTransportFactory(client) );
         client.setConfig(clientConfig);                

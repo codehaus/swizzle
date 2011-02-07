@@ -23,12 +23,11 @@ import junit.framework.TestCase;
 /**
  * @version $Revision$ $Date$
  */
-public class ConfluenceTest extends TestCase {
+public class PageTest extends SwizzleConfluenceTestCase {
 
     public void testRenderContent() throws Exception {
-        Confluence confluence = new Confluence("http://docs.codehaus.org/rpc/xmlrpc");
-        confluence.login("swizzle", "swizzle");
-        Page page = confluence.getPage("SWIZZLE", "UnitTest Page");
+        Confluence confluence = getConfluence();
+        Page page = getTestPage();
 
         assertNotNull("page", page);
         assertEquals("Page.getId()", "62967", page.getId());
@@ -42,8 +41,7 @@ public class ConfluenceTest extends TestCase {
     }        
 
     public void _testGetActiveUsers() throws Exception {
-        Confluence confluence = new Confluence("http://docs.codehaus.org/rpc/xmlrpc");
-        confluence.login("swizzletester", "swizzle");
+        Confluence confluence = getConfluence();
 
         List activeUsers = confluence.getActiveUsers(true);
         for (int i = 0; i < activeUsers.size() && i < 10; i++) {

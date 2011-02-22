@@ -48,6 +48,13 @@
       <url>http://docs.codehaus.org/display/~kaosko</url>
       <timezone>-8</timezone>
     </developer>
+    <developer>
+      <id>jvanzyl</id>
+      <name>Jason van Zyl</name>
+      <roles>
+        <role>Instigator</role>
+      </roles>      
+    </developer>
   </developers>
 
   <properties>

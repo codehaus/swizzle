@@ -22,6 +22,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,11 +35,13 @@ import java.util.List;
 public class AttachmentsFiller implements IssueFiller {
     private final Jira jira;
     private boolean enabled;
-    private final SimpleDateFormat dateFormat;
+
+    private final List<DateFormat> formats = new ArrayList<DateFormat>();
 
     public AttachmentsFiller(Jira jira) {
         this.jira = jira;
-        dateFormat = new SimpleDateFormat("dd/MMM/yy hh:mm a");
+        formats.add(new SimpleDateFormat("dd/MMM/yy hh:mm a"));
+        formats.add(new SimpleDateFormat("dd/MMM/yy hh:mm"));
     }
 
     public void setEnabled(boolean enabled) {
@@ -69,11 +73,12 @@ public class AttachmentsFiller implements IssueFiller {
 
     private void getAttachments(String baseUrlString, final Issue issue) {
         try {
-            final List attachments = new ArrayList();
+            final List attachments = new MapObjectList();
+
+            if (!baseUrlString.endsWith("/")) baseUrlString += "/";
+
             URL baseUrl = new URL(baseUrlString);
-
             URL pageUrl = new URL(baseUrl, "secure/ManageAttachments.jspa?id=" + issue.getId());
-
             InputStream in = new BufferedInputStream(pageUrl.openStream());
             StreamLexer lexer = new StreamLexer(in);
 
@@ -102,8 +107,7 @@ public class AttachmentsFiller implements IssueFiller {
                         lexer.readToken("<td");
                         String dateAttached = lexer.readToken(">", "</td>");
                         if (!containsGarbage(dateAttached)) {
-                            // 12/Sep/06 02:23 PM - dd/MMM/yy hh:mm a
-                            Date created = dateFormat.parse(dateAttached);
+                            Date created = parseDate(dateAttached);
                             attachment.setCreated(created);
                         }
                     } catch (Exception e) {
@@ -126,6 +130,16 @@ public class AttachmentsFiller implements IssueFiller {
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
+    }
+
+    private Date parseDate(String dateAttached) {
+        for (DateFormat format : formats) {
+            try {
+                return format.parse(dateAttached);
+            } catch (ParseException e) {
+            }
+        }
+        throw new IllegalStateException("no formats matched string: '" + dateAttached + "'");
     }
 
     private boolean containsGarbage(String data) {

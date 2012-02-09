@@ -138,7 +138,7 @@ public class Jira {
      * Adds a comment to an issue TODO: If someone adds a comment to an issue, we should account for that in our caching
      */
     public boolean addComment(String issueKey, String comment) throws Exception {
-        Boolean value = (Boolean) call("getComments", issueKey, comment);
+        Boolean value = (Boolean) call("addComment", issueKey, comment);
         return value.booleanValue();
     }
 

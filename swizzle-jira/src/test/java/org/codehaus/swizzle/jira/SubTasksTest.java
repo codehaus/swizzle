@@ -49,7 +49,7 @@ public class SubTasksTest extends SwizzleJiraTestCase {
         assertEquals("Issue.getVotes()", 0, issue.getVotes());
         assertEquals("Issue.getAssignee()", "dblevins", issue.getAssignee().getName());
         assertEquals("Issue.getPriority()", 3, issue.getPriority().getId());
-        assertEquals("Issue.getLink()", "http://jira.codehaus.org/browse/SWIZZLE-2", issue.getLink());
+        assertEquals("Issue.getLink()", "https://jira.codehaus.org/browse/SWIZZLE-2", issue.getLink());
 
         List subTasks = issue.getSubTasks();
         assertNotNull("subtasks", subTasks);

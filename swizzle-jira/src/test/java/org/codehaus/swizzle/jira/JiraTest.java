@@ -47,7 +47,7 @@ public class JiraTest extends SwizzleJiraTestCase {
         assertEquals("Issue.getVotes()", 1, issue.getVotes());
         assertEquals("Issue.getAssignee()", "dblevins", issue.getAssignee().getName());
         assertEquals("Issue.getPriority()", 1, issue.getPriority().getId());
-        assertEquals("Issue.getLink()", "http://jira.codehaus.org/browse/SWIZZLE-1", issue.getLink());
+        assertEquals("Issue.getLink() - " + issue.getLink(), "https://jira.codehaus.org/browse/SWIZZLE-1", issue.getLink());
 
         assertEquals("Issue.getFixVersions().size()", 1, issue.getFixVersions().size());
         assertTrue("FixVersion instance of Version", issue.getFixVersions().get(0) instanceof Version);
@@ -119,7 +119,7 @@ public class JiraTest extends SwizzleJiraTestCase {
         assertEquals("Issue.getVotes()", 1, issue.getVotes());
         assertEquals("Issue.getAssignee()", "David Blevins", issue.getAssignee().getFullname());
         assertEquals("Issue.getPriority()", "Blocker", issue.getPriority().getName());
-        assertEquals("Issue.getLink()", "http://jira.codehaus.org/browse/SWIZZLE-1", issue.getLink());
+        assertEquals("Issue.getLink()", "https://jira.codehaus.org/browse/SWIZZLE-1", issue.getLink());
 
         Map data = issue.toMap();
 
@@ -154,8 +154,8 @@ public class JiraTest extends SwizzleJiraTestCase {
         assertEquals("Project.getKey()", "SWIZZLE", project.getKey());
         assertEquals("Project.getName()", "Swizzle", project.getName());
         assertEquals("Project.getLead()", "dblevins", project.getLead());
-        assertEquals("Project.getProjectUrl()", "http://swizzle.codehaus.org", project.getProjectUrl());
-        assertEquals("Project.getUrl()", "http://jira.codehaus.org/browse/SWIZZLE", project.getUrl());
+        assertEquals("Project.getProjectUrl() - " + project.getProjectUrl(), "http://swizzle.codehaus.org", project.getProjectUrl());
+        assertEquals("Project.getUrl() - " + project.getUrl(), "https://jira.codehaus.org/browse/SWIZZLE", project.getUrl());
     }
 
 }

@@ -816,7 +816,7 @@ public class Confluence {
             vector = args;
         }
         try {
-            return client.execute("confluence1." + command, vector);
+            return client.execute("confluence2." + command, vector);
         } catch (XmlRpcClientException e) {
             throw new SwizzleException(e.getMessage(), e.linkedException);
         } catch (XmlRpcException e) {

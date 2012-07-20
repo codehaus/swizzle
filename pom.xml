@@ -16,7 +16,7 @@
   <artifactId>swizzle</artifactId>
   <packaging>pom</packaging>
   <name>Swizzle</name>
-  <version>1.6.2</version>
+  <version>1.6.3-SNAPSHOT</version>
   <url>http://swizzle.codehaus.org</url>
   <description>
     Parent POM to share settings between swizzle modules
@@ -111,9 +111,9 @@
   </build>
 
   <scm>
-    <connection>scm:svn:http://svn.codehaus.org/swizzle/tags/swizzle-1.6.2</connection>
-    <developerConnection>scm:svn:https://svn.codehaus.org/swizzle/tags/swizzle-1.6.2</developerConnection>
-    <url>http://svn.codehaus.org/swizzle/tags/swizzle-1.6.2</url>
+    <connection>scm:svn:http://svn.codehaus.org/swizzle/trunk</connection>
+    <developerConnection>scm:svn:https://svn.codehaus.org/swizzle/trunk</developerConnection>
+    <url>http://svn.codehaus.org/swizzle</url>
   </scm>
 
 </project>

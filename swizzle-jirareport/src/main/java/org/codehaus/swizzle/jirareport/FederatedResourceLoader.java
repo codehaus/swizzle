@@ -48,6 +48,7 @@ public class FederatedResourceLoader extends ResourceLoader {
             ResourceLoader loader = (ResourceLoader) loaders.get(i);
             loader.commonInit(runtimeServices, extendedProperties);
         }
+        super.commonInit(runtimeServices, extendedProperties);
     }
 
     public InputStream getResourceStream(String string) throws ResourceNotFoundException {

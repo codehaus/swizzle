@@ -18,6 +18,7 @@
   <name>Swizzle</name>
   <version>1.6.3-SNAPSHOT</version>
   <url>http://swizzle.codehaus.org</url>
+
   <description>
     Parent POM to share settings between swizzle modules
   </description>
